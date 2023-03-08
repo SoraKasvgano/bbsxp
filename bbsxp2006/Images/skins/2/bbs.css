@@ -1,0 +1,89 @@
+TD.node {
+	FONT-SIZE: 12px; VERTICAL-ALIGN: middle; COLOR: #000000; FONT-FAMILY: verdana; HEIGHT: 22px;
+}
+.left {
+	background-color: FFD7BC;
+}
+.division {
+	background-color: FFBE93;
+}
+
+#deeptree SPAN {
+	PADDING-TOP: 2px;
+	PADDING-RIGHT: 4px;
+	PADDING-LEFT: 4px;
+	PADDING-BOTTOM: 2px;
+	MARGIN-LEFT: 3px;
+	CURSOR: hand; COLOR: #000000;
+	FONT-FAMILY: verdana; HEIGHT: 20px;
+}
+#deeptree SPAN.NodeOver {
+
+	BORDER-RIGHT: #0B008B 1px solid;
+	BORDER-TOP: #0B008B 1px solid;
+	BORDER-LEFT: #0B008B 1px solid;
+	BORDER-BOTTOM: #0B008B 1px solid;
+	BACKGROUND-COLOR: #FFEEC2
+}
+A:visited{TEXT-DECORATION:none}
+A:link{text-decoration:none}
+A:hover{TEXT-DECORATION:underline}
+
+DIV,FORM,P,TD,BODY{FONT-SIZE:9pt;}
+BODY{
+background-color: #ffffff;
+SCROLLBAR-ARROW-COLOR: #FFffff;
+SCROLLBAR-3DLIGHT-COLOR: #F9904B;
+scrollbar-Base-Color: #F9904B;
+SCROLLBAR-TRACK-COLOR: #FFF0E6;
+}
+#TableTitleLink A:link,#TableTitleLink A:visited{COLOR:ffffff;}
+.a1{BACKGROUND-IMAGE:url('titlebg.gif');COLOR:ffffff;}
+.a2{BACKGROUND-COLOR: F17623;}
+.a3{BACKGROUND-COLOR: FFF7F0;}
+.a4{BACKGROUND-COLOR: FFF0E6;}
+
+.CommonImageTextButton {
+	BORDER-RIGHT: #999999 1px solid; PADDING-RIGHT: 4px; BACKGROUND-POSITION: 1px 1px; BORDER-TOP: #cccccc 1px solid; DISPLAY: inline-block; PADDING-LEFT: 22px; FONT-WEIGHT: bold; FONT-SIZE: 100%; PADDING-BOTTOM: 4px; MARGIN: 1px; BORDER-LEFT: #cccccc 1px solid; COLOR: #333333; LINE-HEIGHT: normal; PADDING-TOP: 4px; BORDER-BOTTOM: #999999 1px solid; BACKGROUND-REPEAT: no-repeat; BACKGROUND-COLOR: #eeeeee
+}
+.CommonImageTextButton:visited {
+	COLOR: #333333; TEXT-DECORATION: none
+}
+.CommonImageTextButton:hover {
+	COLOR: #333333; BACKGROUND-COLOR: #dddddd; TEXT-DECORATION: underline
+}
+
+
+TD.StatusBarBtnOff {padding:1px 5px;border:1px outset;cursor:pointer;}
+TD.StatusBarBtnOn {padding:1px 5px;border:1px inset;background-color: #EEEEEE;}
+
+.menuskin {
+	BORDER-RIGHT: #0A2999 1px solid ;
+	BORDER-TOP: #0A2999 1px solid;
+	BORDER-LEFT: #0A2999 1px solid;
+	BORDER-BOTTOM: #0A2999 1px solid;
+	BACKGROUND-IMAGE: url(menubg.gif);
+	POSITION: absolute;
+	VISIBILITY: hidden;
+}
+.menuitems {
+	PADDING-RIGHT: 1px;
+	PADDING-TOP: 1px;
+	PADDING-LEFT: 1px;
+	PADDING-BOTTOM: 1px;
+	MARGIN: 2px;
+	font-size:9pt;
+	line-height:14pt;
+}
+#mouseoverstyle {
+	PADDING-RIGHT: 0px;
+	PADDING-TOP: 0px;
+	PADDING-LEFT: 0px;
+	PADDING-BOTTOM: 0px;
+	BORDER-RIGHT: #0B008B 1px solid;
+	BORDER-TOP: #0B008B 1px solid;
+	BORDER-LEFT: #0B008B 1px solid;
+	BORDER-BOTTOM: #0B008B 1px solid;
+	BACKGROUND-COLOR: #FFEEC2 
+}
+.menuskin A {PADDING-RIGHT: 10px;PADDING-LEFT: 30px;}

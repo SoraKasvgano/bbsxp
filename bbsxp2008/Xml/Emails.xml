@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="gb2312"?>
+<emails>
+
+<!--
+======================================================
+    Thread that the user is monitoring was modified.
+======================================================
+-->
+<NewMessagePostedToThread>
+<subject>您订阅的主题有新回复</subject>
+<body>
+在这里浏览完整的讨论主题：[ThreadURL]
+
+[UserName] 发表于 [PostTime]
+
+主题：[Topic]
+
+[Subject]
+----------------------------------
+[body]
+----------------------------------
+
+您已通过邮件订阅了该主题，因此当主题有新帖子您都将收到邮件通知。
+如果您要取消邮件订阅，点击以上链接，选择“取消订阅”即可。
+</body>
+</NewMessagePostedToThread>
+
+
+<!--
+======================================================
+    Post was deleted.     
+======================================================
+-->
+<MessageDeleted>
+<subject>帖子被删除</subject>
+<body>
+您发表的帖子已被 [Moderator] 删除。
+
+主题：[Topic]
+
+[Subject]
+----------------------------------
+[Body]
+----------------------------------
+
+[DeleteReasons]
+</body>
+</MessageDeleted>
+
+<!--
+======================================================
+    New account created.     
+======================================================
+-->
+<NewUserAccountCreated>
+<subject>用户名注册成功</subject>
+<body>
+　　[UserName] , 您好!
+
+　　恭喜! 您已经成功地注册了您的资料！
+
+　* 您的用户名是: [UserName]　密码是:[password]
+</body>
+</NewUserAccountCreated>
+
+
+<!--
+======================================================
+    User Invitation    
+======================================================
+-->
+<InviteNewUser>
+<subject>注册邀请码</subject>
+<body>
+[UserName] 给您发送 [SiteName] 的注册邀请码
+
+请点击下面的超链接进行注册，如果没有链接，请把下面地址直接复制到浏览器的地址栏中进行注册。
+
+[InviteURL]
+</body>
+</InviteNewUser>
+
+
+<!--
+======================================================
+     Email sent when user has forgotten his/her password.
+======================================================
+-->
+<RecoverPassword>
+<subject>用户找回密码</subject>
+<body>
+　　[UserName] , 您好!
+
+请点击以下链接, 重新设置新的密码!
+
+[RecoverPasswordURL]
+
+申请发送密码者的IP为：[IPAddress]
+</body>
+</RecoverPassword>
+
+</emails>

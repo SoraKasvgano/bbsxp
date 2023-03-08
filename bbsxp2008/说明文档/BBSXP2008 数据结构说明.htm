@@ -1,0 +1,2141 @@
+<html>
+<head>
+<title>BBSXP2008(8.0.5) 数据结构说明</title>
+</head>
+<style type="text/css">
+	body {font-size:10pt; padding 0 auto;line-height:1.5}
+	td {font-size:10pt;}
+	.TableNav{color:#00F}
+</style>
+<body>
+<div style="text-align:center; font-weight:bold; font-size:13pt; color:#F00">BBSXP2008 数据结构</div>
+
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+<tr>
+<td style="line-height:1.5">
+<a href="#Advertisements">表[Advertisements]</a>　<a href="#EventLog">表[EventLog]</a>
+<a href="#FavoriteForums">表[FavoriteForums]</a>　<a href="#FavoritePosts">表[FavoritePosts]</a>
+<a href="#FavoriteUsers">表[FavoriteUsers]</a>　<a href="#ForumPermissions">表[ForumPermissions]</a><br>
+<a href="#Forums">表[Forums]</a>　<a href="#Groups">表[Groups]</a>
+<a href="#Links">表[Links]</a>　<a href="#PostAttachments">表[PostAttachments]</a>
+<a href="#PostEditNotes">表[PostEditNotes]</a>　<a href="#PostInTags">表[PostInTags]</a>
+<a href="#Posts">表[Posts]</a>　<a href="#PostTags">表[PostTags]</a><br>
+<a href="#PrivateMessages">表[PrivateMessages]</a>　<a href="#Ranks">表[Ranks]</a>
+<a href="#Reputation">表[Reputation]</a>　<a href="#Roles">表[Roles]</a>
+<a href="#SiteSettings">表[SiteSettings]</a>　<a href="#Statistics">表[Statistics]</a>
+<a href="#Subscriptions">表[Subscriptions]</a><br><a href="#ThreadRating">表[ThreadRating]</a>
+<a href="#Threads">表[Threads]</a>　<a href="#UserActivation">表[UserActivation]</a>
+<a href="#UserOnline">表[UserOnline]</a>　<a href="#Users">表[Users]</a>
+<a href="#Votes">表[Votes]</a>
+</td>
+</tr>
+<tr>
+<td>
+<div>说明：</div>
+<div style="padding-left:40px;">1、PK表示主键　　　　2、FK表示外键</div>
+</td>
+</tr>
+</table>
+
+
+<br />
+<br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="Advertisements"></a>表[Advertisements]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+
+
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>AdvertisementID</td>
+    <td>广告ID</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号 </td>
+  </tr>
+  <tr>
+    <td>Body</td>
+    <td>广告内容 </td>
+    <td>ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ExpireDate</td>
+    <td>广告过期时间 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<br /><br />
+
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="EventLog"></a>表[EventLog]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="242"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>UserName</td>
+    <td>名字 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ErrNumber</td>
+    <td>错误代码 </td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>EventDate</td>
+    <td>操作时间 </td>
+    <td>DateTime(8)</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>MessageXML</td>
+    <td>操作记录 </td>
+    <td>ntext</td>
+    <td>&nbsp;</td>
+    <td>XML格式 </td>
+  </tr>
+</table>
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="FavoriteForums"></a>表[FavoriteForums]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong><strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong><strong></td>
+  </tr>
+  <tr>
+    <td>FavoriteID</td>
+    <td>收藏ID</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号 </td>
+  </tr>
+  <tr>
+    <td>OwnerUserName</td>
+    <td>所有者 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>FK</td>
+  </tr>
+  <tr>
+    <td>ForumID </td>
+    <td>论坛ID</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="FavoritePosts"></a>表[FavoritePosts]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong> </td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>FavoriteID</td>
+    <td>收藏ID</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号 </td>
+  </tr>
+  <tr>
+    <td>OwnerUserName</td>
+    <td>所有者 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>FK</td>
+  </tr>
+  <tr>
+    <td>PostID </td>
+    <td>帖子ID</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br /><br /><span class="TableNav">
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="FavoriteUsers"></a>表[FavoriteUsers]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong> </td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>FavoriteID</td>
+    <td>收藏ID</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号 </td>
+  </tr>
+  <tr>
+    <td>OwnerUserName</td>
+    <td>所有者 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>FK</td>
+  </tr>
+  <tr>
+    <td>FriendUserName </td>
+    <td>好友名 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="ForumPermissions"></a>表[ForumPermissions]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>ForumID</td>
+    <td>论坛ID</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>FK</td>
+  </tr>
+  <tr>
+    <td>RoleID</td>
+    <td>角色ID</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PermissionView</td>
+    <td>是否允许浏览主题列表</td>
+    <td>Int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PermissionRead</td>
+    <td>是否允许阅读帖子</td>
+    <td>Int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PermissionPost</td>
+    <td>是否允许发帖 </td>
+    <td>Int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PermissionReply</td>
+    <td>是否允许回复帖子 </td>
+    <td>Int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PermissionEdit</td>
+    <td>是否允许编辑帖子 </td>
+    <td>Int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PermissionDelete</td>
+    <td>是否允许删除帖子 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PermissionCreatePoll</td>
+    <td>是否允许发起投票 </td>
+    <td>Int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PermissionVote</td>
+    <td>是否允许参与投票 </td>
+    <td>Int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PermissionAttachment</td>
+    <td>是否允许上传附件 </td>
+    <td>Int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PermissionManage</td>
+    <td>是否允许管理论坛 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="Forums"></a>表[Forums]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>ForumID</td>
+    <td>论坛ID</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号、PK</td>
+  </tr>
+  <tr>
+    <td>GroupID</td>
+    <td>论坛组ID</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ParentID</td>
+    <td>父论坛ID</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>SortOrder</td>
+    <td>排序（0为隐藏） </td>
+    <td>Int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ForumName</td>
+    <td>论坛名称 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Moderated</td>
+    <td>论坛版主 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>TotalCategorys</td>
+    <td>主题类别 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ForumDescription</td>
+    <td>论坛描述 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>TodayPosts</td>
+    <td>今日帖数 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>TotalThreads</td>
+    <td>总主题数 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>TotalPosts</td>
+    <td>总帖子数 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ForumUrl</td>
+    <td>论坛转向URL</td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IsActive</td>
+    <td>是否激活 </td>
+    <td>Int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>MostRecentThreadID</td>
+    <td>最后主题帖ID</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>MostRecentPostSubject</td>
+    <td>最后发表主题 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>MostRecentPostAuthor</td>
+    <td>最后发帖人的名称 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>MostRecentPostDate</td>
+    <td>最后发帖人的时间 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ForumRules</td>
+    <td>版规和导读 </td>
+    <td>ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ModerateNewThread</td>
+    <td>新主题是否需要审核 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ModerateNewPost</td>
+    <td>新帖子是否需要审核 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DateCreated</td>
+    <td>创建时间 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="Groups"></a>表[Groups]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>GroupID</td>
+    <td>论坛组ID</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号、PK</td>
+  </tr>
+  <tr>
+    <td>GroupName</td>
+    <td>论坛组名称 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>SortOrder</td>
+    <td>排序（0为隐藏） </td>
+    <td>Int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GroupDescription</td>
+    <td>论坛组描述 </td>
+    <td>ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ForumColumns</td>
+    <td>论坛横排</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+    <td>Moderated</td>
+    <td>论坛组版主</td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="Links"></a>表[Links]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>LinkID</td>
+    <td>&nbsp;</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号 </td>
+  </tr>
+  <tr>
+    <td>Name</td>
+    <td>网站名字 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>URL</td>
+    <td>网址 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Logo</td>
+    <td>网站LOGO</td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Intro</td>
+    <td>网站描述 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>SortOrder</td>
+    <td>排序（0为隐藏） </td>
+    <td>Int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="PostAttachments"></a>表[PostAttachments]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>UpFileID</td>
+    <td>&nbsp;</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号 </td>
+  </tr>
+  <tr>
+    <td>UserName</td>
+    <td>用户名 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>FileName</td>
+    <td>文件名 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>FileDate</td>
+    <td>附件数据</td>
+    <td>Image</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ContentType</td>
+    <td>文件类型 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>FilePath</td>
+    <td>服务器路径 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ContentSize</td>
+    <td>文件大小 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PostID</td>
+    <td>帖子ID</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Description</td>
+    <td>描述 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Created</td>
+    <td>创建时间 </td>
+    <td>DateTime</td>
+    <td>Now()</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="PostEditNotes"></a>表[PostEditNotes]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align=center>
+    <td width="142"><strong>字段名</strong></td>
+    <td><p align="center"><strong>字段中文说明</strong></td>
+    <td><p align="center"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td><p align="center"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>EditNoteID</td>
+    <td>&nbsp;</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号 </td>
+  </tr>
+  <tr>
+    <td>PostID</td>
+    <td>帖子ID</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>EditNotes</td>
+    <td>帖子编辑记录 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="PostInTags"></a>表[PostInTags]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>TagID</td>
+    <td>标签ID</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>FK</td>
+  </tr>
+  <tr>
+    <td>ThreadID</td>
+    <td>主题ID</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PostID</td>
+    <td>帖子ID</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="Posts"></a>表[Posts]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="108"><strong>字段名</strong></td>
+    <td width="288"><strong>字段中文说明</strong></td>
+    <td width="120"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>PostID</td>
+    <td>帖子ID</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号、PK</td>
+  </tr>
+  <tr>
+    <td>ThreadID</td>
+    <td>主题ID</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ParentID</td>
+    <td>帖子父ID [0为主题帖]</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PostAuthor</td>
+    <td>作者 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Subject</td>
+    <td>标题 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Body</td>
+    <td>正文内容 </td>
+    <td>Ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IPAddress</td>
+    <td>IP地址 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Visible</td>
+    <td>是否可见[0=未通过审核 1=通过审核 2=已删除]</td>
+    <td>Int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PostDate</td>
+    <td>创建时间 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="PostTags"></a>表[PostTags]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>TagID</td>
+    <td>标签ID</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号、PK</td>
+  </tr>
+  <tr>
+    <td>TagName</td>
+    <td>标签名称 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IsEnabled</td>
+    <td>是否启用 </td>
+    <td>Int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>TotalPosts</td>
+    <td>使用总帖子数 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>MostRecentPostDate</td>
+    <td>最后使用日期 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DateCreated</td>
+    <td>创建日期 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="PrivateMessages"></a>表[PrivateMessages]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>MessageID</td>
+    <td>短消息ID</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号 </td>
+  </tr>
+  <tr>
+    <td>SenderUserName</td>
+    <td>发送用户 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>RecipientUserName</td>
+    <td>接收用户 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Subject</td>
+    <td>标题 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Body</td>
+    <td>正文内容 </td>
+    <td>Ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IsRead</td>
+    <td>是否已读 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IsRecipientDelete</td>
+    <td>发送人是否删除 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IsSenderDelete</td>
+    <td>接收人是否删除 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>CreateTime</td>
+    <td>创建日期 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="Ranks"></a>表[Ranks]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>RankID</td>
+    <td>&nbsp;</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号 </td>
+  </tr>
+  <tr>
+    <td>RoleID</td>
+    <td>角色ID</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>FK</td>
+  </tr>
+  <tr>
+    <td>RankName</td>
+    <td>等级名称 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PostingCountMin</td>
+    <td>最少经验值 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="Reputation"></a>表[Reputation]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align=center>
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>ReputationID</td>
+    <td>&nbsp;</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号 </td>
+  </tr>
+  <tr>
+    <td>Reputation</td>
+    <td>评价分数 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>CommentFor</td>
+    <td>被评价的用户 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>FK</td>
+  </tr>
+  <tr>
+    <td>CommentBy</td>
+    <td>发表评价的用户 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Comment</td>
+    <td>评论内容 </td>
+    <td>ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IPAddress</td>
+    <td>IP地址 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DateCreated</td>
+    <td>评价时间 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="Roles"></a>表[Roles]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>RoleID</td>
+    <td>角色ID</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号、PK</td>
+  </tr>
+  <tr>
+    <td>Name</td>
+    <td>角色名称 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Description</td>
+    <td>角色描述 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  
+  <tr>
+    <td>RoleMaxFileSize</td>
+    <td>允许单个帖子附件的大小</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>RoleMaxPostAttachmentsSize</td>
+    <td>设置用户上传文件夹的最大容量</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="SiteSettings"></a>表[SiteSettings]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>SiteSettingsXML</td>
+    <td>论坛信息 </td>
+    <td>Ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>CreateUserAgreement</td>
+    <td>注册用户协议 </td>
+    <td>Ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GenericHeader</td>
+    <td>页面头信息 </td>
+    <td>Ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GenericTop</td>
+    <td>顶部广告代码 </td>
+    <td>Ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GenericBottom</td>
+    <td>底部版权信息 </td>
+    <td>Ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>BestOnline</td>
+    <td>最高在线人数 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>BestOnlineTime</td>
+    <td>最高在线发生时间 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>AdminNotes</td>
+    <td>管理员便笺 </td>
+    <td>ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>BBSxpVersion</td>
+    <td>数据库版本 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="Statistics"></a>表[Statistics]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>DaysUsers</td>
+    <td>今日用户 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DaysPosts</td>
+    <td>今日帖子 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DaysTopics</td>
+    <td>今日主题 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>TotalUsers</td>
+    <td>总用户数 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>TotalPosts</td>
+    <td>总帖子数 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>TotalTopics</td>
+    <td>总主题数 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>NewestUserName</td>
+    <td>新注册用户 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DateCreated</td>
+    <td>生成时间 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="Subscriptions"></a>表[Subscriptions]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>SubscriptionID</td>
+    <td>&nbsp;</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号 </td>
+  </tr>
+  <tr>
+    <td>ThreadID</td>
+    <td>主题ID</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>FK</td>
+  </tr>
+  <tr>
+    <td>UserName</td>
+    <td>订阅用户</td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Email</td>
+    <td>Email</td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>SubscriptionDate</td>
+    <td>订阅时间</td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="ThreadRating"></a>表[ThreadRating]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>ThreadID</td>
+    <td>主题ID</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>FK</td>
+  </tr>
+  <tr>
+    <td>UserName</td>
+    <td>用户 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Rating</td>
+    <td>评级 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DateCreated</td>
+    <td>参与时间 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="Threads"></a>表[Threads]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="120"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="108"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>ThreadID</td>
+    <td width="217">主题ID</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号、PK</td>
+  </tr>
+  <tr>
+    <td>ForumID</td>
+    <td width="217">所属版块 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ThreadEmoticonID</td>
+    <td width="217">表情 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ThreadStyle</td>
+    <td width="217">主题样式 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Topic</td>
+    <td width="217">标题 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Category</td>
+    <td width="217">文章类别 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Description</td>
+    <td width="217">主题描述 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PostAuthor</td>
+    <td width="217">用户名 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>LastName</td>
+    <td width="217">最后回复的用户 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PostTime</td>
+    <td width="217">主题发表时间 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>LastTime</td>
+    <td width="217">最后回复时间 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>LastViewedDate</td>
+    <td width="217">最后查看日期 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IsGood</td>
+    <td width="217">是否精华帖 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ThreadTop</td>
+    <td width="217">是否置顶帖 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>StickyDate</td>
+    <td width="217">公告/置顶过期时间 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IsLocked</td>
+    <td width="217">是否锁帖 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Visible</td>
+    <td width="217">是否可见<br>
+    0=未通过审核<br>
+    1=通过审核<br>
+      2=已删除</td>
+    <td>Int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>HiddenCount</td>
+    <td width="217">未审核帖子数 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DeletedCount</td>
+    <td width="217">已删除帖子数 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IsVote</td>
+    <td width="217">是否投票主题 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>TotalViews</td>
+    <td width="217">总浏览数 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>TotalReplies</td>
+    <td width="217">总回复数 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>RatingSum</td>
+    <td width="217">投票总得分数 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>TotalRatings</td>
+    <td width="217">共几个用户投票 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ThreadStatus</td>
+    <td width="217">主题状态 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="UserActivation"></a>表[UserActivation]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>ActivationKey</td>
+    <td>邀请码 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserName</td>
+    <td>受邀请用户名 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Email</td>
+    <td>受邀请注册的email</td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DateCreated</td>
+    <td>参与时间 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="UserOnline"></a>表[UserOnline]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>ForumID</td>
+    <td>论坛ID</td>
+    <td>int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>SessionID</td>
+    <td>SessionID</td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserName</td>
+    <td>用户名称 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IPAddress</td>
+    <td>IP地址 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IsInvisible</td>
+    <td>是否隐身 </td>
+    <td>int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ForumName</td>
+    <td>所在论坛 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ThreadID</td>
+    <td>当前所在主题ID</td>
+    <td>int</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Topic</td>
+    <td>当前所在主题</td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ComeTime</td>
+    <td>来访时间 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>LastTime</td>
+    <td>最后更新时间 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="Users"></a>表[Users]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="254"><strong>字段中文说明</strong></td>
+    <td width="120"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>UserID</td>
+    <td width="254">&nbsp;</td>
+    <td>Int</td>
+    <td>&nbsp;</td>
+    <td>自动编号 </td>
+  </tr>
+  <tr>
+    <td>UserName</td>
+    <td width="254">用户名 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>PK</td>
+  </tr>
+  <tr>
+    <td>UserPassword</td>
+    <td width="254">用户密码 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserSex</td>
+    <td width="254">性别（0=未设置 1=男 2=女） </td>
+    <td>int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserRoleID</td>
+    <td width="254">角色ID<br>1=管理员<br>2=超级版主<br>3=注册会员</td>
+    <td>Int</td>
+    <td>3</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserAccountStatus</td>
+    <td width="254">0=正等待审核<br />
+    1=已通过审核<br />
+    2=已禁用<br />
+    3=未通过审核 </td>
+    <td>int</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ModerationLevel</td>
+    <td width="254">信任用户等级（针对审核论坛才生效）<br>0=不信任<br>1=信任 </td>
+    <td>int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserEmail</td>
+    <td width="254">Email</td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PasswordQuestion</td>
+    <td width="254">密码问题 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>PasswordAnswer</td>
+    <td width="254">问题答案 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>WebAddress</td>
+    <td width="254">主页 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>WebLog</td>
+    <td width="254">博客 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>WebGallery</td>
+    <td width="254">相册 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserRank</td>
+    <td width="254">用户等级 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Birthday</td>
+    <td width="254">生日 </td>
+    <td>DateTime</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>NewMessage</td>
+    <td width="254">新留言 </td>
+    <td>int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>TotalPosts</td>
+    <td width="254">发表帖数 </td>
+    <td>int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserMoney</td>
+    <td width="254">用户金币 </td>
+    <td>int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Experience</td>
+    <td width="254">经 验 值 </td>
+    <td>int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserFaceUrl</td>
+    <td width="254">头像URL</td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserRegisterIP</td>
+    <td width="254">用户注册IP</td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserActivityIP</td>
+    <td width="254">最后活动IP</td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserRegisterTime</td>
+    <td width="254">注册日期 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserPostTime</td>
+    <td width="254">发帖日期 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserActivityTime</td>
+    <td width="254">最后活动日期 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ReferrerName</td>
+    <td width="254">邀请人 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>RealName</td>
+    <td width="254">真实姓名 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserMate</td>
+    <td width="254">配偶 </td>
+    <td>Nvarchar(50)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Occupation</td>
+    <td width="254">职业 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Address</td>
+    <td width="254">联系地址 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>QQ</td>
+    <td>QQ帐号</td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ICQ</td>
+    <td>ICQ帐号</td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>AIM</td>
+    <td>AIM帐号</td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>MSN</td>
+    <td>MSN帐号</td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Yahoo</td>
+    <td>雅虎通</td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Skype</td>
+    <td>Skype</td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Interests</td>
+    <td width="254">个人兴趣 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserTitle</td>
+    <td width="254">用户头衔 </td>
+    <td>Nvarchar(255)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Reputation</td>
+    <td width="254">声望 </td>
+    <td>int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserActivityDay</td>
+    <td width="254">用户活跃天数 </td>
+    <td>int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>BankMoney</td>
+    <td width="254">银行存款 </td>
+    <td>int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>BankDate</td>
+    <td width="254">存款日期 </td>
+    <td>DateTime</td>
+    <td>now()</td>
+    <td>&nbsp;</td>
+  </tr>
+  
+  <tr>
+    <td>UserSign</td>
+    <td width="254">签名档 </td>
+    <td>Ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserBio</td>
+    <td width="254">个人简介 </td>
+    <td>Ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UserNote</td>
+    <td width="254">用户备注 </td>
+    <td>ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<br /><br />
+<table width="780" border="0" align="center" cellpadding="3" cellspacing="0">
+  <tr>
+    <td align="left"><span class="TableNav"><a name="Votes"></a>表[Votes]</span></td>
+    <td align="right"><a href="#top">返回TOP</a></td>
+  </tr>
+</table>
+<table width="780" border="1" align="center" cellpadding="3" cellspacing="0">
+  <tr align="center">
+    <td width="142"><strong>字段名</strong></td>
+    <td width="242"><strong>字段中文说明</strong></td>
+    <td width="132"><strong>数据类型</strong></td>
+    <td width="120"><strong>默认值</strong></td>
+    <td width="120"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>ThreadID</td>
+    <td>主题ID</td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IsMultiplePoll</td>
+    <td>类型：0=单选，1=多选 </td>
+    <td>Int</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Expiry</td>
+    <td>过期时间 </td>
+    <td>DateTime</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Items</td>
+    <td>投票内容 </td>
+    <td>Ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Result</td>
+    <td>投票结果 </td>
+    <td>Ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>BallotUserList</td>
+    <td>投票用户名单 </td>
+    <td>Ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>BallotIPList</td>
+    <td>投票IP名单 </td>
+    <td>ntext</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+</body>
+</html>

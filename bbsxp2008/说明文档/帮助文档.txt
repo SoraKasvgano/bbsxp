@@ -1,0 +1,78 @@
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 论坛版本：BBSXP Version 2008					┃
+┃ 版权所有: YUZI.Net						┃
+┃ Copyright 1998-2008 YUZI.Net - All Rights Reserved.		┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃【版权声明】							┃
+┃ 本软体为共享软体(Shareware)提供个人网站免费使用。		┃
+┃ 未经YUZI书面授权许可，不得将之用于盈利或非盈利性的商业用途。	┃
+┃ 为适应实际的应用环境可进行必要的修改。			┃
+┃ 不得去除YUZI的版权标示，不得将修改后版本进行任何的商业行为。	┃
+┃ 使用该软件必须保留YUZI的版权声明。				┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ 文件名称：帮助文档						┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+Q: 如何更改数据库路径？
+A: 用记事本打开 Config.asp 文件进行修改
+
+
+Q: 我想更改管理密码？我忘记了后台管理密码？
+A: 重新运行 Install.asp 进行设定新密码
+
+
+Q: 我该如何进入后台管理？
+A: 请用管理员的身份登录后，论坛顶端就有显示 管理 的链接
+
+
+Q: 如何打开ACCESS数据库文件？
+A: 请使用 Microsoft Office Access 即可打开
+
+
+Q: 如何在网页中调用论坛帖子
+A: 调用代码如下
+   <script type="text/javascript" src="http://www.***.com/New.asp?ForumID=1&TopicCount=10&Showtime=1&icon=◎"></script>
+    GroupID:    指定论坛组的ID（若指定了此参数，则不需要再指定 ForumID 这个参数。）
+    ForumID:    指定论坛的ID
+    TopicCount: 显示多少条主题（最高100条）
+    TimeLimit:  显示多长时间内的帖子（单位：天）
+    Sort:       排序方式 ID Views Replies IsGood
+    icon:       标题前的符号
+    TitleLen:   显示标题的长度
+    Showtime:   显示发表时间 1=是 0=否
+
+
+Q: 为什么我后台管理有些功能不能使用？例：备份数据库、压缩数据库、查看占用空间等
+A: 您的主机不支持FSO，BBSXP有些功能将不能使用，比如删除上传文件等。
+
+
+Q: 如何增加论坛管理员的安全性？
+A: 1、管理员的密码强度至少需要达到强的级别
+   2、更改Admin_Default.asp的文件名，可以防止其他人登录，例如更该为Admin_Default1.asp
+
+
+Q: 如何将来BBSXP更改为UTF-8编码
+A: 1 首先将压缩包内所有目录下的 .htm .asp .js .xml 的文件的编码更改为UTF-8
+   2 将 .htm .asp .xml 文件中出现gb2312的字符全部替换为UTF-8
+   3 修改 conn.asp 文件中的 CODEPAGE=936 更改为 CODEPAGE=65001
+
+
+Q: 论坛的入口应该怎么写？
+A: 下面的代码插入即可
+   <form action="http://www.youname.com/bbsxp/Login.asp" method="POST">
+   用户名:<input type=text name="UserName" size=8>
+   密　码:<input type=password name="UserPassword" size=8>
+   <INPUT type=submit value=进入>
+   <INPUT type=reset value=取消></FORM>
+
+
+Q: 我是内网用户，发帖时部分表情图片看不到，应该怎么做？
+A: 由于BBSXP附加的一些表情调用BiaoQing.COM的图片，所以一些内网用户可能无法访问，请到后台设置表情的图片即可！
+
+
+Q: 无法创建数据库，安装ACCESS版本时提示“ACCESS 数据库没有被创建！未指定的错误(-2147467259)”？
+A: 由于MS Jet引擎没有对临时目录的写入权限，导致数据库创建失败。 
+   WINDOWS XP用户请在“C:\Windows\Temp”目录添加一个有权限的“Authenticated Users”用户即可！
+   Vista用户请在“C:\Windows\ServiceProfiles\NetworkService\AppData\Local\Temp”目录添加一个有权限的“Authenticated Users”用户即可！
+   具体设置权限步骤：右击Temp文件夹，选择“属性”->“安全”->“编辑”->“添加”，在下面的“输入对象名称来选择”中输入Authenticated Users，确定 -> 返回到“Temp 的权限”，将Authenticated Users的权限中的完全控制给勾上。）
+

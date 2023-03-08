@@ -1,0 +1,376 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>BBSXP API通行接口开发人员参考规范</title>
+</head>
+<head>
+<style type="text/css">
+body {margin:5px 15px; line-height:1.5}
+.code {
+	font-family:"Courier New", Courier, "宋体", monospace;
+	font-size:9pt;
+	padding:10px;
+	margin-left:6em;
+	text-indent:0;
+	width:500px;
+	border: 1px dashed #666666;
+	color:#FF3300;
+}
+em {color:#000099;}
+table.code {background:#666;color:#000;}
+th {background:#ccc;}
+td {text-align:center;background:#fff;}
+h1 {margin-top:40px;text-decoration: underline;}
+h2 {margin-left:2em;text-decoration:underline;}
+p {margin-left:4em;text-indent:2em;}
+p.description {margin:0;}
+h1.title {margin:0;text-align:center;}
+.foot {text-align:center;font-size:9pt;color:#666;}
+.pright {
+padding-left:80px;
+font-size:13px;
+}
+</style>
+</head>
+<body>
+<div id="dochead">
+	<h1 class="title">API 通行接口开发人员参考规范1.0</h1>
+	<p class="description">本规范其目的在于为不同的WEB应用按照统一的规范开发用户通行接口，以便实现不同WEB应用之间的用户数据同步。</p>
+  <p class="description">本规范不限制WEB应用开发所使用的平台、开发语言、数据库，可以适用于任何基于B/S架构的WEB应用。只要按照本规范提供完整接口和数据处理支持的WEB应用，均可称“支持BBSXP API 1.0”。</p>
+	<p class="description">支持本规范的所有WEB应用，其技术文档中应该提供对本规范中的元素支持程度的详细说明，以供其它WEB应用开发人员以及进行二次开发的用户参考。</p>
+	<h1 class="title">目 录</h1>
+	<ul>
+		<li><a href="#a">数据格式</a> </li>
+		<ol>
+			<li><a href="#a1">请求格式</a></li>
+			<li><a href="#a2">响应格式</a></li>
+		</ol>
+		<li><a href="#b">元素定义</a> </li>
+		<ol>
+			<li><a href="#b1">元素对照表</a></li>
+			<li><a href="#b2">元素使用说明</a></li>
+			<li><a href="#b3">接口安全码</a></li>
+			<!--<li><a href="#b4">元素值编码</a></li>-->
+		</ol>
+		<li><a href="#c">操作类型定义</a>
+			<ol>
+				<li><a href="#c1">检查用户名、邮箱是否可以注册</a></li>
+				<li><a href="#c2">注册新用户</a></li>
+				<li><a href="#c3">用户登录</a></li>
+				<li><a href="#c4">用户注销</a></li>
+				<li><a href="#c5">更新用户资料</a></li>
+				<li><a href="#">删除用户</a></li>
+				<li><a href="#c7">查询用户资料</a></li>
+			</ol>
+		</li>
+		<li><a href="#d">Cookies<u>同步操作说明</u></a></li>
+	</ul>
+</div>
+<div id="docbody">
+	<h1>一、数据格式<a name="a" id="a"></a></h1>
+	<h2>1.请求格式<a name="a1" id="a1"></a></h2>
+	<p>请求包必须是一个构造良好的xml文档，以post方式由XMLHttpRequest对象发送。</p>
+	<p>为了避免不同编码下的乱码，该xml中的文本应该用DOM创建而不能用字符串形式创建。</p>
+	<p>请求中的<strong>蓝色斜体部分在实际运用时要由实际值替代</strong>。每个元素的详细定义和数据格式参考“元素列表”，直接写出元素名的元素为所有请求包都必须提供的数据。</p>
+	<p class="code">POST HTTP/1.1<br />
+		Content-Type: text/xml; charset=<em>gb2312</em> <br />
+		<br />
+		&lt;?xml version=&quot;1.0&quot; encoding=&quot;<em>gb2312</em>&quot;?&gt;<br />
+		&lt;root&gt;<br />
+		 　&lt;appid&gt;<em>程序标识</em>&lt;/appid&gt;<br />
+		　&lt;action&gt;<em>操作类型</em>&lt;/action&gt;<br />
+		　&lt;syskey&gt;<em>安全码</em>&lt;/syskey&gt; <br />
+		　&lt;username&gt;<em>用户名</em>&lt;/username&gt;		<br />
+		<em>　&lt;可选元素列表 /&gt;</em><br />
+		&lt;/root&gt;</p>
+	<h2>2.响应格式<a name="a2" id="a2"></a></h2>
+	<p>响应包必须是一个构造良好的xml文档。</p>
+	<p>为了避免不同编码下的乱码，该xml中的文本应该用DOM创建而不能用字符串形式创建。</p>
+	<p>请求中的蓝色斜体部分在实际运用时要由实际值替代。每个元素的详细定义和数据格式参考“元素列表”，直接写出元素名的元素为所有请求包都必须提供的数据。</p>
+	<p>当操作状态为失败时，必须提供具体的错误说明。其它情况下，根据具体的操作类型和定义决定body及其子元素。</p>
+	<p class="code">HTTP/1.1 200 OK<br />
+		Content-Type: text/xml; charset=<em>gb2312</em><br />
+		Content-Length: length<br />
+		<br />
+		&lt;?xml version=&quot;1.0&quot; encoding=&quot;<em>gb2312</em>&quot;?&gt;<br />
+		&lt;root&gt;<br />
+		　&lt;appid&gt;<em>程序标识</em>&lt;/appid&gt;<br />
+		　&lt;status&gt;<em>操作结果</em>&lt;/status&gt;<br />
+		　&lt;body&gt;<br />
+		<em>　　 　</em>&lt;message&gt;<em>操作不成功时的错误说明</em>&lt;/message&gt;<em><br />
+		　&lt;可选元素列表 /&gt;<br />
+		</em>　&lt;/body&gt; <br />
+		&lt;/root&gt;</p>
+	<h1>二、元素定义<a name="b" id="b"></a></h1>
+	<h2>1.元素对照表<a name="b1" id="b1"></a></h2>
+	<table border="0" cellpadding="3" cellspacing="1" class="code">
+		<tr>
+			<th>类别</th>
+			<th>元素名称</th>
+			<th>数据格式</th>
+			<th>可选值</th>
+			<th>使用方式</th>
+			<th>备注</th>
+		</tr>
+		<tr>
+			<td rowspan="13">整<br />
+				<br />
+				合<br />
+				<br />
+				所<br />
+				<br />
+				需<br />
+				<br />
+				字<br />
+				<br />
+				段<br />
+				<br />			</td>
+			<td>root</td>
+			<td>--</td>
+			<td>--</td>
+			<td>通用</td>
+			<td>根元素</td>
+		</tr>
+		<tr>
+			<td>appid</td>
+			<td>string</td>
+			<td>bbsxp<br />
+				oblog<br />
+				other</td>
+			<td>通用</td>
+			<td>程序标识</td>
+		</tr>
+		<tr>
+			<td>action</td>
+			<td>string</td>
+		  <td>checkname<br />
+				reguser<br />
+				login<br />
+				update<br />
+				delete				</td>
+			<td>请求包</td>
+			<td>操作类型</td>
+		</tr>
+		<tr>
+			<td>syskey</td>
+			<td>string</td>
+			<td>接口安全码</td>
+			<td>请求包</td>
+			<td>安全校验码</td>
+		</tr>
+		<tr>
+			<td>status</td>
+			<td>integer</td>
+			<td>0=操作完成<br />
+			1=操作失败</td>
+			<td>返回包</td>
+			<td>操作结果</td>
+		</tr>
+		<tr>
+			<td>body</td>
+			<td>string|<br />
+				nodelist</td>
+			<td>--</td>
+			<td>返回包</td>
+			<td>响应信息或数据</td>
+		</tr>
+		<tr>
+			<td>message</td>
+			<td>string</td>
+			<td>--</td>
+			<td>返回包</td>
+			<td>操作失败时返回<br />
+				说明信息。</td>
+		</tr>
+		
+		<tr>
+			<td>username</td>
+			<td>string</td>
+			<td>--</td>
+			<td>请求包</td>
+			<td>用户名</td>
+		</tr>
+		<tr>
+			<td>password</td>
+			<td>string</td>
+			<td>--</td>
+			<td>请求包</td>
+			<td>用户密码<br />
+				(未加密)</td>
+		</tr>
+		<tr>
+			<td>email</td>
+			<td>string</td>
+			<td>--</td>
+			<td>通用</td>
+			<td>电子邮件</td>
+		</tr>
+		<tr>
+			<td>question</td>
+			<td>string</td>
+			<td>--</td>
+			<td>通用</td>
+			<td>密码提示问题</td>
+		</tr>
+		<tr>
+			<td>answer</td>
+			<td>string</td>
+			<td>--</td>
+			<td>通用</td>
+			<td>密码提示答案<br />
+				(未加密)</td>
+		</tr>
+		<tr>
+			<td>savecookie</td>
+			<td>string</td>
+			<td>0=不记录(默认)<br />
+				1=一周<br />
+				2=一月<br />
+				3=一年</td>
+			<td>通用</td>
+			<td>cookies保存时间</td>
+		</tr>
+		
+		<tr>
+		  <td rowspan="6">用<br />
+			  <br />
+			  户<br />
+			  <br />
+			  基<br />
+			  <br />
+			  本<br />
+			  <br />
+			  信<br />
+			  <br />
+			  息</td>
+			<td>birthday</td>
+			<td>date</td>
+			<td>--</td>
+			<td>通用</td>
+			<td>生日</td>
+		</tr>
+		<tr>
+			<td>qq</td>
+			<td>integer</td>
+			<td>--</td>
+			<td>通用</td>
+			<td>QQ帐号</td>
+	  </tr>
+		<tr>
+			<td>msn</td>
+			<td>string</td>
+			<td>--</td>
+			<td>通用</td>
+			<td>MSN帐号</td>
+		</tr>
+		
+		<tr>
+			<td>address</td>
+			<td>string</td>
+			<td>--</td>
+			<td>通用</td>
+			<td>通讯地址</td>
+		</tr>
+		
+		<tr>
+			<td>homepage</td>
+			<td>string</td>
+			<td>--</td>
+			<td>通用</td>
+			<td>个人主页</td>
+		</tr>
+		<tr>
+			<td>userip</td>
+			<td>string</td>
+			<td>--</td>
+			<td>通用</td>
+			<td>用户IP地址</td>
+		</tr>
+		<tr>
+			<td rowspan="4">用<br />
+				<br />
+				户<br />
+				<br />
+				属<br />
+				<br />
+				性</td>
+			<td>jointime</td>
+			<td>datatime</td>
+			<td>--</td>
+			<td>通用</td>
+			<td>注册日期</td>
+		</tr>
+		<tr>
+			<td>experience</td>
+			<td>integer</td>
+			<td>--</td>
+			<td>通用</td>
+			<td>经验值</td>
+		</tr>
+		
+		<tr>
+			<td>posts</td>
+			<td>integer</td>
+			<td>--</td>
+			<td>通用</td>
+			<td>发表信息数</td>
+		</tr>
+		<tr>
+			<td>userstatus</td>
+			<td>integer</td>
+			<td>0=正等待审核<br />
+				1=已通过审核<br />
+				2=已禁用<br />
+				3=未通过审核</td>
+			<td>通用</td>
+			<td>用户状态</td>
+		</tr>
+	</table>
+	<h2>2. 元素使用说明<a name="b2" id="b2"></a></h2>
+	<p>本规范定义的元素共分为三组，其中第一组为实现整合通行所有程序必须支持的元素，第二、三组为各程序开发人员根据自己的情况可以自行决定是否支持的元素。</p>
+	<p>第二三组元素的主要作用在于方便利用整合接口进行跨程序的扩展功能开发。</p>
+	<p>整合接口提供的各种操作可以提供或者不提供这两组元素，由开发人员自决，</p>
+	<h2>3. 接口安全码<a name="b3" id="b3"></a></h2>
+	<p>
+	接口安全码“syskey”是用来检验程序间传输的数据来源合法性的依据。syskey元素是一个文本元素，值为一个定长16字节的字符串。该字符串由当前传输中包含的用户名和各程序接口配置文件中用户定义的密钥(APISafeKey)连接起来，再进行16位MD5加密得出。如：<br>
+　</p>
+	<p class="code">Set APIObject = New BBSXPAPI <br>
+	APIObject.AppendNode &quot;action&quot;,&quot;login&quot;,0,False<br>
+	APIObject.AppendNode &quot;username&quot;,UserName,1,False
+	<br>
+	SafeKey= LCase(Mid(Md5(ApiObject.XmlNode(&quot;username&quot;)&amp;APISafeKey),9,16))	<br>
+	APIObject.AppendNode &quot;syskey&quot;,SafeKey,0,False
+	<h1>三、操作类型说明<a name="c" id="c"></a></h1>
+	<p>以下部分对action元素的各项值对应的操作做出统一规定，格式为：</p>
+	<p>操作类型(必须元素1,必须元素2...)</p>
+	<p>每个操作的定义之后，对该操作所实现的功能和返回值做具体说明。其中appid、syskey、username为所有请求操作必须提供的参数，在定义中予以省略。返回操作中的xml均不包含syskey、username两个元素。</p>
+	<p>返回值中status不等于0的，返回值必须包括body元素及其子元素messenge。</p>
+	<h2>1.检查用户名、邮箱是否可以注册<a name="c1" id="c1"></a></h2>
+	<p>定义：CheckUser() </p>
+	<p>作用：对请求中提供的用户名及email进行验证，检查是否符合注册要求。</p>
+	<h2>2.注册用户<a name="c2" id="c2"></a></h2>
+	<p>定义：AddUser(password,email)</p>
+	<p>作用：利用请求中提供的用户信息，进行用户注册。</p>
+	<h2>3. 用户登录<a name="c3" id="c3"></a></h2>
+	<p>定义：Login(password)</p>
+	<p>作用：利用请求中提供的用户名、密码和cookies选项（默认为0，不保存)为用户登录。</p>
+	<h2>4. 更新用户资料<a name="c5" id="c5"></a></h2>
+	<p>定义：EditUser()</p>
+	<p>作用：利用请求中提供的信息来更新用户资料。</p>
+	<h2>5. 删除用户<a name="c6" id="c6"></a></h2>
+	<p>定义：DelUser()</p>
+	<p>作用：根据请求中提供的用户名，对用户进行删除：</p>
+	<p class="code">&lt;username&gt;<em>用户名</em>&lt;/username&gt;</p>
+	<h1>四、COOKIE同步操作说明<a name="c" id="c"></a></h1>
+	<p>为了解决跨站同步登陆，接收请求的检验方在响应请求的接口文件中，必须增加处理Cookie的逻辑，当检测到QueryString中包含数据时，说明是对Cookies操作的请求，要完成下列工作：</p>
+	<p>1.从Request.QueryString中提取四个参数：syskey,username,password,savecookie；</p>
+	<p>2.利用username和syskey，进行安全码验证，验证成功，则利用username和password，根据savecookie的值，处理本地cookie，使指定用户处于登陆状态。</p>
+	<p>3.完成，无需返回任何信息。</p>
+	<p>发送请求方解析检验方返回的xml数据说明可以登陆成功时，则应当构造一个script脚本调用，输出到页面的HTML代码。
+    <strong>当password为空表示注销COOKIE信息</strong>。</p>
+	<p>该脚本的路径为：</p>
+	<p>接口文件URL?syskey=<em>16位安全码</em>&amp;username=<em>用户名</em>&amp;password=<em>MD5加密的16位用户密码</em>&amp;savecookie=<em>Cookie保存选项</em></p>
+</div>
+</body>
+</html>

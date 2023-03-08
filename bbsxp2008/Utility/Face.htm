@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html>
+<head>
+<meta http-equiv="content-Type" content="text/html; charset=gb2312" />
+<title>显示图片</title>
+<style type="text/css">BODY{FONT-SIZE:9pt;}</style>
+</head>
+<body bgcolor="#F5F5F5">
+
+<b><font color="#E9592F" size="4">显示图片</font><br />
+<br />
+</b>使用独特的图片来表现您自己。可以从下面选择一张显示图片，或利用任何图片创建您自己的显示图片。您可以随时更改您在您网友眼中的形象。<br />
+<script language="JavaScript" type="text/javascript">
+function insertface(url){
+	window.opener.document.form.UserFaceUrl.value=url;
+	window.opener.document.getElementById("tus").src=url;
+	window.close();
+}
+
+function ToggleMenuOnOff (ID) {
+
+var btn =document.getElementById("tIB_" + ID);
+var layer =document.getElementById("tPan_" + ID);
+var Images=document.getElementById("Images_" + ID);
+
+if (ID=='1'){
+ImagesList='<img style=CURSOR:pointer onclick=insertface("images/face/BlueFish.jpg") src=../Images/Face/BlueFish.JPG title="蓝色的鱼">　 <img style=CURSOR:pointer onclick=insertface("images/face/Chimpanzee.jpg") src=../Images/Face/Chimpanzee.JPG title="黑猩猩">　 <img style=CURSOR:pointer onclick=insertface("images/face/Dog.jpg") src=../Images/Face/Dog.JPG title="狗">　 <img style=CURSOR:pointer onclick=insertface("images/face/dolphin.jpg") src=../Images/Face/dolphin.JPG title="海豚">　 <img style=CURSOR:pointer onclick=insertface("images/face/frog.jpg") src=../Images/Face/frog.JPG title="青蛙">　 <img style=CURSOR:pointer onclick=insertface("images/face/GuineaPig.jpg") src=../Images/Face/GuineaPig.JPG title="豚鼠">　 <img style=CURSOR:pointer onclick=insertface("images/face/JellyFish.jpg") src=../Images/Face/JellyFish.JPG title="水母">　 <img style=CURSOR:pointer onclick=insertface("images/face/Kitty.jpg") src=../Images/Face/Kitty.JPG title="小猫">　 <img style=CURSOR:pointer onclick=insertface("images/face/LadyBug.jpg") src=../Images/Face/LadyBug.JPG title="瓢虫">　 <img style=CURSOR:pointer onclick=insertface("images/face/Monkey.jpg") src=../Images/Face/Monkey.JPG title="猴子">　 <img style=CURSOR:pointer onclick=insertface("images/face/Ostrich.jpg") src=../Images/Face/Ostrich.JPG title="鸵鸟">　 <img style=CURSOR:pointer onclick=insertface("images/face/owl.jpg") src=../Images/Face/owl.JPG title="猫头鹰">　 <img style=CURSOR:pointer onclick=insertface("images/face/Panda.jpg") src=../Images/Face/Panda.JPG title="熊猫">　 <img style=CURSOR:pointer onclick=insertface("images/face/Pig.jpg") src=../Images/Face/Pig.JPG title="猪">　 <img style=CURSOR:pointer onclick=insertface("images/face/Salamander.jpg") src=../Images/Face/Salamander.JPG title="蝾螈">　 <img style=CURSOR:pointer onclick=insertface("images/face/Spider.jpg") src=../Images/Face/Spider.JPG title="蜘蛛">　 <img style=CURSOR:pointer onclick=insertface("images/face/Starfish.jpg") src=../Images/Face/Starfish.JPG title="海星">　 <img style=CURSOR:pointer onclick=insertface("images/face/Tiger.jpg") src=../Images/Face/Tiger.JPG title="老虎">'
+}else
+if (ID=='2'){
+ImagesList='<img style=CURSOR:pointer onclick=insertface("images/face/Airplane.jpg") src=../Images/Face/Airplane.JPG title="飞机">　 <img style=CURSOR:pointer onclick=insertface("images/face/AngryCat.jpg") src=../Images/Face/AngryCat.JPG title="愤怒的猫">　 <img style=CURSOR:pointer onclick=insertface("images/face/AngryDog.jpg") src=../Images/Face/AngryDog.JPG title="愤怒的狗">　 <img style=CURSOR:pointer onclick=insertface("images/face/BlueDragon.jpg") src=../Images/Face/BlueDragon.JPG title="怪鱼">　 <img style=CURSOR:pointer onclick=insertface("images/face/Chef.jpg") src=../Images/Face/Chef.JPG title="厨师">　 <img style=CURSOR:pointer onclick=insertface("images/face/Cowboy.jpg") src=../Images/Face/Cowboy.JPG title="牛仔">　 <img style=CURSOR:pointer onclick=insertface("images/face/Crab.jpg") src=../Images/Face/Crab.JPG title="螃蟹">　 <img style=CURSOR:pointer onclick=insertface("images/face/DancingPenguin.jpg") src=../Images/Face/DancingPenguin.JPG title="跳舞的企鹅">　 <img style=CURSOR:pointer onclick=insertface("images/face/Doctor.jpg") src=../Images/Face/Doctor.JPG title="医生">　 <img style=CURSOR:pointer onclick=insertface("images/face/EvilNurse.jpg") src=../Images/Face/EvilNurse.JPG title="邪恶的护士">　 <img style=CURSOR:pointer onclick=insertface("images/face/FireFrog.jpg") src=../Images/Face/FireFrog.JPG title="喷火的青蛙">　 <img style=CURSOR:pointer onclick=insertface("images/face/FriendlyLion.jpg") src=../Images/Face/FriendlyLion.JPG title="友好的狮子">　 <img style=CURSOR:pointer onclick=insertface("images/face/ShinyStarFace.jpg") src=../Images/Face/ShinyStarFace.JPG title="发光的星星">　 <img style=CURSOR:pointer onclick=insertface("images/face/ShockedMan.jpg") src=../Images/Face/ShockedMan.JPG title="受惊吓的男人">　 <img style=CURSOR:pointer onclick=insertface("images/face/ShoppingGirl.jpg") src=../Images/Face/ShoppingGirl.JPG title="购物女孩">　 <img style=CURSOR:pointer onclick=insertface("images/face/SingingWoman.jpg") src=../Images/Face/SingingWoman.JPG title="唱歌的女人">　 <img style=CURSOR:pointer onclick=insertface("images/face/SmilingPear.jpg") src=../Images/Face/SmilingPear.JPG title="微笑的梨">　 <img style=CURSOR:pointer onclick=insertface("images/face/SuperHero.jpg") src=../Images/Face/SuperHero.JPG title="超人">　 <img style=CURSOR:pointer onclick=insertface("images/face/Umbrella.jpg") src=../Images/Face/Umbrella.JPG title="雨伞">　 <img style=CURSOR:pointer onclick=insertface("images/face/WalkmanGuy.jpg") src=../Images/Face/WalkmanGuy.JPG title="听随身听的人">'
+}else
+if (ID=='3'){
+ImagesList='<img style=CURSOR:pointer onclick=insertface("images/face/Buddha.jpg") src=../Images/Face/Buddha.JPG title="佛像">　 <img style=CURSOR:pointer onclick=insertface("images/face/Egypt.jpg") src=../Images/Face/Egypt.JPG title="埃及">　 <img style=CURSOR:pointer onclick=insertface("images/face/Greece.jpg") src=../Images/Face/Greece.JPG title="希腊">　 <img style=CURSOR:pointer onclick=insertface("images/face/London.jpg") src=../Images/Face/London.JPG title="伦敦">　 <img style=CURSOR:pointer onclick=insertface("images/face/NewYork.jpg") src=../Images/Face/NewYork.JPG title="纽约">　 <img style=CURSOR:pointer onclick=insertface("images/face/Pagoda.jpg") src=../Images/Face/Pagoda.JPG title="塔">　 <img style=CURSOR:pointer onclick=insertface("images/face/Sphinx.jpg") src=../Images/Face/Sphinx.JPG title="狮身人面像">'
+}else
+if (ID=='4'){
+ImagesList='<img style=CURSOR:pointer onclick=insertface("images/face/Cactus.jpg") src=../Images/Face/Cactus.JPG title="仙人掌">　 <img style=CURSOR:pointer onclick=insertface("images/face/flower.jpg") src=../Images/Face/flower.JPG title="花">　 <img style=CURSOR:pointer onclick=insertface("images/face/leaf.jpg") src=../Images/Face/leaf.JPG title="叶子">　 <img style=CURSOR:pointer onclick=insertface("images/face/orange.jpg") src=../Images/Face/orange.JPG title="柑桔">　 <img style=CURSOR:pointer onclick=insertface("images/face/RedFlower.jpg") src=../Images/Face/RedFlower.JPG title="红色的花">　 <img style=CURSOR:pointer onclick=insertface("images/face/redpepper.jpg") src=../Images/Face/redpepper.JPG title="红辣椒">　 <img style=CURSOR:pointer onclick=insertface("images/face/WaterLily.jpg") src=../Images/Face/WaterLily.JPG title="荷花">'
+}else
+if (ID=='5'){
+ImagesList='<img style=CURSOR:pointer onclick=insertface("images/face/balloon.jpg") src=../Images/Face/balloon.JPG title="热气球">　 <img style=CURSOR:pointer onclick=insertface("images/face/beachball.jpg") src=../Images/Face/beachball.JPG title="海滨气球">　 <img style=CURSOR:pointer onclick=insertface("images/face/boat.jpg") src=../Images/Face/boat.JPG title="帆船">　 <img style=CURSOR:pointer onclick=insertface("images/face/clownshoe.jpg") src=../Images/Face/clownshoe.JPG title="小丑鞋">　 <img style=CURSOR:pointer onclick=insertface("images/face/CoffeeCup.jpg") src=../Images/Face/CoffeeCup.JPG title="咖啡杯">　 <img style=CURSOR:pointer onclick=insertface("images/face/cowboyhat.jpg") src=../Images/Face/cowboyhat.JPG title="牛仔帽">　 <img style=CURSOR:pointer onclick=insertface("images/face/Dice.jpg") src=../Images/Face/Dice.JPG title="骰子">　 <img style=CURSOR:pointer onclick=insertface("images/face/DiverDuck.jpg") src=../Images/Face/DiverDuck.JPG title="潜水鸭子">　 <img style=CURSOR:pointer onclick=insertface("images/face/FlipFlop.jpg") src=../Images/Face/FlipFlop.JPG title="飞盘">　 <img style=CURSOR:pointer onclick=insertface("images/face/gnome.jpg") src=../Images/Face/gnome.JPG title="小矮人">　 <img style=CURSOR:pointer onclick=insertface("images/face/hat.jpg") src=../Images/Face/hat.JPG title="帽子">　 <img style=CURSOR:pointer onclick=insertface("images/face/Skull.jpg") src=../Images/Face/Skull.JPG title="骷髅">　 <img style=CURSOR:pointer onclick=insertface("images/face/Sun.jpg") src=../Images/Face/Sun.JPG title="太阳">　 <img style=CURSOR:pointer onclick=insertface("images/face/Sushi.jpg") src=../Images/Face/Sushi.JPG title="寿司">　 <img style=CURSOR:pointer onclick=insertface("images/face/teddy.jpg") src=../Images/Face/teddy.JPG title="玩具熊">　 <img style=CURSOR:pointer onclick=insertface("images/face/tricycle.jpg") src=../Images/Face/tricycle.JPG title="三轮车">　 <img style=CURSOR:pointer onclick=insertface("images/face/wagon.jpg") src=../Images/Face/wagon.JPG title="小货车">'
+}else
+if (ID=='6'){
+ImagesList='<img style=CURSOR:pointer onclick=insertface("images/face/candle.jpg") src=../Images/Face/candle.JPG title="蜡烛">　 <img style=CURSOR:pointer onclick=insertface("images/face/FlyingHeart.jpg") src=../Images/Face/FlyingHeart.JPG title="飞扬的心">　 <img style=CURSOR:pointer onclick=insertface("images/face/Geisha.jpg") src=../Images/Face/Geisha.JPG title="艺妓">　 <img style=CURSOR:pointer onclick=insertface("images/face/HeartAce.jpg") src=../Images/Face/HeartAce.JPG title="红桃 A">　 <img style=CURSOR:pointer onclick=insertface("images/face/HeartandCrown.jpg") src=../Images/Face/HeartandCrown.JPG title="心与皇冠">　 <img style=CURSOR:pointer onclick=insertface("images/face/OrangeHeart.jpg") src=../Images/Face/OrangeHeart.JPG title="橙色的心">'
+}else
+if (ID=='7'){
+ImagesList='<img style=CURSOR:pointer onclick=insertface("images/face/Alien.jpg") src=../Images/Face/Alien.JPG title="外星人">　 <img style=CURSOR:pointer onclick=insertface("images/face/AlienHead.jpg") src=../Images/Face/AlienHead.JPG title="外星人的脑袋">　 <img style=CURSOR:pointer onclick=insertface("images/face/GreenAlien.jpg") src=../Images/Face/GreenAlien.JPG title="绿色的外星人">　 <img style=CURSOR:pointer onclick=insertface("images/face/LittleRobot.jpg") src=../Images/Face/LittleRobot.JPG title="小机器人">　 <img style=CURSOR:pointer onclick=insertface("images/face/RobotInsect.jpg") src=../Images/Face/RobotInsect.JPG title="机器虫子">　 <img style=CURSOR:pointer onclick=insertface("images/face/space.jpg") src=../Images/Face/space.JPG title="太空">　 <img style=CURSOR:pointer onclick=insertface("images/face/UFO.jpg") src=../Images/Face/UFO.JPG title="UFO">'
+}else
+if (ID=='8'){
+ImagesList='<img style=CURSOR:pointer onclick=insertface("images/face/LaughingStar.jpg") src=../Images/Face/LaughingStar.JPG title="大笑的星星">　 <img style=CURSOR:pointer onclick=insertface("images/face/PinkDevil.jpg") src=../Images/Face/PinkDevil.JPG title="粉红恶魔">　 <img style=CURSOR:pointer onclick=insertface("images/face/ProudCat.jpg") src=../Images/Face/ProudCat.JPG title="傲慢的猫">　 <img style=CURSOR:pointer onclick=insertface("images/face/ProudDog.jpg") src=../Images/Face/ProudDog.JPG title="傲慢的狗">　 <img style=CURSOR:pointer onclick=insertface("images/face/SeeSawBoy.jpg") src=../Images/Face/SeeSawBoy.JPG title="玩跷跷板的小孩">'
+}else
+if (ID=='9'){
+ImagesList='<img style=CURSOR:pointer onclick=insertface("images/face/Baseball.jpg") src=../Images/Face/Baseball.JPG title="棒球">　 <img style=CURSOR:pointer onclick=insertface("images/face/Basketball.jpg") src=../Images/Face/Basketball.JPG title="篮球">　 <img style=CURSOR:pointer onclick=insertface("images/face/Diving.jpg") src=../Images/Face/Diving.JPG title="潜水">　 <img style=CURSOR:pointer onclick=insertface("images/face/Golf.jpg") src=../Images/Face/Golf.JPG title="高尔夫球">　 <img style=CURSOR:pointer onclick=insertface("images/face/Hockey.jpg") src=../Images/Face/Hockey.JPG title="曲棍球">　 <img style=CURSOR:pointer onclick=insertface("images/face/iceskates.jpg") src=../Images/Face/iceskates.JPG title="溜冰鞋">　 <img style=CURSOR:pointer onclick=insertface("images/face/MountainBiking.jpg") src=../Images/Face/MountainBiking.JPG title="山地自行车">　 <img style=CURSOR:pointer onclick=insertface("images/face/SnowBoarding.jpg") src=../Images/Face/SnowBoarding.JPG title="滑雪板">　 <img style=CURSOR:pointer onclick=insertface("images/face/Yoga.jpg") src=../Images/Face/Yoga.JPG title="瑜伽">'
+}
+ if (layer.style.display == 'none') {
+		layer.style.display = '';
+		btn.src="../Images/expanded_norm.gif";
+		Images.innerHTML=ImagesList;
+    } else {
+      layer.style.display = 'none';
+      btn.src="../Images/collapsed_norm.gif";
+    }
+}
+</script>
+<br />
+<table border="0" width="100%">
+	<tr>
+		<td>
+		<a onmousedown="ToggleMenuOnOff('1')" style=CURSOR:pointer><img src="../Images/collapsed_norm.gif" id="tIB_1" border="0" /> 
+		<b><font color="#004E82">动物</font></b></a> </td>
+	</tr>
+	<tr>
+		<td><div id="tPan_1" style="display:none;"><span id=Images_1></span></div></td>
+	</tr>
+	<tr>
+		<td>
+		<a onmousedown="ToggleMenuOnOff('2')" style=CURSOR:pointer>
+		<img src="../Images/collapsed_norm.gif" id="tIB_2" border="0" /> 
+		<font color="#004E82"><b>卡通</b></font></a> </td>
+	</tr>
+	<tr>
+		<td><div id="tPan_2" style="display:none;"><span id=Images_2></span></div></td>
+	</tr>
+	<tr>
+		<td>
+		<a onmousedown="ToggleMenuOnOff('3')" style=CURSOR:pointer>
+		<img src="../Images/collapsed_norm.gif" id="tIB_3" border="0" /> 
+		<font color="#004E82"><b>景点</b></font></a> </td>
+	</tr>
+	<tr>
+		<td><div id="tPan_3" style="display:none;"><span id=Images_3></span></div></td>
+	</tr>
+	<tr>
+		<td>
+		<a onmousedown="ToggleMenuOnOff('4')" style=CURSOR:pointer>
+		<img src="../Images/collapsed_norm.gif" id="tIB_4" border="0" /> 
+		<font color="#004E82"><b>自然</b></font></a> </td>
+	</tr>
+	<tr>
+		<td><div id="tPan_4" style="display:none;"><span id=Images_4></span></div></td>
+	</tr>
+	<tr>
+		<td>
+		<a onmousedown="ToggleMenuOnOff('5')" style=CURSOR:pointer>
+		<img src="../Images/collapsed_norm.gif" id="tIB_5" border="0" /> 
+		<font color="#004E82"><b>其他</b></font></a></td>
+	</tr>
+	<tr>
+		<td><div id="tPan_5" style="display:none;"><span id=Images_5></span></div></td>
+	</tr>
+	<tr>
+		<td>
+		<a onmousedown="ToggleMenuOnOff('6')" style=CURSOR:pointer>
+		<img src="../Images/collapsed_norm.gif" id="tIB_6" border="0" /> 
+		<font color="#004E82"><b>浪漫</b></font></a></td>
+	</tr>
+	<tr>
+		<td><div id="tPan_6" style="display:none;"><span id=Images_6></span></div></td>
+	</tr>
+	<tr>
+		<td>
+		<a onmousedown="ToggleMenuOnOff('7')" style=CURSOR:pointer>
+		<img src="../Images/collapsed_norm.gif" id="tIB_7" border="0" /> 
+		<font color="#004E82"><b>科幻</b></font></a></td>
+	</tr>
+	<tr>
+		<td><div id="tPan_7" style="display:none;"><span id=Images_7></span></div></td>
+	</tr>
+	<tr>
+		<td>
+		<a onmousedown="ToggleMenuOnOff('8')" style=CURSOR:pointer>
+		<img src="../Images/collapsed_norm.gif" id="tIB_8" border="0" /> 
+		<font color="#004E82"><b>笑脸</b></font></a></td>
+	</tr>
+	<tr>
+		<td><div id="tPan_8" style="display:none;"><span id=Images_8></span></div></td>
+	</tr>
+	<tr>
+		<td>
+		<a onmousedown="ToggleMenuOnOff('9')" style=CURSOR:pointer>
+		<img src="../Images/collapsed_norm.gif" id="tIB_9" border="0" /> 
+		<font color="#004E82"><b>运动</b></font></a></td>
+	</tr>
+	<tr>
+		<td><div id="tPan_9" style="display:none;"><span id=Images_9></span></div></td>
+	</tr>
+</table>
+<script language="JavaScript" type="text/javascript">
+ToggleMenuOnOff('1')
+</script>
+</body>
+</html>

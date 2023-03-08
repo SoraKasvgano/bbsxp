@@ -1,0 +1,508 @@
+a{text-decoration: none; color: #22229C;cursor:pointer;}
+A:hover{text-decoration:underline; color: #22229C;}
+body,TD{font-size:9pt;word-break:break-all;}	/* 字体大小 */
+body{background:#DEDEDE;margin:0px 10px; }/* 背景颜色 */
+table{text-align:left;}	/* 表格对齐方式 */
+
+ /* 分栏 Frame START */
+.FrameLeftMenu {
+	margin:0px;
+	color:#FFFFFF;
+	background: #869BBF;
+}
+.FrameLeftMenu a {
+	font-size: 10pt;
+	color:#FFFFFF;
+}
+
+.deeptree SPAN {
+	padding-top: 2px; 
+	padding-right: 4px; 
+	padding-left: 4px; 
+	padding-bottom: 2px;
+	height: 20px;
+	cursor:pointer;
+	color:#FFFFFF;
+	font-size: 10pt;
+}
+.deeptree SPAN.NodeOver {
+	text-decoration:underline;
+}
+ /* 分栏 Frame END */
+
+
+/* 页眉 */
+.CommonHeader{width:100%; margin: 0 auto;}
+
+/* 顶部 CSS 设置 START */
+.CommonTop {
+	background-image:url('header.gif');
+	height:110px;
+	position:relative;
+	color: #000000;
+	text-align:left;
+}
+.CommonTop a{color: #0B008B;}
+
+.CommonTop .CommonTopLogo {
+	top:0;
+	left:0;
+	width:210px;
+	height:87px;
+	padding-top: 0px;
+	padding-left: 0px;	
+	position: absolute;
+	text-align:left;
+	background:url(logo.gif) no-repeat;
+	background-position:center;
+	cursor:pointer;
+}
+
+.CommonTop .CommonTopBanner {
+	top:0;
+	right:0;
+	padding-top: 20px;
+	padding-right: 10px;
+	position:absolute;
+	text-align:right;
+}
+.CommonTop .CommonTopFrameText {
+	bottom:0;
+	left:0;
+	padding-left: 10px;
+	padding-bottom: 3px;
+	position:absolute;
+}
+
+.CommonTop .CommonTopMenuText {
+	bottom:0;
+	right:0;
+	padding-right: 10px;
+	padding-bottom: 3px;
+	position:absolute;
+}
+/* 顶部 CSS 设置 END */
+
+/* 内容区设置 */
+.CommonBody
+{
+	background: #ffffff;
+	padding-top: 10px; 
+	padding-bottom: 5px; 
+	padding-left: 10px; 
+	padding-right: 10px;
+	text-align:center;
+}
+
+/* 标签 */
+.TagList { width:100%;padding:9px;}
+.TagList li {float:left; list-style-type:none; width:14%; padding:3px 0; display:inline;white-space:nowrap;}
+.TagList li a { float:left;width:80%;white-space:nowrap;overflow:hidden; text-overflow:ellipsis;}
+
+/* 导航条设置 */
+.CommonBreadCrumbArea {
+	padding-top: 0px;
+	padding-left: 15px;
+	padding-right:0px;
+	text-align: left;
+	font-weight: bold;
+	color: #000000;
+	height: 20px;
+	background:none;
+}
+
+/* 列表TABLE */
+.CommonListArea{background-color: #D1D1E1;margin-top: 5px;border: 1px solid #869BBF;}
+
+/* 列表标题 */
+.CommonListTitle{background:url('gradient_tcat.gif');color:#FFFFFF;font-weight:bold; }
+.CommonListTitle a{color:#FFFFFF;}
+
+/* 列表页眉 */
+.CommonListHeader{background:#465E8C url('gradient_thead.gif');color:#ffffff;}
+.CommonListHeader a{color:#FFFFFF;}
+
+/* 列表单元格 */
+.CommonListCell{background-color: #F5F5FF;}
+.CommonListCellChecked{background-color: #FFFFCC;}
+
+/* 用户 */
+.UserList { width:100%;}
+.UserList li {float:left; list-style-type:none; width:10%; padding:3px 0; display:inline;white-space:nowrap;}
+.UserList li a { float:left;width:80%;white-space:nowrap;overflow:hidden; text-overflow:ellipsis;}
+
+
+
+
+/* 友情链接 */
+.LinkList { width:100%;}
+.LinkList li {float:left; list-style-type:none; width:11%; padding:3px 0; display:inline;white-space:nowrap;}
+.LinkList li a { float:left;width:80%;white-space:nowrap;overflow:hidden; text-overflow:ellipsis;}
+/* 底部设置 */
+.CommonFooter
+{
+	padding-top: 10px;
+	padding-left:0px;
+	padding-right:0px;
+	padding-bottom:0px;
+	background:#DEDEDE;
+	border-top:none;
+	text-align:center;
+	color:#000000;
+	width:100%;
+	height:45px;
+}
+.CommonFooter li {float:left;background:#DEDEDE; list-style-type:none; padding:3px 0; display:inline; line-height:1.5}
+.CommonFooter a{color:#000000;}
+
+/* ShowPost.asp 单元格*/
+.ForumPostUserArea {
+	border-right: #e1e1e1 1px solid;
+	width: 180px;
+	text-align: center
+}
+.ForumPostButtons {
+	text-align:right;
+	padding-bottom: 4px;
+	border-bottom: #e1e1e1 1px solid;
+}
+.ForumPostBodyArea {
+	padding-top: 10px; 
+	padding-bottom: 10px; 
+	padding-left: 10px; 
+	padding-right: 10px;
+}
+.ForumPostTitle {
+	font-weight: bold;
+	font-size: 120%;
+	padding-bottom: 12px;
+}
+.ForumPostContentText {
+	width:100%;
+	overflow:auto;
+}
+.ForumPostSignature {
+	border-top: #ddd 1px solid;
+	margin: 1em;
+	padding-top: 1em;
+	font-size: 90%;
+	max-height:80px;
+	overflow:hidden;
+}
+
+/* 菜单样式 */
+.menuskin {
+	border-right: #0A2999 1px solid ;
+	border-top: #0A2999 1px solid;
+	border-left: #0A2999 1px solid;
+	border-bottom: #0A2999 1px solid;
+	background-image:url('menubg.gif');
+	background-repeat: repeat-y;
+	background-color: #FFFFFF;
+	position: absolute;
+	VISIBILITY: hidden;
+	z-index:1;
+}
+.menuskin div {
+	margin: 2px;
+	font-size:9pt;
+	line-height:14pt;
+}
+.menuitems {
+	padding-right: 1px;
+	padding-top: 1px;
+	padding-left: 1px;
+	padding-bottom: 1px;
+}
+.mouseoverstyle {
+	padding-right: 0px;
+	padding-top: 0px;
+	padding-left: 0px;
+	padding-bottom: 0px;
+	margin: 20px;
+	font-size:9pt;
+	line-height:14pt;
+	border-right: #0B008B 1px solid;
+	border-top: #0B008B 1px solid;
+	border-left: #0B008B 1px solid;
+	border-bottom: #0B008B 1px solid;
+	background-color: #FFEEC2 
+}
+.menuskin A {padding-right:10px;padding-left:30px;}
+
+/* BB 代码引用样式 */
+BLOCKQUOTE {
+	border-right: #cccccc 1px dotted; padding-right: 4px; border-top: #cccccc 1px dotted; padding-left: 4px; padding-bottom: 4px; margin: 16px; border-left: #cccccc 1px dotted; padding-top: 4px; border-bottom: #cccccc 1px dotted
+}
+
+/*Pannel Style !important for Firefox*/
+.MenuTag {
+	height:26px !important; height: 25px; overflow:visible !important; overflow:hidden; border-bottom:#869BBF 1px solid;
+}
+.MenuTag li {
+	padding: 5px 10px; *padding-top:6px !important;*padding-top:5px; margin-left:8px; position: relative; float: left; cursor: pointer; text-align:center; list-style-type:none; border:#869BBF 1px solid;background-color:#869BBF; color:#FFFFFF;
+}
+.MenuTag li.NowTag {
+	background-color:#FFFFFF; border-bottom:#FFFFFF 1px solid; color:#22229C; padding-top:6px; margin-bottom:-1px !important;
+}
+.PannelBody {border:1px #869BBF solid; border-top:none; background-color: #FFFFFF;}
+.PannelBody td{ padding:5px 0 2px 20px; line-height:20px; color:#333;}
+
+
+/* Text Button */
+.CommonImageTextButton
+{
+	display: inline-table;
+	display: -moz-inline-box;
+	display: inline-block;
+	padding: 4px;
+	margin: 1px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #999999;
+	border-top-color: #cccccc;
+	border-left-color: #cccccc;
+	background-color: #eeeeee;
+	color: #333333;
+	font-family: Tahoma, Arial, Helvetica;
+	font-weight: bold;
+	background-repeat: no-repeat;
+	background-position: 1px 1px;
+	padding-left: 22px;
+	line-height: normal;
+	white-space: nowrap;
+}
+
+.CommonImageTextButton:LINK
+{
+	text-decoration: none;
+	color: #333333;
+	margin: 1px;
+}
+
+.CommonImageTextButton:VISITED
+{
+	text-decoration: none;
+	color: #333333;
+}
+
+.CommonImageTextButton:ACTIVE
+{
+	text-decoration: none;
+	color: #333333;
+}
+
+.CommonImageTextButton:HOVER
+{
+	text-decoration: none;
+	color: #333333;
+	background-color: #dddddd;
+}
+
+.CommonTextButton
+{
+	display: inline-table;
+	display: -moz-inline-box;
+	display: inline-block;
+	background-color: #eeeeee;
+	border-style: solid;
+	border-color: #999999;
+	border-width: 1px;
+	cursor: pointer;
+	position: relative;
+	top: 2px;
+	padding: 5px;
+	margin: 1px;
+	margin-bottom: 0px;
+	font-family: Tahoma, Arial, Helvetica;
+	font-weight: bold;
+}
+
+.CommonTextButton:LINK
+{
+	text-decoration: none;
+	color: #333333;
+	margin: 1px;
+}
+
+.CommonTextButton:VISITED
+{
+	text-decoration: none;
+	color: #333333;
+}
+
+.CommonTextButton:ACTIVE
+{
+	text-decoration: none;
+	color: #333333;
+}
+
+.CommonTextButton:HOVER
+{
+	text-decoration: underline;
+	color: #333333;
+	background-color: #dddddd;
+}
+
+/*弹出菜单DIV样式*/
+.PopupMenu {
+	border: #999 1px solid;
+	position: absolute;
+	background: #FFF;
+
+}
+.PopupMenu A {
+	padding-right: 15px;
+	padding-left: 25px;
+	padding-bottom: 3px;
+	padding-top: 3px;
+	DISPLAY: block;
+	background-repeat: no-repeat;
+	background-position: 1px;
+	color: #333
+}
+.PopupMenu A:hover {
+	background: #D1D1E1;
+	color:#000;
+	background-repeat: no-repeat;
+	background-position: 1px;
+}
+
+/* Modal Styles */
+.CommonModalMask
+{
+	background-image: url("../../images/maskBG.png") !important; /* For browsers Moz, Opera, etc. */
+}
+
+.CommonModal
+{
+	border-style: solid;
+	border-width: 1px;
+	border-color: #888888;
+	border-right-width: 3px;
+	border-right-color: #888888;
+	border-bottom-width: 3px;
+	border-bottom-color: #888888;
+	background-color: #eeeeee;
+}
+
+.CommonModalTitle
+{
+	background-color: #869BBF;
+	padding: 4px;
+	border-style: solid;
+	border-width: 0px;
+	border-bottom-width: 1px;
+	border-color: #D1D1E1;
+	color: #ffffff;
+	font-family: Arial, Helvetica;
+	font-size: 110%;
+	font-weight: bold;
+	margin: 0px;
+	height: 1.3em;
+	position: relative;
+	z-index: 203;
+	cursor: move
+}
+
+.CommonModalClose
+{
+	width: 33px;
+	height: 12px;
+	background-image: url(../../images/close.gif);
+	background-repeat: no-repeat;
+	overflow: hidden;
+	cursor: pointer;
+	float: right;
+}
+
+.CommonModalContent
+{
+	background-color: #ffffff;
+}
+
+.CommonModalFooter
+{
+	border-style: solid;
+	border-width: 0px;
+	border-top-width: 1px;
+	border-color: #cccccc;
+	background-color: #eeeeee;
+	padding: 2px;
+}
+
+.CommonModalResize
+{
+	width: 14px;
+	height: 14px;
+	background-image: url(../../images/resize.gif);
+	background-repeat: no-repeat;
+	overflow: hidden;
+	float: right;
+	cursor: se-resize;
+}
+
+/* Help Icon */
+.helpicon { line-height: normal; background-position: left top; background-repeat: no-repeat; }
+.helpicon img { height: 20px; width: 16px; padding-Right:5px; vertical-align: middle; }
+a.helpicon{ background-image: url(../../images/help_out.gif); }
+a.helpicon:hover, a.helpicon:active { background-image:url(../../images/help_hover.gif); cursor:help; }
+
+/*多页 换页样式*/
+.PageInation {
+	margin: 1px 0px;
+	clear: both;
+}
+.PageInation a {
+	float: left;
+	padding: 4px 6px 4px 6px;
+	text-decoration: none;
+	cursor:default;
+}
+.MultiPages {
+	background-color: #F5FBFF;
+	border: 1px solid #869BBF;
+	margin-right:1px;
+	vertical-align: middle;
+	font-weight: bold;
+}
+.PageNum {
+	background-color: #FFFFFF;
+	border: 1px solid #869BBF;
+	margin-right:1px;
+	vertical-align: middle;
+}
+a.PageNum:hover {
+	background-color: #E1E4F2;
+	border: 1px solid #869BBF;
+	text-decoration: none;
+	cursor:pointer;
+}
+.CurrentPage {
+	margin-right:1px;
+	border: 1px solid #869BBF;
+	vertical-align: middle;
+	background-color: #E1E4F2;
+	font-weight: bold;
+}
+.PageInput {
+	border:1px solid #869BBF;
+	padding: 2px 0px 1px 1px;
+	width: 40px;
+	height: 18px !important;
+	height: 16px;
+	margin: 0px;
+	background: #FFFFFF;
+}
+
+
+
+/*比例条码*/
+.percent {
+	border: 1px solid #465E8C;
+	width:99%;
+}
+.percent div {
+	background: #869BBF;
+	height: 10px;
+}

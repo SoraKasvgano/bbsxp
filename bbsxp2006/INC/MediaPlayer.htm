@@ -1,0 +1,45 @@
+<html>
+
+<head>
+<meta http-equiv="content-Type" content="text/html; charset=gb2312">
+<title>插入 FLASH、MediaPlayer、RealPlayer 文件</title>
+</head>
+<style>TD {FONT-SIZE: 12px}</style>
+<body bgcolor="ECE9D8">
+
+<script event="onclick" for="Ok" language="JavaScript">
+	var s=path.value;
+	if (s.length<10)
+	{
+		alert("请输入正确的文件链接地址！");
+	}else{
+		var autostart,ShowStatusBar
+		autostart=document.getElementById("autostart").checked
+		ShowStatusBar=document.getElementById("ShowStatusBar").checked
+		window.returnValue = "<embed src="+path.value+" width="+selwidth.value+" height="+selheight.value+" AUTOSTART="+autostart+" ShowStatusBar="+ShowStatusBar+"\>"
+		window.close();
+	}
+</script>
+
+<table border="0" cellpadding="0" cellspacing="5" align="center" style="padding-left:10px;width=100%">
+	<tr>
+		<td>文件地址 : <input id="path" size="30" value="http://"></td>
+	</tr>
+	<tr>
+		<td>文件宽度 : <input id="selwidth" size="4" value="400">&nbsp; 文件高度 :
+		<input id="selheight" size="4" value="300"></td>
+	</tr>
+	<tr>
+		<td align="center"> <input type="checkbox" value="1" name="autostart" id=autostart><label for="autostart">自动播放</label> 
+		<input type="checkbox" value="1" name="ShowStatusBar" id=ShowStatusBar checked><label for="ShowStatusBar">显示状态栏</label></td>
+	</tr>
+
+	<tr>
+		<td align="middle"><button id="Ok" type="submit">确 定</button>&nbsp;
+		<button onclick="window.close();">关 闭</button></td>
+	</tr>
+</table>
+
+</body>
+
+</html>

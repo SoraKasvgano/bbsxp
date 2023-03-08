@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="gb2312"?>
+<Themes>
+	<Theme Name="default">默认风格</Theme>
+	<Theme Name="a">灰石风格</Theme>
+	<Theme Name="b">清淡风格</Theme>
+	<Theme Name="c">淡蓝风格</Theme>
+</Themes>

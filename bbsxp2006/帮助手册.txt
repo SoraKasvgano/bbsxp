@@ -1,0 +1,60 @@
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 论坛版本：BBSXP Version 6.0.0                                      ┃
+┃ 版权所有: YUZI Studio (YUZI.net)                                   ┃
+┃ Copyright 1998-2006 YUZI.net - All Rights Reserved.                ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃【版权声明】                                                        ┃
+┃ 本软体为共享软体(shareware)提供个人网站、商业网站免费使用。        ┃
+┃ 为适应实际的计算机应用环境或者改进其功能、性能，可以进行必要的修改 ┃
+┃ 但不得去除YUZI工作室的版权标示，不得将修改后版本进行任何的商业行为 ┃
+┃ 使用该软件必须保留YUZI工作室的版权声明，将该软件从原有自然语言文字 ┃
+┃ 转换成另一自然语言文字的，仍应注明出处。                           ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ 文件名称：帮助手册                                                 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+Q: 如何更改数据库路径？
+A: 用记事本打开 Conn.asp 文件进行修改
+
+Q: 我想更改管理密码该怎么办？
+A: 重新运行 Install.asp 进行设定新密码
+
+Q: 我该如何进入后台管理？
+A: 请用管理员的身份登录后，论坛顶端就有显示 管理 的链接
+
+Q: 我喜欢/不喜欢左栏该如何去掉？
+A: 使用Default.htm访问带有左栏菜单，使用Default.asp访问不带有左栏菜单
+
+Q: 如何打开ACCESS数据库文件？
+A: 请使用 Microsoft Office Access 即可打开
+
+Q: 如何在网页中调用论坛帖子
+A: 调用代码如下
+   <script src=http://www.***.com/New.asp?ForumID=1&TopicCount=10&Showtime=1&icon=◎></script>
+    ForumID:    指定论坛的ID
+    TopicCount: 显示多少条主题（最高100条）
+    TimeLimit:  显示多长时间内的帖子（单位：天）
+    Sort:       排序方式 ID Views Replies IsGood
+    icon:       标题前的符号
+    TitleLen:   显示标题的长度
+    Showtime:   显示发表时间 1=是 0=否
+
+
+Q: 为什么我后台管理有些功能不能使用？例：备份数据库、压缩数据库、查看占用空间等
+A: 您的主机不支持FSO，BBSXP有些功能将不能使用
+
+Q: 论坛的入口应该怎么写？
+A: 下面的代码插入即可
+   <form action="http://www.youname.com/bbsxp/Login.asp" method="POST">
+   用户名:<input type=text name="UserName" size=8>
+   密　码:<input type=password name="Userpass" size=8>
+   <INPUT type=submit value=进入>
+   <INPUT type=reset value=取消></FORM>
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                       YUZI网络有限公司                         ┃
+┃                                                                ┃
+┃  电话：0595-22205407      0595-22205408      0595-22205409     ┃
+┃  网址：http://www.bbsxp.com                                    ┃
+┃  地址：中国福建省泉州市泉秀路农行大厦25楼I座                   ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛

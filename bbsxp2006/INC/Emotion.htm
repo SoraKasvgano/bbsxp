@@ -1,0 +1,40 @@
+<html>
+
+<head>
+<meta http-equiv="content-Type" content="text/html; charset=gb2312">
+<title>选择表情</title>
+</head>
+<style>TD {FONT-SIZE: 12px}</style>
+<body bgcolor="ECE9D8">
+
+<script language="JavaScript">
+function em(which){
+window.returnValue = "<img src=images/Emotions/"+which+".gif>";
+window.close();
+}
+</script>
+<table border="0" cellpadding="0" cellspacing="5" align="center" style="padding-left:10px;width=100%">
+<TR>
+<TD align=center width="90%">
+<div id="Emview" align="center"></div></TD>
+<TD align=center width="10%">
+<b><a  onClick="emotion(1)"   style='cursor:hand' >上页</a><br>
+<br>
+<a  onClick="emotion(2)"   style='cursor:hand' >下页</a> </b>
+</TD></TR>
+</table>
+<script>
+function emotion(no){
+view=""
+for (i=(no-1)*40+1;i<=no*40&&i<=80;i++){
+view+="<td onclick=em('"+i+"') style=cursor:hand align=center onmouseover=\"this.style.borderWidth='1pt';this.style.borderColor='blue';this.style.borderStyle='solid'\" style=\"BORDER-RIGHT: white 1pt solid; BORDER-TOP: white 1pt solid; BORDER-LEFT: white 1pt solid; BORDER-BOTTOM: white 1pt solid\" onmouseout=\"this.style.borderWidth='1pt';this.style.borderColor='white';\"><img src=../images/Emotions/"+i+".gif></td>";
+if (i%10==0){
+view+="</tr><tr>";
+}
+}
+document.all.Emview.innerHTML="<table border=0 width=100% cellspacing=0 cellpadding=0><tr>"+view+"</tr></table>";
+}
+</script>
+<script defer>emotion(1)</script>
+</body>
+</html>

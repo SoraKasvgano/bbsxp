@@ -1,0 +1,78 @@
+<script src=inc/BBSXP.js></script>
+<script>
+var undefined
+skins=getCookie('skins')
+if(skins==undefined){skins=1;}
+document.write("<Link href=images/skins/"+skins+"/bbs.css rel=stylesheet>")
+</script>
+
+<style type="text/css">.navPoint {COLOR: white; CURSOR: hand; FONT-FAMILY: Webdings; FONT-SIZE: 9pt}</style>
+<body style="MARGIN: 0px" scroll=no>
+
+
+<script>
+if(self!=top){top.location=self.location;}
+function switchSysBar(){
+if (switchPoint.innerText==3){
+switchPoint.innerText=4
+document.all("frmTitle").style.display="none"
+}else{
+switchPoint.innerText=3
+document.all("frmTitle").style.display=""
+}}
+</script>
+
+
+<table border="0" cellPadding="0" cellSpacing="0" height="100%" width="100%">
+  <tr>
+    <td align="middle" noWrap vAlign="center" id="frmTitle">
+    
+    
+    <iframe frameBorder="0" id="carnoc" name="carnoc" scrolling="no" src="Left.asp" style="HEIGHT: 100%; VISIBILITY: inherit; WIDTH: 150px; Z-INDEX: 2">
+    </iframe>
+    
+    
+
+    </td>
+    <td style="WIDTH: 9pt" class=division>
+    <table border="0" cellPadding="0" cellSpacing="0" height="100%">
+      <tr>
+        <td style="HEIGHT: 100%" onclick="switchSysBar()">
+        <font style="FONT-SIZE: 9pt; CURSOR: default; COLOR: #ffffff">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <span class="navPoint" id="switchPoint" title="¹Ø±Õ/´ò¿ª×óÀ¸">3</span><br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        ÆÁÄ»ÇÐ»» </font></td>
+      </tr>
+    </table>
+    </td>
+    <td style="WIDTH: 100%">
+
+    <iframe frameBorder="0" id="main" name="main" scrolling="yes" src="Default.asp" style="HEIGHT: 100%; VISIBILITY: inherit; WIDTH: 100%; Z-INDEX: 1">
+    </iframe>
+
+    </td>
+  </tr>
+</table>
+</html>
+<script>
+if(window.screen.width<'1024'){switchSysBar()}
+</script>

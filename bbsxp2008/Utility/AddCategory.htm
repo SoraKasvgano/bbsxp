@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>添加类别</title>
+	<style type="text/css">body,table{FONT-SIZE:9pt;}</style>
+</head>
+<script language="JavaScript" type="text/javascript">
+function ChangeCategory()
+{
+	CategoryName=document.form1.CategoryName.value;
+	if(CategoryName.length < 2){alert("类别名称不能小于2个字符！");return false;}
+	this.focus();
+	i=parent.document.form.Category.length;
+	parent.document.form.Category.options[i]=new Option(CategoryName,CategoryName);
+	parent.document.form.Category.options[i].selected=true;
+	parent.BBSXP_Modal.Close();
+}
+</script>
+
+<body>
+
+<form name=form1 onsubmit="return ChangeCategory()">
+输入类别名称，然后单击“添加”。类别名称会显示在列表的底部。<br /><br />
+<input size="30" maxlength="25" name="CategoryName" >  <input type="submit" value=" 添加 " />
+</form>
+
+
+</body>
+</html>

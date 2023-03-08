@@ -1,0 +1,33 @@
+<HTML><HEAD>
+<meta http-equiv="content-Type" content="text/html; charset=gb2312">
+<TITLE>替换</TITLE>
+</HEAD>
+<style>TD {FONT-SIZE: 12px}</style>
+<body bgcolor=ECE9D8>
+<SCRIPT LANGUAGE=JavaScript FOR=Ok EVENT=onclick>
+  window.returnValue = a.value+"*"+b.value+"*"+(c.checked?"1":"0")+"*";
+  window.close();
+</SCRIPT>
+<table border="0" cellspacing="10" cellpadding="0" align=center style="padding-left:10px">
+<tr>
+	<td align=center>
+
+	查 找 内 容 : <INPUT TYPE=TEXT SIZE=15 ID=a  >
+	</td>
+	<td rowspan="4" valign="top">
+<BUTTON ID=Ok TYPE=SUBMIT> 替 换 </BUTTON><br><br><BUTTON ONCLICK="window.close();"> 取 消 </BUTTON>
+</td>
+</tr>
+<tr>
+	<td>
+	替 换 为 :&nbsp;&nbsp;&nbsp; <INPUT TYPE=TEXT SIZE=15 ID=b >
+	</td>
+</tr>
+<tr>
+	<td>
+	<input type=checkbox id=c> <label for="c">区分大小写</label></td>
+</tr>
+
+</table>
+</BODY>   
+</HTML>
