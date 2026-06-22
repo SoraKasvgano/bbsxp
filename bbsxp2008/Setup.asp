@@ -18,7 +18,9 @@ if SiteConfig("SiteDisabled")=1 then
 end if
 
 if Request_Method = "POST" then
-	if instr(""&Http_Referer&"","http://"&Server_Name&"") = 0 and instr(Script_Name,"login.asp")=0 then error("<li>引用页错误！"&Http_Referer&"<li>系统无法识别您的引用页！<li>建议您关闭防火墙后再提交此信息！")
+	RefererHost=LCase(""&Http_Referer&"")
+	ServerHost=LCase(""&Server_Name&"")
+	if instr(RefererHost,"http://"&ServerHost&"") = 0 and instr(RefererHost,"https://"&ServerHost&"") = 0 and instr(Script_Name,"login.asp")=0 then error("<li>引用页错误！<li>系统无法识别您的引用页！<li>建议您关闭防火墙后再提交此信息！")
 end if
 
 Sub HtmlHead
@@ -219,7 +221,9 @@ if Left(Message,4)<>"<li>" then Message="<li>"&Message
 					<%=Message%>
 					<li><a href=Default.asp>返回论坛首页</a></li>
 					<script language="javascript" type="text/javascript">
-					document.write("<li><a href="+document.referrer+">"+document.referrer+"</a></li>");
+					if(document.referrer && document.referrer.indexOf(location.protocol + "//" + location.host) == 0){
+						document.write("<li><a href=\""+encodeURI(document.referrer)+"\">返回上一页</a></li>");
+					}
 					</script>
 					</ul>
 				</td>
@@ -231,7 +235,7 @@ if Left(Message,4)<>"<li>" then Message="<li>"&Message
 </table>
 
 <script language="JavaScript" type="text/javascript">
-Url="<%=Url%>";
+Url="<%=SafeJsString(SafeRedirectUrl(Url))%>";
 if (!Url){Url=document.referrer}
 function countDown(secs){
 	$("yu").innerHTML=secs;
@@ -441,7 +445,7 @@ End Sub
 Sub Alert(Message)
 %>
 	<script language="JavaScript" type="text/javascript">
-	alert('<%=Message%>');
+	alert('<%=SafeJsString(Message)%>');
 	window.history.back();
 	</script>
 	<script language="JavaScript" type="text/javascript">window.close();</script>
@@ -454,7 +458,7 @@ End Sub
 Sub AlertForModal(Message)
 %>
 	<script language="JavaScript" type="text/javascript">
-	alert('<%=Message%>');
+	alert('<%=SafeJsString(Message)%>');
 	<%if Request_Method <> "POST" then%>
 	parent.BBSXP_Modal.Close();
 	<%else%>

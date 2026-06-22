@@ -7,6 +7,10 @@ if SiteConfig("PublicMemberList")=0 then error("系统已禁止显示成员列表。")
 if SiteConfig("MemberListAdvancedSearch")=1 then
 	SearchType=HTMLEncode(Request("SearchType"))
 	SearchText=HTMLEncode(Request("SearchText"))
+	Select Case SearchType
+		Case "UserName","UserEmail","all"
+		Case Else SearchType="UserName"
+	End Select
 	SearchRole=RequestInt("SearchRole")
 	CurrentAccountStatus=HTMLEncode(Request("CurrentAccountStatus"))
 	JoinedDateComparer=Left(Request("JoinedDateComparer"),1)
@@ -15,7 +19,7 @@ if SiteConfig("MemberListAdvancedSearch")=1 then
 	LastPostDate_picker=HTMLEncode(Request("LastPostDate_picker"))
 	
 	if SearchType="all" then SearchType="UserEmail like '%"&SearchText&"%' or UserName"
-	if SearchText<>"" and len(HTMLEncode(Request("SearchType")))<10 then item=item&" and ("&SearchType&" like '%"&SearchText&"%')"
+	if SearchText<>"" then item=item&" and ("&SearchType&" like '%"&SearchText&"%')"
 	if JoinedDate_picker<>"" and JoinedDateComparer<>"" then item=item&" and DateDiff("&SqlChar&"d"&SqlChar&",'"&JoinedDate_picker&"',UserRegisterTime) "&JoinedDateComparer&" 0"
 	if LastPostDate_picker<>"" and LastPostDateComparer<>"" then item=item&" and DateDiff("&SqlChar&"d"&SqlChar&",'"&LastPostDate_picker&"',UserActivityTime) "&LastPostDateComparer&" 0"
 	if SearchRole >0 then item=item&" and UserRoleID="&SearchRole&""
@@ -43,11 +47,12 @@ end if
 	</tr>
 <%
 MemberSortDropDown=HTMLEncode(Request("MemberSortDropDown"))
-SortOrderDropDown=HTMLEncode(Request("SortOrderDropDown"))
-if Len(MemberSortDropDown)>20 then error("非法操作")
-if len(SortOrderDropDown)>4 then error("非法操作")
+SortOrderDropDown=SafeSqlOrder(Request("SortOrderDropDown"),"Desc")
+Select Case MemberSortDropDown
+	Case "UserName","UserEmail","TotalPosts","UserRegisterTime","UserActivityTime","UserRoleID","Reputation","UserMoney","experience"
+	Case Else MemberSortDropDown=""
+End Select
 
-if SortOrderDropDown="" then SortOrderDropDown="Desc"
 if MemberSortDropDown<>"" then SqlOrder=" order by "&MemberSortDropDown&" "&SortOrderDropDown
 if MemberSortDropDown="UserRoleID" then SqlOrder=" order by "&MemberSortDropDown&""
 

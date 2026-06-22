@@ -336,7 +336,7 @@ end select
 
 Sub CommonBread
 %>
-<div class="CommonBreadCrumbArea"><%=ClubTree%> ¡ú <a href="?menu=<%=Request("menu")%>"><%=ForumTitle%></a></div>
+<div class="CommonBreadCrumbArea"><%=ClubTree%> ¡ú <a href="?menu=<%=HTMLEncode(Request("menu"))%>"><%=ForumTitle%></a></div>
 <table border="0" width="100%" align="center">
 	<tr>
 		<td align=right>

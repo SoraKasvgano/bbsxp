@@ -4,19 +4,25 @@ SiteSettings=Conn.Execute("[BBSXP_SiteSettings]")
 CookieUserName=HTMLEncode(unescape(Request.Cookies("UserName")))
 
 if CookieUserName<>empty then
-''''''''''''''''''第一次来'''''''''''''''''''''''''''''
+sql="select * from [BBSXP_Users] where UserName='"&SqlString(CookieUserName)&"'"
+Set Rs=Conn.Execute(SQL)
+if Rs.eof then
+Response.Cookies("UserName")=""
+Response.Cookies("Userpass")=""
+elseif Request.Cookies("Userpass") <> Rs("Userpass") then
+Response.Cookies("UserName")=""
+Response.Cookies("Userpass")=""
+else
+''''''''''''''''''��һ����'''''''''''''''''''''''''''''
 if Request.Cookies("Onlinetime")=empty then
-Conn.execute("update [BBSXP_Users] set UserDegree=UserDegree+1,UserLandTime="&SqlNowString&",UserLastIP='"&Request.ServerVariables("REMOTE_ADDR")&"' where UserName='"&CookieUserName&"'")
+Conn.execute("update [BBSXP_Users] set UserDegree=UserDegree+1,UserLandTime="&SqlNowString&",UserLastIP='"&SqlString(Request.ServerVariables("REMOTE_ADDR"))&"' where UserName='"&SqlString(CookieUserName)&"'")
 Response.Cookies("Onlinetime")=now()
 end if
 ''''''''''''''''''''''''''''
-sql="select * from [BBSXP_Users] where UserName='"&CookieUserName&"'"
-Set Rs=Conn.Execute(SQL)
-if Rs.eof then Response.Cookies("UserName")=""
-if Request.Cookies("Userpass") <> Rs("Userpass") then Response.Cookies("UserName")=""
 membercode=Rs("membercode")
-Userface=""&Rs("Userface")&""
+Userface=SafeUrl(Rs("Userface"))
 NewMessage=Rs("NewMessage")
+end if
 set rs=nothing
 end if
 
@@ -27,7 +33,13 @@ if instr("|"&Request.ServerVariables("REMOTE_ADDR")&"","|"&filtrate(i)&"") > 0 t
 next
 end if
 
-if Request.Cookies("skins")=empty then Response.Cookies("skins")=SiteSettings("DefaultSiteStyle")
+if Request.Cookies("skins")=empty then
+CurrentSkin=SafeThemeName(SiteSettings("DefaultSiteStyle"))
+Response.Cookies("skins")=CurrentSkin
+else
+CurrentSkin=SafeThemeName(Request.Cookies("skins"))
+if CurrentSkin<>Request.Cookies("skins") then Response.Cookies("skins")=CurrentSkin
+end if
 if ""&SiteSettings("nowdate")&""<>""&date()&"" then
 Conn.execute("update [BBSXP_SiteSettings] set Nowdate='"&date()&"'")
 Conn.execute("update [BBSXP_Statistics_Site] set TodayPost=0")
@@ -40,8 +52,189 @@ startime=timer()
 Set rs = Server.CreateObject("ADODB.Recordset")
 Server.ScriptTimeout=SiteSettings("Timeout")'设置脚本超时时间 单位:秒
 
-response.write "<html><head><meta http-equiv=content-Type content=text/html;charset=gb2312><meta name=keywords content='"&SiteSettings("MetaKeywords")&"'><meta name=description content='"&SiteSettings("MetaDescription")&"'></head><script src=inc/BBSXP.js></script><script src=images/skins/"&Request.Cookies("skins")&"/bbs.js></script><Link href=images/skins/"&Request.Cookies("skins")&"/bbs.css rel=stylesheet>"
+response.write "<html><head><meta http-equiv=content-Type content=text/html;charset=gb2312><meta name=keywords content='"&SiteSettings("MetaKeywords")&"'><meta name=description content='"&SiteSettings("MetaDescription")&"'></head><script src=inc/BBSXP.js></script><script src=images/skins/"&CurrentSkin&"/bbs.js></script><Link href=images/skins/"&CurrentSkin&"/bbs.css rel=stylesheet>"
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function RegExpTest(Pattern,Value)
+Set regEx = New RegExp
+regEx.Pattern = Pattern
+regEx.IgnoreCase = False
+regEx.Global = False
+RegExpTest = regEx.Test(""&Value&"")
+Set regEx = Nothing
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function SafeJsString(Value)
+Value=""&Value&""
+Value=Replace(Value,"\","\\")
+Value=Replace(Value,"'",Chr(92)&"'")
+Value=Replace(Value,Chr(34),Chr(92)&Chr(34))
+Value=Replace(Value,Chr(13),Chr(92)&"n")
+Value=Replace(Value,Chr(10),Chr(92)&"n")
+Value=Replace(Value,"</","<"&Chr(92)&"/")
+SafeJsString=Value
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function SafeUrl(Value)
+Dim TempUrl, LowerUrl, ColonPos, SchemePart
+TempUrl=Trim(""&Value&"")
+TempUrl=Replace(TempUrl,Chr(0),"")
+TempUrl=Replace(TempUrl,Chr(9),"")
+TempUrl=Replace(TempUrl,Chr(10),"")
+TempUrl=Replace(TempUrl,Chr(13),"")
+TempUrl=Replace(TempUrl,Chr(34),"")
+TempUrl=Replace(TempUrl,"'","")
+TempUrl=Replace(TempUrl,"<","")
+TempUrl=Replace(TempUrl,">","")
+LowerUrl=LCase(Replace(Replace(Replace(TempUrl,"&#58;",":"),"&#x3a;",":"),"&colon;",":"))
+ColonPos=InStr(LowerUrl,":")
+If ColonPos>0 Then
+SchemePart=Left(LowerUrl,ColonPos-1)
+If (InStr(SchemePart,"&")>0 Or InStr(SchemePart,"#")>0 Or InStr(SchemePart,";")>0) And InStr(SchemePart,"/")=0 And InStr(SchemePart,"?")=0 Then TempUrl=""
+End If
+If Left(LowerUrl,11)="javascript:" Or Left(LowerUrl,9)="vbscript:" Or Left(LowerUrl,5)="data:" Then TempUrl=""
+SafeUrl=TempUrl
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function SafeRedirectUrl(Value)
+Dim TempUrl, LowerUrl, HostName, SiteUrl
+TempUrl=SafeUrl(Value)
+LowerUrl=LCase(TempUrl)
+HostName=LCase(Request.ServerVariables("HTTP_HOST"))
+SiteUrl=LCase(""&SiteSettings("SiteURL")&"")
+If TempUrl="" Then
+SafeRedirectUrl=""
+ElseIf Left(TempUrl,1)="/" Then
+If Left(TempUrl,2)="//" Or InStr(TempUrl,"\")>0 Then TempUrl="Default.asp"
+SafeRedirectUrl=TempUrl
+ElseIf Left(LowerUrl,7)="http://" Or Left(LowerUrl,8)="https://" Then
+If (HostName<>"" And InStr(LowerUrl,"//"&HostName&"/")=1) Or (SiteUrl<>"" And InStr(LowerUrl,SiteUrl)=1) Then
+SafeRedirectUrl=TempUrl
+Else
+SafeRedirectUrl="Default.asp"
+End If
+ElseIf InStr(TempUrl,":")>0 Or Left(TempUrl,1)="#" Or InStr(TempUrl,"\")>0 Then
+SafeRedirectUrl="Default.asp"
+Else
+SafeRedirectUrl=TempUrl
+End If
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function SafeThemeName(Value)
+Dim TempValue
+TempValue=Trim(""&Value&"")
+If Not RegExpTest("^[A-Za-z0-9_-]+$",TempValue) Then TempValue="default"
+SafeThemeName=TempValue
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function SafeFileName(Value)
+Dim TempValue
+TempValue=""&Value&""
+TempValue=Replace(TempValue,"\","_")
+TempValue=Replace(TempValue,"/","_")
+TempValue=Replace(TempValue,":","_")
+TempValue=Replace(TempValue,"*","_")
+TempValue=Replace(TempValue,"?","_")
+TempValue=Replace(TempValue,Chr(34),"_")
+TempValue=Replace(TempValue,"<","_")
+TempValue=Replace(TempValue,">","_")
+TempValue=Replace(TempValue,"|","_")
+TempValue=Replace(TempValue,Chr(13),"")
+TempValue=Replace(TempValue,Chr(10),"")
+If Trim(TempValue)="" Then TempValue="download"
+SafeFileName=TempValue
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function SafeDbRelativePath(Value)
+Dim TempPath, LowerPath
+TempPath=Trim(""&Value&"")
+TempPath=Replace(TempPath,"\","/")
+TempPath=Replace(TempPath,Chr(0),"")
+TempPath=Replace(TempPath,Chr(9),"")
+TempPath=Replace(TempPath,Chr(10),"")
+TempPath=Replace(TempPath,Chr(13),"")
+LowerPath=LCase(TempPath)
+If TempPath="" Or InStr(LowerPath,"..")>0 Or InStr(LowerPath,":")>0 Or Left(LowerPath,1)="/" Or Left(LowerPath,2)="//" Or Right(LowerPath,4)<>".mdb" Then
+SafeDbRelativePath=""
+Else
+SafeDbRelativePath=TempPath
+End If
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function SafeDateSuffix()
+SafeDateSuffix=Year(Date())&Right("0"&Month(Date()),2)&Right("0"&Day(Date()),2)
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function SqlString(Value)
+SqlString=Replace(""&Value&"","'","''")
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function RequestInt(Name)
+If IsNumeric(Request(Name)) Then
+RequestInt=CLng(Request(Name))
+Else
+RequestInt=0
+End If
+End Function
+Function SafeLongValue(Value, DefaultValue)
+Dim TempNumber
+On Error Resume Next
+TempNumber=CLng(Value)
+If Err.Number<>0 Then
+Err.Clear
+TempNumber=DefaultValue
+End If
+On Error GoTo 0
+SafeLongValue=TempNumber
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function SafeSqlOrder(Value,DefaultValue)
+Value=LCase(Trim(""&Value&""))
+If Value="asc" Or Value="desc" Then
+SafeSqlOrder=Value
+Else
+SafeSqlOrder=DefaultValue
+End If
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function SafeTableSuffix(Value)
+Dim TempValue
+TempValue=Trim(""&Value&"")
+If TempValue="" Then
+SafeTableSuffix=""
+ElseIf RegExpTest("^[1-9]$",TempValue) Then
+SafeTableSuffix=TempValue
+Else
+SafeTableSuffix=""
+End If
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function SafeUpFileDir(Value)
+Dim TempValue, DirPart, DirParts, i
+TempValue=Trim(""&Value&"")
+TempValue=Replace(TempValue,"\","/")
+TempValue=Replace(TempValue,Chr(0),"")
+TempValue=Replace(TempValue,Chr(9),"")
+TempValue=Replace(TempValue,Chr(10),"")
+TempValue=Replace(TempValue,Chr(13),"")
+If TempValue="" Then
+SafeUpFileDir=""
+Exit Function
+End If
+If InStr(TempValue,"..")>0 Or InStr(TempValue,":")>0 Or Left(TempValue,1)="/" Or Left(TempValue,2)="//" Then
+SafeUpFileDir=""
+Exit Function
+End If
+DirParts=Split(TempValue,"/")
+For i=0 To UBound(DirParts)
+DirPart=Trim(DirParts(i))
+If DirPart="" Or Not RegExpTest("^[A-Za-z0-9_-]+$",DirPart) Then
+SafeUpFileDir=""
+Exit Function
+End If
+Next
+SafeUpFileDir=Join(DirParts,"/")
+End Function
 function HTMLEncode(fString)
 fString=replace(fString,";","&#59;")
 fString=replace(fString,"<","&lt;")
@@ -87,6 +280,7 @@ str=ReplaceText(str,"\[URL=([^[]*)\]","<A TARGET=_blank HREF=$1>")
 str=ReplaceText(str,"\[\/URL\]","</A>")
 str=ReplaceText(str,"\[EMAIL\](\S+\@[^[]*)(\[\/EMAIL\])","<a href=mailto:$1>$1</a>")
 str=ReplaceText(str,"\[IMG\]([^[]*)(\[\/IMG\])","<img border=0 src=$1>")
+str=ReplaceText(str,"(href|src)=([""']?)(javascript|vbscript|data):","$1=$2#")
 YbbEncode=str
 End Function
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -119,7 +313,7 @@ if CookieUserName=empty then
 %>  <a href="Login.asp">请先登录</a> |  <a href="CreateUser.asp">
 	注册</a> |  <a href="RecoverPassword.asp">
 	忘记密码</a> |  <a href="Online.asp">
-	在线情况</a> | <a href="Search.asp?ForumID=<%=Request("ForumID")%>">
+	在线情况</a> | <a href="Search.asp?ForumID=<%=RequestInt("ForumID")%>">
 	搜索</a> | <a href="Help.asp">
 	帮助</a> </td></tr></table></td></tr></table><br>
 <%else%>
@@ -200,12 +394,12 @@ if toptrue<>1 then top
 htmlend
 end sub
 sub error2(Message)
-%><script>alert('<%=Message%>');history.back();</script><script>window.close();</script><%
+%><script>alert('<%=SafeJsString(Message)%>');history.back();</script><script>window.close();</script><%
 CloseDatabase
 end sub
 ''''''''''''''''''''''''''''''''
 sub Log(Message)
-Conn.Execute("insert into [BBSXP_Log] (UserName,IPAddress,UserAgent,HttpVerb,PathAndQuery) values ('"&CookieUserName&"','"&Request.ServerVariables("REMOTE_ADDR")&"','"&HTMLEncode(Request.Servervariables("HTTP_User_AGENT"))&"','"&Request.ServerVariables("request_method")&"','"&Message&"')")
+Conn.Execute("insert into [BBSXP_Log] (UserName,IPAddress,UserAgent,HttpVerb,PathAndQuery) values ('"&SqlString(CookieUserName)&"','"&SqlString(Request.ServerVariables("REMOTE_ADDR"))&"','"&SqlString(HTMLEncode(Request.Servervariables("HTTP_User_AGENT")))&"','"&SqlString(Request.ServerVariables("request_method"))&"','"&SqlString(Message)&"')")
 end sub
 ''''''''''''''''''''''''''''''''
 
@@ -325,7 +519,7 @@ end if
 %>
 <tr>
 <td align="middle" width="5%" class=a3>
-<img src="images/skins/<%=Request.Cookies("skins")%>/Board<%=ShowForumIcon%>.gif"></td>
+<img src="images/skins/<%=CurrentSkin%>/Board<%=ShowForumIcon%>.gif"></td>
 <td class=a3>
 <table cellspacing="0" cellpadding="3" width="100%" border="0">
 	<tr>

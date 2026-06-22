@@ -98,7 +98,7 @@ select case Request("menu")
 		ForumTarget=RequestInt("ForumTarget")
 		if ForumSource=0 or ForumTarget=0 then Alert("该操作不能选择论坛组！")
 		if ForumSource = ForumTarget then Alert("不能选择相同论坛！")
-		if UserName<>"" then UserNamelist="and PostAuthor='"&UserName&"'"
+		if UserName<>"" then UserNamelist="and PostAuthor='"&SqlString(UserName)&"'"
 		Execute("update ["&TablePrefix&"Threads] Set ForumID="&ForumTarget&" where ForumID="&ForumSource&" and DateDiff("&SqlChar&"d"&SqlChar&",lasttime,"&SqlNowString&") > "&TimeLimit&" "&UserNamelist&"")
 		Alert("移动论坛资料成功！")
 
@@ -111,7 +111,12 @@ select case Request("menu")
 		ShowTags
 	case "EditTagsUp"
 		for each ho in Request.Form("TagID")
-			Execute("update ["&TablePrefix&"PostTags] set TagName='"&HTMLEncode(Request.Form("TagName"&ho))&"',IsEnabled='"&Request.Form("IsEnabled"&ho)&"' where TagID="&ho&"")
+			if IsNumeric(ho) then
+				ho=CLng(ho)
+				IsEnabled=0
+				if Request.Form("IsEnabled"&ho)="1" then IsEnabled=1
+				Execute("update ["&TablePrefix&"PostTags] set TagName='"&SqlString(HTMLEncode(Request.Form("TagName"&ho)))&"',IsEnabled="&IsEnabled&" where TagID="&ho&"")
+			end if
 		next
 		response.write "标签更新成功<br><br><a href=javascript:history.back()>返 回</a>"
 	case "DelTag"
@@ -808,7 +813,7 @@ Sub ShowTags
 %>
 	<tr class="CommonListCell" align="center">
 		<td><%=Rs("TagID")%><input type=hidden name=TagID value=<%=Rs("TagID")%>></td>
-		<td><input type=text name="TagName<%=Rs("TagID")%>" value=<%=Rs("TagName")%>></td>
+		<td><input type="text" name="TagName<%=Rs("TagID")%>" value="<%=HTMLEncode(""&Rs("TagName")&"")%>"></td>
 		<td><%=Rs("DateCreated")%></td>
 		<td>
 			<input type="radio" name="IsEnabled<%=Rs("TagID")%>" value="1" <%if Rs("IsEnabled")=1 then%>checked<%end if%>>是

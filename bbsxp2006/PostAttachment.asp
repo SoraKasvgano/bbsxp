@@ -1,12 +1,30 @@
 <!-- #include file="conn.asp" -->
 <%
 SiteSettings=Conn.Execute("[BBSXP_SiteSettings]")
+Function SafeFileName(Value)
+Dim TempValue
+TempValue=""&Value&""
+TempValue=Replace(TempValue,"\","_")
+TempValue=Replace(TempValue,"/","_")
+TempValue=Replace(TempValue,":","_")
+TempValue=Replace(TempValue,"*","_")
+TempValue=Replace(TempValue,"?","_")
+TempValue=Replace(TempValue,Chr(34),"_")
+TempValue=Replace(TempValue,"<","_")
+TempValue=Replace(TempValue,">","_")
+TempValue=Replace(TempValue,"|","_")
+TempValue=Replace(TempValue,Chr(13),"")
+TempValue=Replace(TempValue,Chr(10),"")
+If Trim(TempValue)="" Then TempValue="download"
+SafeFileName=TempValue
+End Function
+
 set Rs=server.CreateObject("adodb.recordset")
 sql="SELECT top 1 * FROM [BBSXP_PostAttachments] where id="&int(Request("AttachmentID"))
 Rs.Open sql,conn,1,3
 if Rs.Eof then CloseDatabase
 response.contenttype=Rs("ContentType")
-response.addheader "content-disposition","attachment;filename="&Rs("FileName")&""
+response.addheader "content-disposition","attachment;filename="&Chr(34)&SafeFileName(Rs("FileName"))&Chr(34)
 
 if sitesettings("WatermarkOption")="Persits.Jpeg" and Rs("ContentType")="image/pjpeg" then
 Set Jpeg = Server.CreateObject("Persits.Jpeg")

@@ -45,8 +45,10 @@ end select
 
 
 sub index
-sql="select * from [BBSXP_Users] where UserName='"&CookieUserName&"'"
+sql="select * from [BBSXP_Users] where UserName='"&SqlString(CookieUserName)&"'"
 Set Rs=Conn.Execute(sql)
+CurrentUserFace=SafeUrl(Rs("Userface"))
+CurrentUserHome=SafeUrl(Rs("Userhome"))
 
 UserIM=split(Rs("UserIM"),"\")
 qq=UserIM(0)
@@ -79,7 +81,7 @@ UserSign=replace(Rs("UserSign"),"<br>",vbCrlf)
 %>
 <table width=100% cellspacing=1 cellpadding=4 align=center border=0 class=a2>
 <form method="POST" name="form" action="EditProfile.asp">
-<input type=hidden name=Userface value="<%=Rs("Userface")%>">
+<input type=hidden name=Userface value="<%=CurrentUserFace%>">
 <input type=hidden name=menu value="editProfileok">
 <tr>
 <td height="20" align="center" colspan="2" valign="bottom" class=a1>
@@ -98,7 +100,7 @@ UserSign=replace(Rs("UserSign"),"<br>",vbCrlf)
 	<tr>
 		<td><b>头　像： &nbsp;</b></td>
 		<td>
-		<table title="选择头像" cellspacing=1 cellpadding=0 border=0 background=Images/FaceBackground.gif width=54 style=cursor:hand onclick="javascript:open('CreateUser.asp?menu=face','','width=500,height=500,resizable,scrollbars')"><tr><td><img src="<%=Rs("Userface")%>" width=40 height=40 name=tus border="0"></td></tr></table>
+		<table title="选择头像" cellspacing=1 cellpadding=0 border=0 background=Images/FaceBackground.gif width=54 style=cursor:hand onclick="javascript:open('CreateUser.asp?menu=face','','width=500,height=500,resizable,scrollbars')"><tr><td><img src="<%=CurrentUserFace%>" width=40 height=40 name=tus border="0"></td></tr></table>
 		</td>
 	</tr>
 </table>
@@ -198,7 +200,7 @@ name=blood value="<%=blood%>">
 </tr>
 
 <tr class=a4>
-<td valign="middle" align="Left" colspan="2">　<b>个人主页：</b><input type="text" name="Userhome" size="60" value="<%=Rs("Userhome")%>"></td>
+<td valign="middle" align="Left" colspan="2">　<b>个人主页：</b><input type="text" name="Userhome" size="60" value="<%=CurrentUserHome%>"></td>
 </tr>
 
 
@@ -241,7 +243,10 @@ sub editProfileok
 
 
 UserSign=HTMLEncode(Request.Form("UserSign"))
-Userface=HTMLEncode(Request("Userface"))
+RawUserface=Trim(Request("Userface"))
+RawUserhome=Trim(Request("Userhome"))
+Userface=SafeUrl(RawUserface)
+Userhome=SafeUrl(RawUserhome)
 
 if SiteSettings("BannedText")<>empty then
 filtrate=split(SiteSettings("BannedText"),"|")
@@ -252,23 +257,23 @@ end if
 
 
 if Len(UserSign)>255 then Message=Message&"<li>签名档不能大于 255 个字节"
-
-if instr(Userface,";")>0 then Message=Message&"<li>头像URL中不能含有特殊符号"
+if RawUserface<>"" and Userface="" then Message=Message&"<li>头像URL地址非法"
+if RawUserhome<>"" and Userhome="" then Message=Message&"<li>个人主页URL地址非法"
 
 if Message<>"" then error(""&Message&"")
 
-sql="select * from [BBSXP_Users] where UserName='"&CookieUserName&"'"
+sql="select * from [BBSXP_Users] where UserName='"&SqlString(CookieUserName)&"'"
 Rs.Open sql,Conn,1,3
 
 Rs("birthday")=HTMLEncode(Request("birthday"))
-Rs("Userface")=Userface
+Rs("Userface")=HTMLEncode(Userface)
 Rs("UserSex")=HTMLEncode(Request("UserSex"))
 Rs("UserSign")=UserSign
 
 Rs("UserIM")=""&HTMLEncode(Request("qq"))&"\"&HTMLEncode(Request("icq"))&"\"&HTMLEncode(Request("uc"))&"\"&HTMLEncode(Request("aim"))&"\"&HTMLEncode(Request("msn"))&"\"&HTMLEncode(Request("Yahoo"))&""
 Rs("UserInfo")=""&HTMLEncode(Request("realname"))&"\"&HTMLEncode(Request("country"))&"\"&HTMLEncode(Request("province"))&"\"&HTMLEncode(Request("city"))&"\"&HTMLEncode(Request("Postcode"))&"\"&HTMLEncode(Request("blood"))&"\"&HTMLEncode(Request("belief"))&"\"&HTMLEncode(Request("occupation"))&"\"&HTMLEncode(Request("marital"))&"\"&HTMLEncode(Request("education"))&"\"&HTMLEncode(Request("college"))&"\"&HTMLEncode(Request("address"))&"\"&HTMLEncode(Request("phone"))&"\"&HTMLEncode(Request("character"))&"\"&HTMLEncode(Request("personal"))&""
 Rs("UserMobile")=""&HTMLEncode(Request("UserMobile"))&""
-Rs("Userhome")=""&HTMLEncode(Request("Userhome"))&""
+Rs("Userhome")=""&HTMLEncode(Userhome)&""
 
 
 Rs.update
@@ -284,7 +289,7 @@ end sub
 
 
 sub pass
-sql="select * from [BBSXP_Users] where UserName='"&CookieUserName&"'"
+sql="select * from [BBSXP_Users] where UserName='"&SqlString(CookieUserName)&"'"
 Set Rs=Conn.Execute(sql)
 %>
 
@@ -351,7 +356,7 @@ UserMail=HTMLEncode(Request("UserMail"))
 
 if instr(UserMail,"@")=0 then error("<li>您的电子邮件地址填写错误")
 
-sql="select * from [BBSXP_Users] where UserName='"&CookieUserName&"'"
+sql="select * from [BBSXP_Users] where UserName='"&SqlString(CookieUserName)&"'"
 Rs.Open sql,Conn,1,3
 
 

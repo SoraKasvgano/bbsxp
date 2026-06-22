@@ -11,6 +11,10 @@ else
 end if
 Set Rs=Execute(sql)
 	if Rs.eof then Alert("对不起，不存在你要查看的用户资料")
+UserFaceUrl=SafeUrl(Rs("UserFaceUrl"))
+WebAddress=SafeUrl(Rs("WebAddress"))
+WebLog=SafeUrl(Rs("WebLog"))
+WebGallery=SafeUrl(Rs("WebGallery"))
 
 
 HtmlHeadTitle="查看"&Rs("UserName")&"的资料"
@@ -29,7 +33,7 @@ if SiteConfig("RequireAuthenticationForProfileViewing")=1 and CookieUserName=emp
 					<td colspan="2"><%=Rs("UserName")%></td>
 				</tr>
 				<tr class="CommonListCell">
-					<td colspan="2"><%if SiteConfig("EnableAvatars")=1 then%><center><img src="<%=Rs("UserFaceUrl")%>"  style="max-width:<%=SiteConfig("AvatarWidth")%>px;max-height:<%=SiteConfig("AvatarHeight")%>px;" /></center><%end if%>　<table border="0" cellspacing="0">
+					<td colspan="2"><%if SiteConfig("EnableAvatars")=1 and UserFaceUrl<>"" then%><center><img src="<%=UserFaceUrl%>"  style="max-width:<%=SiteConfig("AvatarWidth")%>px;max-height:<%=SiteConfig("AvatarHeight")%>px;" /></center><%end if%>　<table border="0" cellspacing="0">
 
 	<tr><td>用户状态：<%=ShowUserAccountStatus(RS("UserAccountStatus"))%></td></tr>
 	<tr><td>角　　色：<%=ShowRole(RS("UserRoleID"))%></td></tr>
@@ -105,26 +109,26 @@ if SiteConfig("RequireAuthenticationForProfileViewing")=1 and CookieUserName=emp
 							</tr>
 
 
-							<%if Rs("WebAddress")<>"" then%>
+							<%if WebAddress<>"" then%>
 							<tr>
 								<td><img src=images/homepage.gif /></td>
-								<td><a target="_blank" href="<%=Rs("WebAddress")%>">查看 <%=Rs("UserName")%> 的主页</a></td>
+								<td><a target="_blank" href="<%=WebAddress%>">查看 <%=Rs("UserName")%> 的主页</a></td>
 							</tr>
 							<%
 							end if
 							
-							if Rs("WebLog")<>"" then%>
+							if WebLog<>"" then%>
 							<tr>
 								<td><img src=images/weblog.gif /></td>
-								<td><a target="_blank" href="<%=Rs("WebLog")%>">查看 <%=Rs("UserName")%> 的博客</a></td>
+								<td><a target="_blank" href="<%=WebLog%>">查看 <%=Rs("UserName")%> 的博客</a></td>
 							</tr>
 							<%
 							end if
 							
-							if Rs("WebGallery")<>"" then%>
+							if WebGallery<>"" then%>
 							<tr>
 								<td><img src=images/webgallery.gif /></td>
-								<td><a target="_blank" href="<%=Rs("WebGallery")%>">查看 <%=Rs("UserName")%> 的相册</a></td>
+								<td><a target="_blank" href="<%=WebGallery%>">查看 <%=Rs("UserName")%> 的相册</a></td>
 							</tr>
 							<%end if%>
 							<tr>

@@ -19,7 +19,7 @@ If Err Then
 		err.Clear
 		response.Redirect("Install.asp")
 	else
-		Response.Write ""&IsSqlVer&"数据库连接出错，请检查连接字串。<br /><br />"&Err.Source&" ("&Err.Number&")"
+		Response.Write "数据库连接出错，请联系管理员检查配置。"
 		Set Conn = Nothing
 		err.Clear
 		Response.End
@@ -56,13 +56,14 @@ Script_Name=LCase(Request.ServerVariables("script_name"))
 Server_Name=Request.ServerVariables("server_name")
 Query_String=Request.ServerVariables("Query_String")
 Http_Referer=Request.ServerVariables("http_referer")
-ReturnUrl=Request("ReturnUrl")
+ReturnUrl=SafeRedirectUrl(Request("ReturnUrl"))
 startime=timer()
 CookieUserRoleID=0
 
 
-if IsNumeric(RequestCookies("UserID")) then
-	Set Rs=Execute("Select * from ["&TablePrefix&"Users] where UserID="&RequestCookies("UserID")&"")
+CookieUserID=SafeLongValue(RequestCookies("UserID"),0)
+if CookieUserID>0 then
+	Set Rs=Execute("Select * from ["&TablePrefix&"Users] where UserID="&CookieUserID&"")
 	if Rs.eof then
 		CleanCookies()
 	elseif SiteConfig("AllowLogin")=0 and Rs("UserRoleID")<>1 or Rs("UserAccountStatus")<>1 then
@@ -105,7 +106,7 @@ end if
 On Error GoTo 0
 
 
-if ""&RequestCookies("Themes")&""="" then ResponseCookies "Themes",SiteConfig("DefaultSiteStyle"),9999
+if ""&RequestCookies("Themes")&""="" then ResponseCookies "Themes",SafeThemeName(SiteConfig("DefaultSiteStyle")),9999
 
 Set Rs = Server.CreateObject("ADODB.Recordset")
 set AutoTerminate=new AutoTerminate_Class

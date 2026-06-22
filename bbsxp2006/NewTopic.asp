@@ -2,7 +2,7 @@
 <%
 top
 if CookieUserName=empty then error("<li>您还未<a href=Login.asp>登录</a>论坛")
-If not Conn.Execute("Select UserName From [BBSXP_Prison] where UserName='"&CookieUserName&"'" ).eof Then error("<li>您被关进<a href=Prison.asp>监狱</a>")
+If not Conn.Execute("Select UserName From [BBSXP_Prison] where UserName='"&SqlString(CookieUserName)&"'" ).eof Then error("<li>您被关进<a href=Prison.asp>监狱</a>")
 ForumID=int(Request("ForumID"))
 
 sql="select * from [BBSXP_Forums] where id="&ForumID&""
@@ -76,7 +76,7 @@ if Message<>"" then error(""&Message&"")
 
 
 
-sql="select * from [BBSXP_Users] where UserName='"&CookieUserName&"'"
+sql="select * from [BBSXP_Users] where UserName='"&SqlString(CookieUserName)&"'"
 Rs.Open sql,Conn,1,3
 
 StopPostTime=int(DateDiff("s",Rs("UserLandTime"),Now()))
@@ -107,8 +107,8 @@ Rs("lasttime")=now()
 Rs("Topic")=Subject
 Rs("ForumID")=ForumID
 Rs("PostsTableName")=SiteSettings("DefaultPostsName")
-if Request("SpecialTopic")<>"" then Rs("SpecialTopic")=Request("SpecialTopic")
-if Request("icon")<>"" then Rs("icon")=Request("icon")
+if Request("SpecialTopic")<>"" then Rs("SpecialTopic")=HTMLEncode(Request("SpecialTopic"))
+if Request("icon")<>"" then Rs("icon")=HTMLEncode(Request("icon"))
 if Request("Vote")<>"" then Rs("isVote")=1
 if Request("IsLocked")=1 then Rs("IsLocked")=1
 if ForumPass=5 then Rs("IsDel")=1
@@ -117,20 +117,21 @@ ID=Rs("ID")
 Rs.close
 
 if Request.Form("Vote")<>"" then
-multiplicity=int(Request.Form("multiplicity"))
-Expiry=now()+int(Request.Form("Expiry"))
-Conn.Execute("insert into [BBSXP_Vote] (ThreadID,Type,Items,Result,Expiry) values ('"&ID&"','"&multiplicity&"','"&HTMLEncode(allpollTopic)&"','"&Votenum&"','"&Expiry&"')")
+multiplicity=SafeLongValue(Request.Form("multiplicity"),0)
+Expiry=now()+SafeLongValue(Request.Form("Expiry"),0)
+Conn.Execute("insert into [BBSXP_Vote] (ThreadID,Type,Items,Result,Expiry) values ('"&ID&"','"&multiplicity&"','"&SqlString(HTMLEncode(allpollTopic))&"','"&SqlString(Votenum)&"','"&SqlString(Expiry)&"')")
 end if
 
 if Request.Form("UpFileID")<>"" then
 UpFileID=split(Request.form("UpFileID"),",")
 for i = 0 to ubound(UpFileID)-1
-Conn.execute("update [BBSXP_PostAttachments] set ThreadID="&ID&",Description='"&Subject&"' where id="&UpFileID(i)&" and ThreadID=0")
+UpFileItem=SafeLongValue(UpFileID(i),0)
+if UpFileItem>0 then Conn.execute("update [BBSXP_PostAttachments] set ThreadID="&ID&",Description='"&SqlString(Subject)&"' where id="&UpFileItem&" and ThreadID=0")
 next
 end if
 
-Conn.Execute("insert into [BBSXP_Posts"&SiteSettings("DefaultPostsName")&"] (ThreadID,IsTopic,UserName,Subject,content,Postip) values ('"&ID&"','1','"&CookieUserName&"','"&Subject&"','"&content&"','"&Request.ServerVariables("REMOTE_ADDR")&"')")
-Conn.execute("update [BBSXP_Forums] set lastTopic='<a href=ShowPost.asp?ThreadID="&id&">"&Left(HTMLEncode(Request.Form("Subject")),15)&"</a>',lastname='"&CookieUserName&"',lasttime="&SqlNowString&",ForumToday=ForumToday+1,ForumThreads=ForumThreads+1,ForumPosts=ForumPosts+1 where id="&ForumID&"")
+Conn.Execute("insert into [BBSXP_Posts"&SiteSettings("DefaultPostsName")&"] (ThreadID,IsTopic,UserName,Subject,content,Postip) values ('"&ID&"','1','"&SqlString(CookieUserName)&"','"&SqlString(Subject)&"','"&SqlString(content)&"','"&SqlString(Request.ServerVariables("REMOTE_ADDR"))&"')")
+Conn.execute("update [BBSXP_Forums] set lastTopic='"&SqlString("<a href=ShowPost.asp?ThreadID="&id&">"&Left(HTMLEncode(Request.Form("Subject")),15)&"</a>")&"',lastname='"&SqlString(CookieUserName)&"',lasttime="&SqlNowString&",ForumToday=ForumToday+1,ForumThreads=ForumThreads+1,ForumPosts=ForumPosts+1 where id="&ForumID&"")
 Conn.execute("update [BBSXP_Statistics_Site] set TodayPost=TodayPost+1,TotalPost=TotalPost+1,TotalThread=TotalThread+1")
 
 Session("VerifyCode")=""

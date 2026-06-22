@@ -5,7 +5,9 @@ top
 
 if Request("menu")="passwordok" then
 Response.Cookies("password")=Request("password")
-response.redirect Request("url")
+url=SafeRedirectUrl(Request("url"))
+if url="" then url="Default.asp"
+response.redirect url
 end if
 
 if Request.ServerVariables("request_method") = "POST" then
@@ -14,23 +16,23 @@ if sitesettings("EnableAntiSpamTextGenerateForLogin")=1 then
 if Request.Form("VerifyCode")<>Session("VerifyCode") then error("<li>验证码错误")
 end if
 
-url=Trim(Request.Form("url"))
+url=SafeRedirectUrl(Request.Form("url"))
 UserName=HTMLEncode(Request.Form("UserName"))
 Userpass=md5(Trim(Request.Form("Userpass")))
 if UserName=empty then error("<li>用户名没有输入")
 
-sql="select * from [BBSXP_Users] where UserName='"&UserName&"'"
+sql="select * from [BBSXP_Users] where UserName='"&SqlString(UserName)&"'"
 Set Rs1=Conn.Execute(SQL)
 if rs1.eof then error("<li>此用户名还未注册")
 if rs1("membercode")=0 then error("<li>您的帐号尚未激活")
 
 if Len(rs1("Userpass"))<16 then
 if Request("Userpass")<>rs1("Userpass") then error("<li>您输入的密码错误")
-Conn.execute("update [BBSXP_Users] set Userpass='"&Userpass&"' where UserName='"&UserName&"'")
+Conn.execute("update [BBSXP_Users] set Userpass='"&SqlString(Userpass)&"' where UserName='"&SqlString(UserName)&"'")
 elseif Len(rs1("Userpass"))=16 then
 mdfive=16
 if md5(Request("Userpass"))<>rs1("Userpass") then error("<li>您输入的密码错误")
-Conn.execute("update [BBSXP_Users] set Userpass='"&Userpass&"' where UserName='"&UserName&"'")
+Conn.execute("update [BBSXP_Users] set Userpass='"&SqlString(Userpass)&"' where UserName='"&SqlString(UserName)&"'")
 else
 if Userpass<>rs1("Userpass") then error("<li>您输入的密码错误")
 end if
@@ -68,7 +70,7 @@ case ""
 <table width="333" border="0" cellspacing="1" cellpadding="2" align="center" class=a2>
 
 <form action="Login.asp" method="POST">
-<input type="hidden" value="<%=Request.ServerVariables("HTTP_REFERER")%>" name="url">
+<input type="hidden" value="<%=HTMLEncode(SafeRedirectUrl(Request.ServerVariables("HTTP_REFERER")))%>" name="url">
 <tr>
 <td width="328" height="25" align="center" class=a1>
 登录论坛
@@ -106,7 +108,7 @@ case "password"
 
 <form action="Login.asp" method="POST">
 <input type="hidden" value="passwordok" name="menu">
-<input type="hidden" value="<%=Request("url")%>" name="url">
+<input type="hidden" value="<%=HTMLEncode(SafeRedirectUrl(Request("url")))%>" name="url">
 <tr>
 <td width="328" height="25" align="center" class=a1>
 登录论坛

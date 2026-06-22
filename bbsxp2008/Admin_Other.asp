@@ -93,19 +93,19 @@ Sub circumstance
 	</tr>
 	<tr class="CommonListCell">
 		<td>服务器的域名</td>
-		<td width="66%"><%=Request.ServerVariables("server_name")%></td>
+		<td width="66%"><%=HTMLEncode(Request.ServerVariables("server_name"))%></td>
 	</tr>
 	<tr class="CommonListCell">
 		<td>服务器的IP地址</td>
-		<td width="66%"><%=Request.ServerVariables("LOCAL_ADDR")%>
+		<td width="66%"><%=HTMLEncode(Request.ServerVariables("LOCAL_ADDR"))%>
 	</tr>
 	<tr class="CommonListCell">
 		<td>服务端口</td>
-		<td width="66%"><%=Request.ServerVariables("SERVER_PORT")%>
+		<td width="66%"><%=HTMLEncode(Request.ServerVariables("SERVER_PORT"))%>
 	</tr>
 	<tr class="CommonListCell">
 		<td>服务器软件</td>
-		<td width="66%"><%=Request.ServerVariables("SERVER_SOFTWARE")%>
+		<td width="66%"><%=HTMLEncode(Request.ServerVariables("SERVER_SOFTWARE"))%>
 	</tr>
 	<tr class="CommonListCell">
 		<td>服务器解译引擎</td>
@@ -141,11 +141,11 @@ Sub circumstance
 	</tr>
 	<tr class="CommonListCell">
 		<td>本文件请求的物理路径</td>
-		<td width="66%"><%=Request.ServerVariables("path_translated")%>
+		<td width="66%">已隐藏</td>
 	</tr>
 	<tr class="CommonListCell">
 		<td>本文件请求的URL</td>
-		<td width="66%">http://<%=Request.ServerVariables("server_name")%><%=Request.ServerVariables("script_name")%></td>
+		<td width="66%">http://<%=HTMLEncode(Request.ServerVariables("server_name"))%><%=HTMLEncode(Request.ServerVariables("script_name"))%></td>
 	</tr>
 </table>
 <%
@@ -176,7 +176,7 @@ Sub EventLog
 	end if
 	
 	Key=HTMLEncode(Request("Key"))
-	if Key<>"" then SearchList=" and UserName like '%"&Key&"%' or MessageXML like '%"&Key&"%'"
+	if Key<>"" then SearchList=" and (UserName like '%"&SqlString(Key)&"%' or MessageXML like '%"&SqlString(Key)&"%')"
 	TopSql="["&TablePrefix&"EventLog] where "&QueryStr&""&SearchList&""
 	TotalCount=Execute("Select count(UserName) From "&TopSql&" ")(0) '获取数据数量
 	PageSetup=20 '设定每页的显示数量
@@ -196,7 +196,7 @@ Sub EventLog
 		i=i+1
 %>
 	<tr class="CommonListCell">
-		<td valign=top align="center"><br /><b><a target="_blank" href="Profile.asp?UserName=<%=Rs("UserName")%>"><%=Rs("UserName")%></a></b><br /><br /><%=Rs("EventDate")%></td>
+		<td valign=top align="center"><br /><b><a target="_blank" href="Profile.asp?UserName=<%=Server.URLEncode(""&Rs("UserName")&"")%>"><%=HTMLEncode(""&Rs("UserName")&"")%></a></b><br /><br /><%=Rs("EventDate")%></td>
 		<td>
 			<ul>
 <%
@@ -204,7 +204,7 @@ Sub EventLog
 	XMLDOM.loadxml("<bbsxp>"&Rs("MessageXML")&"</bbsxp>")
 	Set objnodes=XMLDOM.documentElement.ChildNodes
 	for each element in objnodes
-		if element.text<>"" then  response.write "<p><li>"&element.nodename&"：<br>"&Replace(UnEscape(element.text),CHR(10),"<br>")&"</li></p>"
+		if element.text<>"" then  response.write "<p><li>"&HTMLEncode(element.nodename)&"：<br>"&Replace(HTMLEncode(UnEscape(element.text)),CHR(10),"<br>")&"</li></p>"
 	next
 %></ul>
 		</td>

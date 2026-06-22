@@ -56,7 +56,7 @@ function DelReasonOptions() { //原因下拉框
 	}
 }
 </script>
-<form method="Post" action="?<%=Request.ServerVariables("Query_String")%>">
+<form method="Post" action="?<%=HTMLEncode(Request.ServerVariables("Query_String"))%>">
 	<table cellspacing="1" cellpadding="5" width=100% class=CommonListArea>
 		<tr class=CommonListTitle>
 			<td colspan="2" align="center">删除帖子</td>
@@ -67,7 +67,7 @@ function DelReasonOptions() { //原因下拉框
 		</tr>
 		<tr class="CommonListCell">
 			<td width="200">删除人：</td>
-			<td><%=CookieUserName%></td>
+			<td><%=HTMLEncode(CookieUserName)%></td>
 		</tr>
 		<tr class="CommonListCell">
 			<td>删除帖子的原因：</td>

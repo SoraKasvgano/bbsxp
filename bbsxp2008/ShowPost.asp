@@ -86,7 +86,7 @@ End if
 	<div style="float:right">
 		<a href="javascript:window.external.AddFavorite(location.href,document.title)" onmouseover="MouseOverOpen('FavoriteAllItem',this.id);" id="FavoriteAll"><img title="添加到收藏夹" src="images/favs.gif" border="0" /></a>　<script language="JavaScript" type="text/javascript">
 		document.write("<a target=_blank href='Mailto:?subject="+document.title+"&body="+encodeURIComponent(location.href)+"'>");</script><img title="通过电子邮件发送本页面" src="images/mail.gif" border="0" /></a>　<a href="javascript:window.print();"><img title="打印本页" src="images/Print.gif" border="0" /></a>　<a href="?menu=Previous&ForumID=<%=ForumID%>&ThreadID=<%=ThreadID%>"><img title="浏览上一篇主题" src="images/previous.gif" border="0" /></a>　<a href="?menu=Next&ForumID=<%=ForumID%>&ThreadID=<%=ThreadID%>"><img title="浏览下一篇主题" src="images/next.gif" border="0" /></a>
-	</div>　 
+	</div>　
 </div>
 
 
@@ -113,7 +113,7 @@ End if
 	</tr>
 	<tr class="CommonListCell">
 		<td align="center" width="5%"><img src="images/totel.gif" /></td>
-		<td>发起人：<a href="Profile.asp?UserName=<%=UserName%>"><%=UserName%></a>　　回复数：<b><%=TotalReplies%></b>　　浏览数：<b><%=TotalViews%></b>　　最后更新：<%=lasttime%> 
+		<td>发起人：<a href="Profile.asp?UserName=<%=UserName%>"><%=UserName%></a>　　回复数：<b><%=TotalReplies%></b>　　浏览数：<b><%=TotalViews%></b>　　最后更新：<%=lasttime%>
 		by <a href="Profile.asp?UserName=<%=lastname%>"><%=lastname%></a></td>
 	</tr>
 </table>
@@ -148,14 +148,14 @@ End if
 					<span id="ThreadSubscription"><a class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/<%=BgImage%>)" href="javascript:Ajax_CallBack(false,'ThreadSubscription','Loading.asp?menu=Subscription&ThreadID=<%=ThreadID%>')"><%=ButtonText%></a></span>
 					<%
 				end if
-				
+
 			end if
 			%>
 			<a class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/view.gif)" onmouseover="MouseOverOpen('View',this.id);" id="View1">选择查看</a>
 			<%if PermissionPost=1 then%><a class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/NewPost.gif)" href="AddTopic.asp?ForumID=<%=ForumID%>">发表新帖</a> <%end if%>
 			</td>
 			<td align="right" valign="bottom"><a href="http://www.duoci.com/Search/?Charset=<%=BBSxpCharset%>&word=<%=Topic%>" target="_blank" title="在更多网站中搜索此类问题">搜索更多相关主题</a>
-			<%if SiteConfig("DisplayThreadStatus")=1 and (PermissionManage=1 or UserName=CookieUserName) then%> 
+			<%if SiteConfig("DisplayThreadStatus")=1 and (PermissionManage=1 or UserName=CookieUserName) then%>
 			　主题状态：<select onchange="javascript:if(this.options[this.selectedIndex].value)Ajax_CallBack(false,false,'loading.asp?menu=ThreadStatus&amp;ThreadID=<%=ThreadID%>&amp;ThreadStatus='+this.options[this.selectedIndex].value)">
 			<option value="0" <%if threadstatus=0 then%>selected<%end if%>>--
 			</option>
@@ -285,7 +285,7 @@ end if
 '加入审核功能
 	sql="Select top "&PageCount*pagesetup&" PostID,ThreadID,ParentID,PostAuthor,Subject,Body,IPAddress,PostDate,Visible from ["&TablePrefix&"Posts] where ThreadID="&ThreadID&PostSql&VisibleSql&" order by PostID "&SqlSortOrder&""
 	Set Rs=Execute(sql)
-	
+
 	If Rs.Eof and ""&PostAuthor&""="" then Execute("Delete from ["&TablePrefix&"Threads] where ThreadID="&ThreadID&"")
 	If TotalPage>1 then RS.Move (PageCount-1) * pagesetup
 	IF Not Rs.Eof then PostGetRows=Rs.GetRows(pagesetup)
@@ -304,14 +304,14 @@ if IsArray(PostGetRows) then
 		IPAddress=PostGetRows(6,i)
 		PostDate=PostGetRows(7,i)
 		Visible=PostGetRows(8,i)
-		
-		
+
+
 		if ViewMode=0 then
 			ShowPostSimple
 		else
 			ShowPost
 		end if
-		
+
 	Next
 End if
 AdvertisementGetRow=null
@@ -401,15 +401,15 @@ if SiteConfig("DisplayThreadUsers")=1 then
 	ThreadIDOnline=Execute("Select count(sessionid) from ["&TablePrefix&"UserOnline] where ThreadID="&ThreadID&"")(0)
 	regThreadIDOnline=Execute("Select count(sessionid) from ["&TablePrefix&"UserOnline] where ThreadID="&ThreadID&" and UserName<>''")(0)
 %>
-	
+
 <table cellspacing="1" cellpadding="5" width="100%" class="CommonListArea">
 	<tr class="CommonListTitle">
 		<td>用户在线信息</td>
 	</tr>
 	<tr class="CommonListCell">
-    	<td>
-		<img src="images/plus.gif" id="followImg" style="cursor:pointer;" onclick="loadThreadFollow('ThreadID=<%=ThreadID%>')" /> 
-		当前查看此主题的会员: <b><%=ThreadIDOnline%></b> 人。其中注册用户 <b><%=regThreadIDOnline%></b> 人，访客 <b><%=ThreadIDOnline-regThreadIDOnline%></b> 
+	<td>
+		<img src="images/plus.gif" id="followImg" style="cursor:pointer;" onclick="loadThreadFollow('ThreadID=<%=ThreadID%>')" />
+		当前查看此主题的会员: <b><%=ThreadIDOnline%></b> 人。其中注册用户 <b><%=regThreadIDOnline%></b> 人，访客 <b><%=ThreadIDOnline-regThreadIDOnline%></b>
 		人。<div style="display:none" id="follow">
 			<hr width="90%" size="1" align="left"><span id="followTd" class="UserList">
 			<img src="images/loading.gif" />正在加载...</span></div>
@@ -476,13 +476,13 @@ Sub ShowPostSimple()
 		if Subject<>"" then response.write "<div class=ForumPostTitle>"&Subject&"</div>"
 		response.write "<div class=ForumPostContentText>"&BBCode(Body)&"</div>"
 		%>
-		
+
 				<div style="float:right">
 				<%if PermissionManage=1 then response.write "IP："&IPAddress&"　"%>
 				<%if IsLocked=0 and PermissionReply=1 then response.write "<a onclick=javascript:QuickReply("&PostID&")>快速回复</a>"%>
 				</div>
 
-		
+
 		</td>
 	</tr>
 </table>
@@ -501,6 +501,10 @@ Sub ShowPost()
 		Rs.close
 		Exit Sub
 	End if
+	UserFaceUrl=SafeUrl(Rs("UserFaceUrl"))
+	WebAddress=SafeUrl(Rs("WebAddress"))
+	WebLog=SafeUrl(Rs("WebLog"))
+	WebGallery=SafeUrl(Rs("WebGallery"))
 %>
 <div class="PopupMenu" id="ContactMenu<%=PostID%>" style="DISPLAY: none">
 	<table cellspacing="0" cellpadding="1">
@@ -514,14 +518,14 @@ Sub ShowPost()
 		<tr>
 			<td><a style="BACKGROUND-IMAGE:url(images/email.gif)" href="Mailto:<%=Rs("UserEmail")%>">给 <%=Rs("UserName")%> 发送邮件</a></td>
 		</tr>
-		<%if Rs("WebAddress")<>"" then%><tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/homepage.gif)" href="<%=Rs("WebAddress")%>" target="_blank">浏览 <%=Rs("UserName")%> 的主页</a></td>
+		<%if WebAddress<>"" then%><tr>
+			<td><a style="BACKGROUND-IMAGE:url(images/homepage.gif)" href="<%=WebAddress%>" target="_blank">浏览 <%=Rs("UserName")%> 的主页</a></td>
 		</tr>
-		<%end if%> <%if Rs("WebLog")<>"" then%><tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/weblog.gif)" href="<%=Rs("WebLog")%>" target="_blank">浏览 <%=Rs("UserName")%> 的博客</a></td>
+		<%end if%> <%if WebLog<>"" then%><tr>
+			<td><a style="BACKGROUND-IMAGE:url(images/weblog.gif)" href="<%=WebLog%>" target="_blank">浏览 <%=Rs("UserName")%> 的博客</a></td>
 		</tr>
-		<%end if%> <%if Rs("WebGallery")<>"" then%><tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/webgallery.gif)" href="<%=Rs("WebGallery")%>" target="_blank">浏览 <%=Rs("UserName")%> 的相册</a></td>
+		<%end if%> <%if WebGallery<>"" then%><tr>
+			<td><a style="BACKGROUND-IMAGE:url(images/webgallery.gif)" href="<%=WebGallery%>" target="_blank">浏览 <%=Rs("UserName")%> 的相册</a></td>
 		</tr>
 		<%end if%>
 		<tr>
@@ -574,9 +578,9 @@ Sub ShowPost()
 					</div>
 				<%
 					end if
-				response.write "<br /><br /><br /><div style='text-align:center;'>"		
+				response.write "<br /><br /><br /><div style='text-align:center;'>"
 
-				if SiteConfig("EnableAvatars")=1 and SiteConfig("AllowAvatars")=1 then response.write "<img src='"&Rs("UserFaceUrl")&"' style='max-width:"&SiteConfig("AvatarWidth")&"px;max-height:"&SiteConfig("AvatarHeight")&"px;'  /><br />"
+				if SiteConfig("EnableAvatars")=1 and SiteConfig("AllowAvatars")=1 and UserFaceUrl<>"" then response.write "<img src='"&UserFaceUrl&"' style='max-width:"&SiteConfig("AvatarWidth")&"px;max-height:"&SiteConfig("AvatarHeight")&"px;'  /><br />"
 				if Rs("UserRank")<>"" then response.write "<br />"&Rs("UserRank")&"<br />"
 
 				response.write "<br /></div>角　　色："
@@ -586,7 +590,7 @@ Sub ShowPost()
 				else
 					response.write ShowRole(Rs("UserRoleID"))
 				end if
-					
+
 				if Rs("UserMate")<>"" then response.write "<br />配　　偶："&Rs("UserMate")&""
 				response.write "<br />发 帖 数："&Rs("TotalPosts")&""
 				response.write "<br />经 验 值："&Rs("experience")&""
@@ -612,7 +616,7 @@ Sub ShowPost()
 				</div>
 
 				<div class="ForumPostBodyArea">
-					
+
 
 				<%
 				if Rs("UserAccountStatus")=2 then
@@ -622,15 +626,15 @@ Sub ShowPost()
 					response.write "<div class=ForumPostTitle id='PostTitle"&PostID&"' style='display:none'>"&Subject&"</div><div class=ForumPostContentText id='PostContent"&PostID&"' style='display:none'>"&BBCode(Body)&"</div>"
 				elseif Visible=2 then
 					Response.Write "<div id='PostContent_"&PostID&"'>========================<br /><font color=RED>帖子已被删除！</font>　<a onclick='showPostText("&PostID&")'>点击查看</a><br />========================</div>"
-					response.write "<div class=ForumPostTitle id='PostTitle"&PostID&"' style='display:none'>"&Subject&"</div><div class=ForumPostContentText id='PostContent"&PostID&"' style='display:none'>"&BBCode(Body)&"</div>"	
+					response.write "<div class=ForumPostTitle id='PostTitle"&PostID&"' style='display:none'>"&Subject&"</div><div class=ForumPostContentText id='PostContent"&PostID&"' style='display:none'>"&BBCode(Body)&"</div>"
 				else
 					response.write "<div class=ForumPostTitle>"&Subject&"</div><div class=ForumPostContentText>"&BBCode(Body)&"</div>"
-					
+
 					if SiteConfig("EnableSignatures")=1 and SiteConfig("AllowSignatures")=1 then
 						if Rs("UserSign")<>"" then response.write "<div class=ForumPostSignature>"&BBCode(Rs("UserSign"))&"</div>"
 					end if
 
-					
+
 					sql="select * from ["&TablePrefix&"PostInTags] where PostID="&PostID&""
 					Set RsTag=Execute(sql)
 					do while not RsTag.eof
@@ -640,8 +644,8 @@ Sub ShowPost()
 					RsTag.Close
 					Set RsTag = Nothing
 					if ""&Tags&""<>"" then Response.Write("<p>标签："&Mid(Tags,2))&"</p>"
-					
-					
+
+
 					if SiteConfig("DisplayEditNotes")=1 then
 						Set EditNotesRs=Execute("Select * from ["&TablePrefix&"PostEditNotes] where PostID="&PostID&"")
 						If Not EditNotesRs.eof Then EditNotesRecordset=EditNotesRs("EditNotes")
@@ -649,7 +653,7 @@ Sub ShowPost()
 						Set EditNotesRs = Nothing
 						Response.Write("<p>"&EditNotesRecordset&"</p>")
 					end if
-					
+
 
 				end if
 				%>
@@ -685,7 +689,7 @@ Sub ShowPost()
 				</td>
 			</tr>
 		</table>
-		
+
 		</td>
 	</tr>
 </table>

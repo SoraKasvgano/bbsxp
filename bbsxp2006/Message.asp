@@ -18,7 +18,7 @@ alert("昵称不能没有填写！");
 return false;
 }
 
-if(theForm.incept.value == "<%=CookieUserName%>" ) {
+if(theForm.incept.value == "<%=SafeJsString(CookieUserName)%>" ) {
 alert("请输入您要发送的对象，不能发讯息给自己！");
 return false;
 }
@@ -62,7 +62,7 @@ if Request("report")="1" then
 %>
 <option>版主列表</option>
 <SCRIPT>
-var moderated="<%=Request("moderated")%>"
+var moderated="<%=SafeJsString(Request("moderated"))%>"
 var list= moderated.split ('|'); 
 for(i=0;i<list.length;i++) {
 if (list[i] !=""){document.write("<option value="+list[i]+">"+list[i]+"</option>")}
@@ -74,7 +74,7 @@ else
 %>
 <option>好友列表</option>
 <SCRIPT>
-var moderated="<%=Conn.Execute("Select UserFriend From [BBSXP_Users] where UserName='"&CookieUserName&"'")(0)%>"
+var moderated="<%=SafeJsString(Conn.Execute("Select UserFriend From [BBSXP_Users] where UserName='"&SqlString(CookieUserName)&"'")(0))%>"
 var list= moderated.split ('|'); 
 for(i=0;i<list.length;i++) {
 if (list[i] !=""){document.write("<option value="+list[i]+">"+list[i]+"</option>")}
@@ -89,7 +89,7 @@ end if
 
 </select>
 </TD></TR><TR><TD VALIGN=top ALIGN=right colspan="3" bgcolor="F8F8F8">
-    <textarea name="content" cols="39" rows="6" onkeydown=presskey()><%=Request("body")%></textarea>
+    <textarea name="content" cols="39" rows="6" onkeydown=presskey()><%=HTMLEncode(Request("body"))%></textarea>
 </TD></TR></TABLE><TABLE WIDTH=300 BORDER=0 CELLSPACING=0 CELLPADDING=0 height="30">
 <tr ALIGN=center><TD>
 <input onclick=javascript:Check() type="button" value="聊天记录">
@@ -103,10 +103,10 @@ end if
 
 
 if Request("menu")="Del" then
-Conn.execute("Delete from [BBSXP_Messages] where id="&id&" and incept='"&CookieUserName&"'")
+Conn.execute("Delete from [BBSXP_Messages] where id="&id&" and incept='"&SqlString(CookieUserName)&"'")
 error2("删除成功")
 elseif Request("menu")="allDel" then
-Conn.execute("Delete from [BBSXP_Messages] where incept='"&CookieUserName&"'")
+Conn.execute("Delete from [BBSXP_Messages] where incept='"&SqlString(CookieUserName)&"'")
 error2("已经成功清空收件箱")
 end if
 
@@ -177,10 +177,10 @@ top
 
 
 if Request("send")="1" then
-sql="select * from [BBSXP_Messages] where UserName='"&CookieUserName&"' order by id Desc"
+sql="select * from [BBSXP_Messages] where UserName='"&SqlString(CookieUserName)&"' order by id Desc"
 response.write "<script>send.innerText='收件人'</script>"
 else
-sql="select * from [BBSXP_Messages] where incept='"&CookieUserName&"' order by id Desc"
+sql="select * from [BBSXP_Messages] where incept='"&SqlString(CookieUserName)&"' order by id Desc"
 
 end if
 
@@ -210,7 +210,7 @@ end if
 %>
 <TR class=a3>
     <TD vAlign=center align=middle width="5%"><IMG src="images/f_norm.gif"></TD>
-    <TD vAlign=center align=middle width="12%"><A href="Profile.asp?UserName=<%=UserName%>"><%=UserName%></A> </TD>
+    <TD vAlign=center align=middle width="12%"><A href="Profile.asp?UserName=<%=Server.URLEncode(""&UserName&"")%>"><%=HTMLEncode(""&UserName&"")%></A> </TD>
     <TD width="50%"><%=Rs("content")%></TD>
     <TD align="center" width="17%"><%=Rs("DateCreated")%></TD>
     <TD align="center" width="16%"><%=Del%></TD>
@@ -219,7 +219,7 @@ end if
 Rs.MoveNext
 loop
 Rs.Close
-if NewMessage>0 then Conn.execute("update [BBSXP_Users] set NewMessage=0 where UserName='"&CookieUserName&"'")
+if NewMessage>0 then Conn.execute("update [BBSXP_Users] set NewMessage=0 where UserName='"&SqlString(CookieUserName)&"'")
 %>
 </TD></TR></TABLE>
 

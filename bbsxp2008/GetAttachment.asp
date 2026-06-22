@@ -5,7 +5,7 @@ Sql="select top 1 * from ["&TablePrefix&"PostAttachments] where UpFileID="&Attac
 Rs.Open Sql,conn,1,1
 if not Rs.Eof then
 	response.contenttype=Rs("ContentType")
-	response.addheader "content-disposition","attachment;filename="&Rs("FileName")&""
+	response.addheader "content-disposition","attachment;filename="&SafeFileName(Rs("FileName"))&""
 	
 	if IsObjInstalled("Persits.Jpeg") and SiteConfig("WatermarkOption")="Persits.Jpeg" and Rs("ContentType")="image/pjpeg" then
 		Set Jpeg = Server.CreateObject("Persits.Jpeg")

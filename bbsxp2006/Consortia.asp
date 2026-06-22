@@ -2,13 +2,13 @@
 <%
 if CookieUserName=empty then error("<li>您还未<a href=Login.asp>登录</a>论坛")
 
-id=int(Request("id"))
+id=RequestInt("id")
 incept=HTMLEncode(Request("incept"))
 UserName=HTMLEncode(Request("UserName"))
 UserHonor=HTMLEncode(Request("UserHonor"))
 ConsortiaName=HTMLEncode(Request("ConsortiaName"))
 
-sql="select * from [BBSXP_Users] where UserName='"&CookieUserName&"'"
+sql="select * from [BBSXP_Users] where UserName='"&SqlString(CookieUserName)&"'"
 Set Rs=Conn.Execute(sql)
 Consortia=Rs("Consortia")
 experience=Rs("experience")
@@ -19,16 +19,16 @@ top
 if Request.form("menu")="Consortiaadd" then
 if Consortia<>"" then error2("您已经加入 "&Consortia&" 了，不能再加入其他公会！")
 Consortianame=Conn.Execute("Select Consortianame From [BBSXP_Consortia] where id="&id&"")(0)
-if Conn.execute("Select count(id) from [BBSXP_Users] where Consortia='"&Consortianame&"'")(0)>99 then error2("该公会已经超过100名会员，无法再加入新会员")
-Conn.execute("Delete from [BBSXP_Messages] where id="&int(Request("Messageid"))&" and incept='"&CookieUserName&"'")
-Conn.execute("update [BBSXP_Users] set Consortia='"&Consortianame&"' where UserName='"&CookieUserName&"'")
+if Conn.execute("Select count(id) from [BBSXP_Users] where Consortia='"&SqlString(Consortianame)&"'")(0)>99 then error2("该公会已经超过100名会员，无法再加入新会员")
+Conn.execute("Delete from [BBSXP_Messages] where id="&RequestInt("Messageid")&" and incept='"&SqlString(CookieUserName)&"'")
+Conn.execute("update [BBSXP_Users] set Consortia='"&SqlString(Consortianame)&"' where UserName='"&SqlString(CookieUserName)&"'")
 error2("加入公会成功")
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 elseif Request("menu")="Consortiaout" then
 if ""&Request("sessionid")&""<>""&session.sessionid&"" then error("<li>效验码错误<li>请重新返回刷新后再试")
 if Consortia=empty then error("<li>您目前没有加入任何公会！")
-If not Conn.Execute("Select id From [BBSXP_Consortia] where UserName='"&CookieUserName&"'").eof Then error("<li>要退出请先解散公会")
-Conn.execute("update [BBSXP_Users] set Consortia='',UserHonor='' where UserName='"&CookieUserName&"'")
+If not Conn.Execute("Select id From [BBSXP_Consortia] where UserName='"&SqlString(CookieUserName)&"'").eof Then error("<li>要退出请先解散公会")
+Conn.execute("update [BBSXP_Users] set Consortia='',UserHonor='' where UserName='"&SqlString(CookieUserName)&"'")
 Message=Message&"<li>退出公会成功<li><a href=Consortia.asp>返回社区公会</a><li><a href=Default.asp>返回论坛首页</a>"
 succeed(""&Message&"<meta http-equiv=refresh content=3;url=Consortia.asp>")
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -36,18 +36,19 @@ elseif Request("menu")="invite" then
 if UserName="" then error("<li>请填写受邀人的名称")
 if CookieUserName=UserName then error("<li>不能自己邀请自己")
 if Conn.Execute("Select UserName From [BBSXP_Consortia] where id="&id&"")(0)<>CookieUserName then error("<li>只有会长才有权限执行该操作")
-if Conn.execute("Select count(id) from [BBSXP_Users] where Consortia='"&Consortia&"'")(0)>99 then error2("公会已经超过100名会员，无法再加入新会员")
-if Conn.Execute("Select Consortia From [BBSXP_Users] where UserName='"&UserName&"'")(0)<>"" then error("<li>对方已经加入了其他公会")
+if Conn.execute("Select count(id) from [BBSXP_Users] where Consortia='"&SqlString(Consortia)&"'")(0)>99 then error2("公会已经超过100名会员，无法再加入新会员")
+if Conn.Execute("Select Consortia From [BBSXP_Users] where UserName='"&SqlString(UserName)&"'")(0)<>"" then error("<li>对方已经加入了其他公会")
 Messageid=Conn.execute("select Max(ID)+1 From [BBSXP_Messages]")(0)
-Conn.Execute("insert into [BBSXP_Messages] (UserName,incept,content) values ('"&CookieUserName&"','"&UserName&"','<form name=ConsortiaAdd"&Messageid&" method=Post action=Consortia.asp?id="&id&"&Messageid="&Messageid&"><input type=hidden name=menu value=Consortiaadd></form><font color=0000FF>【系统消息】："&CookieUserName&" 邀请您加入 "&Consortia&" 公会<br><br><center><a href=javascript:ConsortiaAdd"&Messageid&".submit()>同意</a>　　　<a href=Message.asp?menu=Del&id="&Messageid&">拒绝</a></font></center>')")
-Conn.execute("update [BBSXP_Users] set NewMessage=NewMessage+1 where UserName='"&UserName&"'")
+MessageContent="<form name=ConsortiaAdd"&Messageid&" method=Post action=Consortia.asp?id="&id&"&Messageid="&Messageid&"><input type=hidden name=menu value=Consortiaadd></form><font color=0000FF>【系统消息】："&CookieUserName&" 邀请您加入 "&Consortia&" 公会<br><br><center><a href=javascript:ConsortiaAdd"&Messageid&".submit()>同意</a>　　　<a href=Message.asp?menu=Del&id="&Messageid&">拒绝</a></font></center>"
+Conn.Execute("insert into [BBSXP_Messages] (UserName,incept,content) values ('"&SqlString(CookieUserName)&"','"&SqlString(UserName)&"','"&SqlString(MessageContent)&"')")
+Conn.execute("update [BBSXP_Users] set NewMessage=NewMessage+1 where UserName='"&SqlString(UserName)&"'")
 Message=Message&"<li>邀请已经成功发出<li><a href=Consortia.asp>返回社区公会</a><li><a href=Default.asp>返回论坛首页</a>"
 succeed(""&Message&"<meta http-equiv=refresh content=3;url=Consortia.asp>")
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 elseif Request("menu")="ConsortiaDel" then
 if ""&Request("sessionid")&""<>""&session.sessionid&"" then error("<li>效验码错误<li>请重新返回刷新后再试")
 if Conn.Execute("Select UserName From [BBSXP_Consortia] where id="&id&"")(0)<>CookieUserName then error("<li>只有会长才有权限执行该操作")
-Conn.execute("update [BBSXP_Users] set Consortia='',UserHonor='' where Consortia='"&Consortia&"'")
+Conn.execute("update [BBSXP_Users] set Consortia='',UserHonor='' where Consortia='"&SqlString(Consortia)&"'")
 Conn.execute("Delete from [BBSXP_Consortia] where id="&id&"")
 Message=Message&"<li>解散公会成功<li><a href=Consortia.asp>返回社区公会</a><li><a href=Default.asp>返回论坛首页</a>"
 succeed(""&Message&"<meta http-equiv=refresh content=3;url=Consortia.asp>")
@@ -56,7 +57,7 @@ elseif Request("menu")="ConsortiaUserOut" then
 if ""&Request("sessionid")&""<>""&session.sessionid&"" then error("<li>效验码错误<li>请重新返回刷新后再试")
 if CookieUserName=UserName then error("<li>不能自己开除自己")
 if Conn.Execute("Select UserName From [BBSXP_Consortia] where id="&id&"")(0)<>CookieUserName then error("<li>只有会长才有权限执行该操作")
-Conn.execute("update [BBSXP_Users] set Consortia='',UserHonor='' where UserName='"&UserName&"' and Consortia='"&Consortia&"'")
+Conn.execute("update [BBSXP_Users] set Consortia='',UserHonor='' where UserName='"&SqlString(UserName)&"' and Consortia='"&SqlString(Consortia)&"'")
 Message=Message&"<li>已经将 "&UserName&" 从公会中开除了<li><a href=Consortia.asp>返回社区公会</a><li><a href=Default.asp>返回论坛首页</a>"
 succeed(""&Message&"<meta http-equiv=refresh content=3;url=Consortia.asp>")
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -64,7 +65,7 @@ elseif Request("menu")="ConsortiaUserUserHonor" then
 if ""&Request("sessionid")&""<>""&session.sessionid&"" then error("<li>效验码错误<li>请重新返回刷新后再试")
 if Len(UserHonor)>7 then error("<li>头衔长度不能超多7个字符")
 if Conn.Execute("Select UserName From [BBSXP_Consortia] where id="&id&"")(0)<>CookieUserName then error("<li>只有会长才有权限执行该操作")
-Conn.execute("update [BBSXP_Users] set UserHonor='"&UserHonor&"' where UserName='"&UserName&"' and Consortia='"&Consortia&"'")
+Conn.execute("update [BBSXP_Users] set UserHonor='"&SqlString(UserHonor)&"' where UserName='"&SqlString(UserName)&"' and Consortia='"&SqlString(Consortia)&"'")
 Message=Message&"<li> "&UserName&" 已经获得 "&UserHonor&" 的头衔<li><a href=Consortia.asp>返回社区公会</a><li><a href=Default.asp>返回论坛首页</a>"
 succeed(""&Message&"<meta http-equiv=refresh content=3;url=Consortia.asp>")
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -78,10 +79,10 @@ if UserMoney< 10000 then Message=Message&"<li>您的金币少于 10000 ！"
 if Consortianame="" then Message=Message&"<li>公会简称没有填写"
 if Len(Consortianame)>7 then Message=Message&"<li>公会简称最多7个字符"
 if FullName="" then Message=Message&"<li>公会全称没有填写"
-If not Conn.Execute("Select id From [BBSXP_Consortia] where Consortianame='"&Consortianame&"' or UserName='"&CookieUserName&"'").eof Then  Message=Message&"<li>社区中已存在同名公会<li>您已经建立过公会"
+If not Conn.Execute("Select id From [BBSXP_Consortia] where Consortianame='"&SqlString(Consortianame)&"' or UserName='"&SqlString(CookieUserName)&"'").eof Then  Message=Message&"<li>社区中已存在同名公会<li>您已经建立过公会"
 if Message<>"" then error(""&Message&"")
-Conn.Execute("insert into [BBSXP_Consortia] (Consortianame,FullName,tenet,UserName) values ('"&Consortianame&"','"&FullName&"','"&tenet&"','"&CookieUserName&"')")
-Conn.execute("update [BBSXP_Users] set Consortia='"&Consortianame&"',[UserMoney]=[UserMoney]-10000 where UserName='"&CookieUserName&"'")
+Conn.Execute("insert into [BBSXP_Consortia] (Consortianame,FullName,tenet,UserName) values ('"&SqlString(Consortianame)&"','"&SqlString(FullName)&"','"&SqlString(tenet)&"','"&SqlString(CookieUserName)&"')")
+Conn.execute("update [BBSXP_Users] set Consortia='"&SqlString(Consortianame)&"',[UserMoney]=[UserMoney]-10000 where UserName='"&SqlString(CookieUserName)&"'")
 Message=Message&"<li>创建公会成功<li><a href=Consortia.asp>返回社区公会</a><li><a href=Default.asp>返回论坛首页</a>"
 succeed(""&Message&"<meta http-equiv=refresh content=3;url=Consortia.asp>")
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -91,7 +92,7 @@ tenet=HTMLEncode(Request.Form("tenet"))
 if FullName="" then Message=Message&"<li>公会全称没有填写"
 if Message<>"" then error(""&Message&"")
 if Conn.Execute("Select UserName From [BBSXP_Consortia] where id="&id&"")(0)<>CookieUserName then error("<li>只有会长才有权限执行该操作")
-Conn.execute("update [BBSXP_Consortia] set FullName='"&FullName&"',tenet='"&tenet&"' where id="&id&"")
+Conn.execute("update [BBSXP_Consortia] set FullName='"&SqlString(FullName)&"',tenet='"&SqlString(tenet)&"' where id="&id&"")
 Message=Message&"<li>修改公会成功<li><a href=Consortia.asp>返回社区公会</a><li><a href=Default.asp>返回论坛首页</a>"
 succeed(""&Message&"<meta http-equiv=refresh content=3;url=Consortia.asp>")
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -142,7 +143,7 @@ Set Rs=Conn.Execute(sql)
 </td>
 <td width="82%">
 <%
-sql="select UserName from [BBSXP_Users] where Consortia='"&Rs("Consortianame")&"'"
+sql="select UserName from [BBSXP_Users] where Consortia='"&SqlString(Rs("Consortianame"))&"'"
 Set Rs=Conn.Execute(sql)
 Do While Not Rs.EOF
 i=i+1
@@ -291,12 +292,12 @@ else
 
 
 if Consortia<>"" then
-sql="select * from [BBSXP_Consortia] where Consortianame='"&Consortia&"'"
+sql="select * from [BBSXP_Consortia] where Consortianame='"&SqlString(Consortia)&"'"
 Set Rs=Conn.Execute(sql)
-if Rs.eof then Conn.execute("update [BBSXP_Users] set Consortia='',UserHonor='' where UserName='"&CookieUserName&"'")
-sql="select UserName from [BBSXP_Users] where Consortia='"&Rs("Consortianame")&"'"
+if Rs.eof then Conn.execute("update [BBSXP_Users] set Consortia='',UserHonor='' where UserName='"&SqlString(CookieUserName)&"'")
+sql="select UserName from [BBSXP_Users] where Consortia='"&SqlString(Rs("Consortianame"))&"'"
 Set Rs1=Conn.Execute(sql)
-if Rs1.eof then Conn.execute("update [BBSXP_Users] set Consortia='',UserHonor='' where UserName='"&CookieUserName&"'")
+if Rs1.eof then Conn.execute("update [BBSXP_Users] set Consortia='',UserHonor='' where UserName='"&SqlString(CookieUserName)&"'")
 Do While Not RS1.EOF
 i=i+1
 list=list&"<input type=radio value='"&rs1("UserName")&"' name=UserName id="&i&"><label for="&i&">"&rs1("UserName")&"</label> "

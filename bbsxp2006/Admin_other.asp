@@ -33,15 +33,15 @@ sub circumstance
 </tr>
 <tr class=a3>
 <td height="25">服务器的域名</td>
-<td width="66%" height="25"><%=Request.ServerVariables("server_name")%></td>
+<td width="66%" height="25"><%=HTMLEncode(Request.ServerVariables("server_name"))%></td>
 </tr>
 <tr class=a4>
 <td height="25">服务器的IP地址</td>
-<td width="66%" height="25"><%=Request.ServerVariables("LOCAL_ADDR")%>
+<td width="66%" height="25"><%=HTMLEncode(Request.ServerVariables("LOCAL_ADDR"))%>
 </tr>
 <tr class=a3>
 <td height="25">服务器操作系统</td>
-<td width="66%" height="25"><%=Request.ServerVariables("OS")%>
+<td width="66%" height="25"><%=HTMLEncode(Request.ServerVariables("OS"))%>
 </tr>
 <tr class=a4>
 <td height="25">服务器解译引擎</td>
@@ -49,15 +49,15 @@ sub circumstance
 </tr>
 <tr class=a3>
 <td height="25">服务器软件的名称及版本</td>
-<td width="66%" height="25"><%=Request.ServerVariables("SERVER_SOFTWARE")%>
+<td width="66%" height="25"><%=HTMLEncode(Request.ServerVariables("SERVER_SOFTWARE"))%>
 </tr>
 <tr class=a4>
 <td height="25">服务器正在运行的端口</td>
-<td width="66%" height="25"><%=Request.ServerVariables("server_port")%>
+<td width="66%" height="25"><%=HTMLEncode(Request.ServerVariables("server_port"))%>
 </tr>
 <tr class=a3>
 <td height="25">服务器CPU数量</td>
-<td width="66%" height="25"><%=Request.ServerVariables("NUMBER_OF_PROCESSORS")%></td>
+<td width="66%" height="25"><%=HTMLEncode(Request.ServerVariables("NUMBER_OF_PROCESSORS"))%></td>
 </tr>
 
 <tr class=a4>
@@ -72,11 +72,11 @@ sub circumstance
 
 <tr class=a4>
 <td height="25">请求的物理路径</td>
-<td width="66%" height="25"><%=Request.ServerVariables("path_translated")%>
+<td width="66%" height="25">已隐藏</td>
 </tr>
 <tr class=a3>
 <td height="25">请求的URL</td>
-<td width="66%" height="25">http://<%=Request.ServerVariables("server_name")%><%=Request.ServerVariables("script_name")%></td>
+<td width="66%" height="25">http://<%=HTMLEncode(Request.ServerVariables("server_name"))%><%=HTMLEncode(Request.ServerVariables("script_name"))%></td>
 </tr>
 <tr class=a4>
 <td height="25">服务器当前时间</td>
@@ -105,14 +105,15 @@ sub Log
 <%
 
 
-if Request("order")<>"" then
 order=HTMLEncode(Request("order"))
-else
+select case order
+case "UserName","IPAddress","HttpVerb","DateCreated","UserAgent"
+case else
 order="DateCreated"
-end if
+end select
 
 Search=HTMLEncode(Request("Search"))
-if Search<>"" then Searchlist="where UserName like '%"&Search&"%' or IPAddress like '%"&Search&"%' or PathAndQuery like '%"&Search&"%'"
+if Search<>"" then Searchlist="where UserName like '%"&SqlString(Search)&"%' or IPAddress like '%"&SqlString(Search)&"%' or PathAndQuery like '%"&SqlString(Search)&"%'"
 
 sql="select * from [BBSXP_Log] "&Searchlist&" order by "&order&" Desc"
 Rs.Open sql,Conn,1
@@ -120,7 +121,7 @@ Rs.Open sql,Conn,1
 PageSetup=20 '设定每页的显示数量
 Rs.Pagesize=PageSetup
 TotalPage=Rs.Pagecount  '总页数
-PageCount = cint(Request.QueryString("PageIndex"))
+PageCount = RequestInt("PageIndex")
 if PageCount <1 then PageCount = 1
 if PageCount > TotalPage then PageCount = TotalPage
 if TotalPage>0 then Rs.absolutePage=PageCount '跳转到指定页数
@@ -130,7 +131,7 @@ i=0
 Do While Not Rs.EOF and i<PageSetup
 i=i+1
 
-response.write "<tr class=a3><td align=center>"&Rs("UserName")&"</td><td align=center>"&Rs("IPAddress")&"</td><td align=center>"&Rs("HttpVerb")&"</td><td style=word-break:break-all>"&Rs("PathAndQuery")&"</td><td align=center>"&Rs("DateCreated")&"</td><td align=center style=word-break:break-all><font size=1>"&Rs("UserAgent")&"</font></td></tr>"
+response.write "<tr class=a3><td align=center>"&HTMLEncode(""&Rs("UserName")&"")&"</td><td align=center>"&HTMLEncode(""&Rs("IPAddress")&"")&"</td><td align=center>"&HTMLEncode(""&Rs("HttpVerb")&"")&"</td><td style=word-break:break-all>"&HTMLEncode(""&Rs("PathAndQuery")&"")&"</td><td align=center>"&Rs("DateCreated")&"</td><td align=center style=word-break:break-all><font size=1>"&HTMLEncode(""&Rs("UserAgent")&"")&"</font></td></tr>"
 
 
 

@@ -3,7 +3,7 @@
 top
 
 if CookieUserName=empty then error("<li>您还未<a href=Login.asp>登录</a>论坛")
-If not Conn.Execute("Select UserName From [BBSXP_Prison] where UserName='"&CookieUserName&"'" ).eof Then error("<li>您被关进<a href=Prison.asp>监狱</a>")
+If not Conn.Execute("Select UserName From [BBSXP_Prison] where UserName='"&SqlString(CookieUserName)&"'" ).eof Then error("<li>您被关进<a href=Prison.asp>监狱</a>")
 ThreadID=int(Request("ThreadID"))
 
 
@@ -53,7 +53,7 @@ next
 end if
 
 
-sql="select * from [BBSXP_Users] where UserName='"&CookieUserName&"'"
+sql="select * from [BBSXP_Users] where UserName='"&SqlString(CookieUserName)&"'"
 Rs.Open sql,Conn,1,3
 
 StopPostTime=int(DateDiff("s",Rs("UserLandTime"),Now()))
@@ -74,16 +74,17 @@ Rs.close
 if Request.Form("UpFileID")<>"" then
 UpFileID=split(Request.form("UpFileID"),",")
 for i = 0 to ubound(UpFileID)-1
-Conn.execute("update [BBSXP_PostAttachments] set ThreadID="&ThreadID&",Description='"&Subject&"' where id="&UpFileID(i)&" and ThreadID=0")
+UpFileItem=SafeLongValue(UpFileID(i),0)
+if UpFileItem>0 then Conn.execute("update [BBSXP_PostAttachments] set ThreadID="&ThreadID&",Description='"&SqlString(Subject)&"' where id="&UpFileItem&" and ThreadID=0")
 next
 end if
 
 
 if UserPopedomPass=1 and color<>"" then Subject="<font color="&color&">"&Subject&"</font>"
 
-Conn.Execute("insert into [BBSXP_Posts"&PostsTableName&"] (ThreadID,UserName,Subject,content,Postip) values ('"&ThreadID&"','"&CookieUserName&"','"&Subject&"','"&content&"','"&Request.ServerVariables("REMOTE_ADDR")&"')")
-Conn.execute("update [BBSXP_Threads] set lastname='"&CookieUserName&"',replies=replies+1,lasttime="&SqlNowString&" where ID="&ThreadID&"")
-Conn.execute("update [BBSXP_Forums] set lastTopic='<a href=ShowPost.asp?ThreadID="&ThreadID&">"&Left(HTMLEncode(Request.Form("Subject")),15)&"</a>',lastname='"&CookieUserName&"',lasttime="&SqlNowString&",ForumToday=ForumToday+1,ForumPosts=ForumPosts+1 where id="&ForumID&"")
+Conn.Execute("insert into [BBSXP_Posts"&PostsTableName&"] (ThreadID,UserName,Subject,content,Postip) values ('"&ThreadID&"','"&SqlString(CookieUserName)&"','"&SqlString(Subject)&"','"&SqlString(content)&"','"&SqlString(Request.ServerVariables("REMOTE_ADDR"))&"')")
+Conn.execute("update [BBSXP_Threads] set lastname='"&SqlString(CookieUserName)&"',replies=replies+1,lasttime="&SqlNowString&" where ID="&ThreadID&"")
+Conn.execute("update [BBSXP_Forums] set lastTopic='"&SqlString("<a href=ShowPost.asp?ThreadID="&ThreadID&">"&Left(HTMLEncode(Request.Form("Subject")),15)&"</a>")&"',lastname='"&SqlString(CookieUserName)&"',lasttime="&SqlNowString&",ForumToday=ForumToday+1,ForumPosts=ForumPosts+1 where id="&ForumID&"")
 Conn.execute("update [BBSXP_Statistics_Site] set TodayPost=TodayPost+1,TotalPost=TotalPost+1")
 
 Session("VerifyCode")=""
@@ -96,8 +97,9 @@ end if
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 
-if isnumeric(""&Request("PostID")&"") then
-sql="select * from [BBSXP_Posts"&PostsTableName&"] where id="&Request("PostID")&""
+PostID=RequestInt("PostID")
+if PostID>0 then
+sql="select * from [BBSXP_Posts"&PostsTableName&"] where id="&PostID&""
 Set Rs=Conn.Execute(sql)
 Subject=ReplaceText(""&Rs("Subject")&"","<[^>]*>","")
 if Request("quote")=1 then
@@ -124,7 +126,7 @@ function title_color(color){document.yuziform.Subject.style.color = color;}
 
 <TABLE cellSpacing=1 cellPadding=5 width=100% border=0 class=a2 align="center">
 <form name="yuziform" method="post" onSubmit="return CheckForm(this);">
-<input name="content" type="hidden" value='<%=quote%>'>
+<input name="content" type="hidden" value='<%=HTMLEncode(quote)%>'>
 <input type=hidden name=ThreadID value=<%=ThreadID%>>
 <input name="UpFileID" type="hidden">
 <TR class=a1>

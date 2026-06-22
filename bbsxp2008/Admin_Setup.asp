@@ -958,7 +958,8 @@ End Sub
 Sub SiteInfo
 	If IsObjInstalled("Scripting.FileSystemObject") Then
 		Set fso = Server.CreateObject("Scripting.FileSystemObject")
-		if not fso.folderexists(Server.MapPath("Themes/"&Request("DefaultSiteStyle")&"")) then Alert("默认风格设置错误，Themes/"&Request("DefaultSiteStyle")&" 目录不存在！")
+		DefaultSiteStyle=SafeThemeName(Request("DefaultSiteStyle"))
+		if not fso.folderexists(Server.MapPath("Themes/"&DefaultSiteStyle&"")) then Alert("默认风格设置错误，Themes/"&DefaultSiteStyle&" 目录不存在！")
 		Set fso = nothing
 	end if
 
@@ -999,7 +1000,14 @@ Sub SiteInfo
 		Set objNodes = SiteConfigXMLDOM.documentElement.ChildNodes
 		Set objRoot = SiteConfigXMLDOM.documentElement
 		for each ho in Request.Form
-			objRoot.SelectSingleNode(ho).text = ""&server.HTMLEncode(Request(""&ho&""))&""
+			Set ConfigNode=objRoot.SelectSingleNode(ho)
+			if not ConfigNode is nothing then
+				if ho="DefaultSiteStyle" then
+					ConfigNode.text = ""&server.HTMLEncode(DefaultSiteStyle)&""
+				else
+					ConfigNode.text = ""&server.HTMLEncode(Request(""&ho&""))&""
+				end if
+			end if
 		next
 		for each element in objNodes	
 			SiteSettingsXMLStrings=SiteSettingsXMLStrings&"<"&element.nodename&">"&element.text&"</"&element.nodename&">"&vbCrlf

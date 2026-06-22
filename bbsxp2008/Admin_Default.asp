@@ -52,12 +52,12 @@ Sub main
 		<td colspan="2" align="center">系统信息</td>
 	</tr>
 	<tr class="CommonListCell">
-		<td width="50%">服务器域名：<%=Request.ServerVariables("server_name")%> / <%=Request.ServerVariables("LOCAL_ADDR")%></td>
+		<td width="50%">服务器域名：<%=HTMLEncode(Request.ServerVariables("server_name"))%> / <%=HTMLEncode(Request.ServerVariables("LOCAL_ADDR"))%></td>
 		<td width="50%">脚本解释引擎：<%=ScriptEngine & "/"& ScriptEngineMajorVersion &"."&ScriptEngineMinorVersion&"."& ScriptEngineBuildVersion %></td>
 	</tr>
 	<tr class="CommonListCell">
-		<td width="50%">服务器软件名：<%=Request.ServerVariables("SERVER_SOFTWARE")%></td>
-		<td width="50%">服务器操作系统：<%=Request.ServerVariables("OS")%></td>
+		<td width="50%">服务器软件名：<%=HTMLEncode(Request.ServerVariables("SERVER_SOFTWARE"))%></td>
+		<td width="50%">服务器操作系统：<%=HTMLEncode(Request.ServerVariables("OS"))%></td>
 	</tr>
 	<tr class="CommonListCell">
 		<td width="50%">FSO 组件支持：<%If Not IsObjInstalled("Scripting.FileSystemObject") Then%><font color="red"><b>×</b></font><%else%><b>√</b><%end if%></td>
@@ -161,7 +161,7 @@ Sub Login
       </td>
     </tr>
 	<tr class="CommonListCell">
-	  <td align="center">管 理 员：<input size="25" name="AdminUserName" type="text" value="<%=CookieUserName%>" Readonly></td>
+	  <td align="center">管 理 员：<input size="25" name="AdminUserName" type="text" value="<%=HTMLEncode(CookieUserName)%>" Readonly></td>
     </tr>
 	<tr class="CommonListCell">
 		<td align="center">管理密码：<input size="25" name="pass" type="Password"></td>

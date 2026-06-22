@@ -64,14 +64,14 @@ UserSign=HTMLEncode(Request.Form("UserSign"))
 password=Trim(Request.Form("password"))
 Userpass2=Trim(Request.Form("Userpass2"))
 UserMail=HTMLEncode(Request.Form("UserMail"))
-Userhome=HTMLEncode(Request.Form("Userhome"))
+RawUserhome=Trim(Request.Form("Userhome"))
+Userhome=SafeUrl(RawUserhome)
 PasswordQuestion=HTMLEncode(Request.Form("PasswordQuestion"))
 PasswordAnswer=HTMLEncode(Request.Form("PasswordAnswer"))
 birthday=HTMLEncode(Request.Form("birthday"))
-Userface=HTMLEncode(Request.Form("Userface"))
+RawUserface=Trim(Request.Form("Userface"))
+Userface=SafeUrl(RawUserface)
 UserSex=HTMLEncode(Request.Form("UserSex"))
-
-
 if SiteSettings("BannedText")<>empty then
 filtrate=split(SiteSettings("BannedText"),"|")
 for i = 0 to ubound(filtrate)
@@ -96,12 +96,11 @@ if instr(UserMail,"@")=0 then Message=Message&"<li>您的电子邮件地址填写错误"
 
 if Len(UserSign)>255 then Message=Message&"<li>签名档不能大于 255 个字节"
 
-if instr(Userface,";")>0 then Message=Message&"<li>头像URL中不能含有特殊符号"
-
-If not Conn.Execute("Select id From [BBSXP_Users] where UserName='"&UserName&"'" ).eof Then Message=Message&"<li>此用户名已经被别人注册了"
-
+if RawUserface<>"" and Userface="" then Message=Message&"<li>头像URL地址非法"
+if RawUserhome<>"" and Userhome="" then Message=Message&"<li>个人主页URL地址非法"
+If not Conn.Execute("Select id From [BBSXP_Users] where UserName='"&SqlString(UserName)&"'" ).eof Then Message=Message&"<li>此用户名已经被别人注册了"
 if SiteSettings("OnlyMailReg") = 1 then
-If not Conn.Execute("Select id From [BBSXP_Users] where UserMail='"&UserMail&"'" ).eof Then Message=Message&"<li>此Email已经被别人注册了"
+If not Conn.Execute("Select id From [BBSXP_Users] where UserMail='"&SqlString(UserMail)&"'" ).eof Then Message=Message&"<li>此Email已经被别人注册了"
 end if
 
 if Message<>"" then error(""&Message&"")
@@ -121,12 +120,12 @@ Rs.addNew
 Rs("UserName")=UserName
 Rs("Userpass")=md5(password)
 Rs("UserMail")=UserMail
-Rs("Userhome")=Userhome
+Rs("Userhome")=HTMLEncode(Userhome)
 Rs("PasswordQuestion")=PasswordQuestion
 Rs("membercode")=membercode
 if Request("PasswordAnswer")<>empty then Rs("PasswordAnswer")=md5(Request("PasswordAnswer"))
 Rs("birthday")=birthday
-Rs("Userface")=Userface
+Rs("Userface")=HTMLEncode(Userface)
 Rs("UserSex")=UserSex
 Rs("UserSign")=UserSign
 Rs("UserMobile")=""&HTMLEncode(Request("UserMobile"))&""
@@ -138,9 +137,7 @@ Rs("UserInfo")=""&HTMLEncode(Request("realname"))&"\"&HTMLEncode(Request("countr
 Rs("UserIM")=""&HTMLEncode(Request("qq"))&"\"&HTMLEncode(Request("icq"))&"\"&HTMLEncode(Request("uc"))&"\"&HTMLEncode(Request("aim"))&"\"&HTMLEncode(Request("msn"))&"\"&HTMLEncode(Request("Yahoo"))&""
 Rs.update
 Rs.close
-
-Conn.execute("update [BBSXP_Statistics_Site] set TotalUser=TotalUser+1,NewUser='"&UserName&"'")
-
+Conn.execute("update [BBSXP_Statistics_Site] set TotalUser=TotalUser+1,NewUser='"&SqlString(UserName)&"'")
 
 Mailaddress=UserMail
 MailTopic="用户名注册成功"
@@ -162,9 +159,7 @@ succeed(""&Message&"<meta http-equiv=refresh content=3;url=Default.asp>")
 
 elseif Request("menu")="write" then
 
-
-If not Conn.Execute("Select id From [BBSXP_Users] where UserName='"&UserName&"'" ).eof or UserName="" Then error2("您所选的用户名 "&UserName&" 已经有人使用，请另外选择一个用户名。")
-
+If not Conn.Execute("Select id From [BBSXP_Users] where UserName='"&SqlString(UserName)&"'" ).eof or UserName="" Then error2("您所选的用户名 "&UserName&" 已经有人使用，请另外选择一个用户名。")
 
 %>
 <SCRIPT src="inc/birthday.js"></SCRIPT>

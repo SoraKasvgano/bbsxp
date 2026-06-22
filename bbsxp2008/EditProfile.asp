@@ -15,8 +15,8 @@ elseif Request("menu")="PostUpFace" then
 %>
 <!--#include FILE="Utility/UpFile.asp"-->
 	<script language="JavaScript" type="text/javascript">
-		parent.document.form.UserFaceUrl.value='<%=SaveFile%>';
-		parent.document.getElementById("tus").src='<%=SaveFile%>';
+		parent.document.form.UserFaceUrl.value='<%=SafeJsString(SafeUrl(SaveFile))%>';
+		parent.document.getElementById("tus").src='<%=SafeJsString(SafeUrl(SaveFile))%>';
 		parent.BBSXP_Modal.Close();
 	</script>
 <%
@@ -110,15 +110,15 @@ Sub default
 	</tr>
 	<tr>
 		<td width="100"><b>主页</b></td>
-		<td><input type="text" name="WebAddress" size="30" value="<%=Rs("WebAddress")%>" /></td>
+		<td><input type="text" name="WebAddress" size="30" value="<%=SafeUrl(Rs("WebAddress"))%>" /></td>
 	</tr>
 	<tr>
 		<td width="100"><b>博客</b></td>
-		<td><input type="text" name="WebLog" size="30" value="<%=Rs("WebLog")%>" /></td>
+		<td><input type="text" name="WebLog" size="30" value="<%=SafeUrl(Rs("WebLog"))%>" /></td>
 	</tr>
 	<tr>
 		<td width="100"><b>相册</b></td>
-		<td><input type="text" name="WebGallery" size="30" value="<%=Rs("WebGallery")%>" /></td>
+		<td><input type="text" name="WebGallery" size="30" value="<%=SafeUrl(Rs("WebGallery"))%>" /></td>
 	</tr>
 </table>
 <table id="Tag_tab_1" style="display:none;" cellspacing=0 cellpadding=0 width=100% class=PannelBody>
@@ -158,10 +158,10 @@ Sub default
 <table id="Tag_tab_3" style="display:none" cellspacing=0 cellpadding=0 width=100% class=PannelBody>
 	<tr>
 		<td width="50">
-			<table cellspacing=0 cellpadding=0 border=0 width=62 style='cursor:pointer' onclick="javascript:open('Utility/Face.htm','','width=500,height=500,resizable,scrollbars')"><tr><td style="padding-left:1px; padding-top:1px; background-repeat:no-repeat" background=Images/FaceBackground.gif><img id="tus" src="<%=Rs("UserFaceUrl")%>" width=48 height=48 name=tus border="0" title="选择系统给定的头像" /></td></tr></table>
+			<table cellspacing=0 cellpadding=0 border=0 width=62 style='cursor:pointer' onclick="javascript:open('Utility/Face.htm','','width=500,height=500,resizable,scrollbars')"><tr><td style="padding-left:1px; padding-top:1px; background-repeat:no-repeat" background=Images/FaceBackground.gif><img id="tus" src="<%=SafeUrl(Rs("UserFaceUrl"))%>" width=48 height=48 name=tus border="0" title="选择系统给定的头像" /></td></tr></table>
 		</td>
 		<td>
-			<b>头像地址</b> <input type="text" value="<%=Rs("UserFaceUrl")%>" name="UserFaceUrl" size="40" <%if SiteConfig("EnableRemoteAvatars")=0 then%> readonly="readonly"<%end if%> /> <a href="javascript:BBSXP_Modal.Open('EditProfile.asp?menu=upface',500,150);" class="CommonTextButton" title="上传本地自定义头像">上传头像</a>
+			<b>头像地址</b> <input type="text" value="<%=SafeUrl(Rs("UserFaceUrl"))%>" name="UserFaceUrl" size="40" <%if SiteConfig("EnableRemoteAvatars")=0 then%> readonly="readonly"<%end if%> /> <a href="javascript:BBSXP_Modal.Open('EditProfile.asp?menu=upface',500,150);" class="CommonTextButton" title="上传本地自定义头像">上传头像</a>
 	 	</td>
 	</tr>
 </table>
@@ -175,7 +175,14 @@ End Sub
 
 Sub editProfileok
 	UserSign=HTMLEncode(Request.Form("UserSign"))
-	UserFaceUrl=HTMLEncode(Request("UserFaceUrl"))
+	RawUserFaceUrl=Trim(Request("UserFaceUrl"))
+	UserFaceUrl=SafeUrl(RawUserFaceUrl)
+	RawWebAddress=Trim(Request("WebAddress"))
+	WebAddress=SafeUrl(RawWebAddress)
+	RawWebLog=Trim(Request("WebLog"))
+	WebLog=SafeUrl(RawWebLog)
+	RawWebGallery=Trim(Request("WebGallery"))
+	WebGallery=SafeUrl(RawWebGallery)
 	birthday=Request("birthday")
 	UserTitle=HTMLEncode(Request.Form("UserTitle"))
 	
@@ -183,7 +190,11 @@ Sub editProfileok
 		if Not IsDate(birthday) then Message=Message&"<li>出生日期输入格式错误"
 	end if
 	
-	if instr(UserFaceUrl,";")>0 or instr(UserFaceUrl,"%")>0 or instr(UserFaceUrl,"javascript:")>0 then Message=Message&"<li>头像URL中不能含有特殊符号"
+	if RawUserFaceUrl<>"" and UserFaceUrl="" then Message=Message&"<li>头像URL格式不合法"
+	if SiteConfig("EnableRemoteAvatars")=0 and (Left(LCase(UserFaceUrl),7)="http://" or Left(LCase(UserFaceUrl),8)="https://") then Message=Message&"<li>当前设置不允许使用远程头像"
+	if RawWebAddress<>"" and WebAddress="" then Message=Message&"<li>主页URL格式不合法"
+	if RawWebLog<>"" and WebLog="" then Message=Message&"<li>博客URL格式不合法"
+	if RawWebGallery<>"" and WebGallery="" then Message=Message&"<li>相册URL格式不合法"
 
 	if Len(UserSign)>SiteConfig("SignatureMaxLength") then Message=Message&"<li>签名档不能大于 "&SiteConfig("SignatureMaxLength")&" 个字节"
 	if Len(UserTitle)>SiteConfig("UserTitleMaxChars") then Message=Message&"<li>头衔名称不能大于 "&SiteConfig("UserTitleMaxChars")&" 个字节"
@@ -205,16 +216,16 @@ Sub editProfileok
 			Rs("UserTitle")=UserTitle
 		end if
 		
-		Rs("UserFaceUrl")=UserFaceUrl
+		Rs("UserFaceUrl")=HTMLEncode(UserFaceUrl)
 		Rs("UserSex")=RequestInt("UserSex")
 		Rs("UserBio")=HTMLEncode(Request("UserBio"))
 		Rs("RealName")=HTMLEncode(Request("RealName"))
 		Rs("Occupation")=HTMLEncode(Request("Occupation"))
 		Rs("Address")=HTMLEncode(Request("Address"))
 		Rs("Interests")=HTMLEncode(Request("Interests"))
-		Rs("WebAddress")=HTMLEncode(Request("WebAddress"))
-		Rs("WebLog")=HTMLEncode(Request("WebLog"))
-		Rs("WebGallery")=HTMLEncode(Request("WebGallery"))
+		Rs("WebAddress")=HTMLEncode(WebAddress)
+		Rs("WebLog")=HTMLEncode(WebLog)
+		Rs("WebGallery")=HTMLEncode(WebGallery)
 		Rs("UserSign")=UserSign
 
 		Rs("QQ")=HTMLEncode(Request("QQ"))

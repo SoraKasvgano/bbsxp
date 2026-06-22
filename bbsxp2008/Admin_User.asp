@@ -52,7 +52,8 @@ select case Request("menu")
 
 		response.write "更新成功"
 	case "UserRankDel"
-		Execute("Delete from ["&TablePrefix&"Ranks] where RankID="&Request("RankID")&"")
+		RankID=RequestInt("RankID")
+		If RankID>0 Then Execute("Delete from ["&TablePrefix&"Ranks] where RankID="&RankID&"")
 		response.write "删除成功"
 	case "AllRoles"
 		AllRoles
@@ -246,8 +247,12 @@ Sub SearchUserok
 <%
 	SearchType=HTMLEncode(Request("SearchType"))
 	SearchText=HTMLEncode(Request("SearchText"))
-	SearchRole=HTMLEncode(Request("SearchRole"))
-	CurrentAccountStatus=HTMLEncode(Request("CurrentAccountStatus"))
+	Select Case SearchType
+		Case "UserName","UserEmail","all"
+		Case Else SearchType="UserName"
+	End Select
+	SearchRole=RequestInt("SearchRole")
+	CurrentAccountStatus=RequestInt("CurrentAccountStatus")
 	JoinedDateComparer=Left(Request("JoinedDateComparer"),1)
 	LastPostDateComparer=Left(Request("LastPostDateComparer"),1)
 	JoinedDate_picker=HTMLEncode(Request("JoinedDate_picker"))
@@ -257,8 +262,8 @@ Sub SearchUserok
 	if SearchText<>"" then item=item&" and ("&SearchType&" like '%"&SearchText&"%')"
 	if JoinedDate_picker<>"" and JoinedDateComparer<>"" then item=item&" and DateDiff("&SqlChar&"d"&SqlChar&",'"&JoinedDate_picker&"',UserRegisterTime) "&JoinedDateComparer&" 0"
 	if LastPostDate_picker<>"" and LastPostDateComparer<>"" then item=item&" and DateDiff("&SqlChar&"d"&SqlChar&",'"&LastPostDate_picker&"',UserActivityTime) "&LastPostDateComparer&" 0"
-	if SearchRole <> "" then item=item&" and UserRoleID="&SearchRole&""
-	if CurrentAccountStatus <> "" then item=item&" and UserAccountStatus="&CurrentAccountStatus&""
+	if SearchRole > 0 then item=item&" and UserRoleID="&SearchRole&""
+	if Request("CurrentAccountStatus") <> "" and CurrentAccountStatus>=0 and CurrentAccountStatus<=3 then item=item&" and UserAccountStatus="&CurrentAccountStatus&""
 
 	if item<>"" then item=" where "&mid(item,5)
 
@@ -271,7 +276,13 @@ Sub SearchUserok
 	if PageCount <1 then PageCount = 1
 	if PageCount > TotalPage then PageCount = TotalPage
 	
-	if Request("MemberSortDropDown")<>"" then item=item&" order by "&Request("MemberSortDropDown")&" "&Request("SortOrderDropDown")&""
+	MemberSortDropDown=HTMLEncode(Request("MemberSortDropDown"))
+	SortOrderDropDown=SafeSqlOrder(Request("SortOrderDropDown"),"Desc")
+	Select Case MemberSortDropDown
+		Case "UserName","UserEmail","TotalPosts","UserRegisterTime","UserActivityTime"
+		Case Else MemberSortDropDown=""
+	End Select
+	if MemberSortDropDown<>"" then item=item&" order by "&MemberSortDropDown&" "&SortOrderDropDown
 	sql="["&TablePrefix&"Users]"&item&""
 	if PageCount<11 then
 		Set Rs=Execute(sql)
@@ -489,17 +500,17 @@ Sub Userok
 	
 	sql="Select * from ["&TablePrefix&"Users] where UserName='"&UserName&"'"
 	Rs.Open sql,Conn,1,3
-		Rs("UserFaceUrl")=Request("UserFaceUrl")
-		Rs("UserRoleID")=Request("UserRoleID")
-		Rs("UserEmail")=Request("UserEmail")
-		Rs("TotalPosts")=Request("TotalPosts")
-		Rs("UserActivityDay")=Request("UserActivityDay")
-		Rs("UserRank")=Request("UserRank")
-		Rs("experience")=Request("experience")
-		Rs("UserMoney")=Request("UserMoney")
-		Rs("ReferrerName")=Request("ReferrerName")
-		Rs("TotalPosts")=Request("TotalPosts")
-		Rs("UserTitle")=Request("UserTitle")
+		Rs("UserFaceUrl")=HTMLEncode(SafeUrl(Request("UserFaceUrl")))
+		Rs("UserRoleID")=RequestInt("UserRoleID")
+		Rs("UserEmail")=HTMLEncode(Request("UserEmail"))
+		Rs("TotalPosts")=RequestInt("TotalPosts")
+		Rs("UserActivityDay")=RequestInt("UserActivityDay")
+		Rs("UserRank")=HTMLEncode(Request("UserRank"))
+		Rs("experience")=RequestInt("experience")
+		Rs("UserMoney")=RequestInt("UserMoney")
+		Rs("ReferrerName")=HTMLEncode(Request("ReferrerName"))
+		Rs("TotalPosts")=RequestInt("TotalPosts")
+		Rs("UserTitle")=HTMLEncode(Request("UserTitle"))
 		Rs("Reputation")=RequestInt("Reputation")
 		Rs("UserSign")=HTMLEncode(Request.Form("UserSign"))
 		Rs("Interests")=HTMLEncode(Request.Form("Interests"))
@@ -507,23 +518,23 @@ Sub Userok
 		Rs("UserNote")=HTMLEncode(Request.Form("UserNote"))
 		
 		Rs("UserSex")=RequestInt("UserSex")
-		Rs("UserAccountStatus")=Request("UserAccountStatus")
-		Rs("ModerationLevel")=Request("ModerationLevel")
+		Rs("UserAccountStatus")=RequestInt("UserAccountStatus")
+		Rs("ModerationLevel")=RequestInt("ModerationLevel")
 		Rs("birthday")=birthday
 		
 		Rs("QQ")=HTMLEncode(Request("QQ"))
 		Rs("ICQ")=HTMLEncode(Request("ICQ"))
-		Rs("AIM")=Request("AIM")
-		Rs("MSN")=Request("MSN")
-		Rs("Yahoo")=Request("Yahoo")
-		Rs("Skype")=Request("Skype")
+		Rs("AIM")=HTMLEncode(Request("AIM"))
+		Rs("MSN")=HTMLEncode(Request("MSN"))
+		Rs("Yahoo")=HTMLEncode(Request("Yahoo"))
+		Rs("Skype")=HTMLEncode(Request("Skype"))
 		
-		Rs("RealName")=Request("RealName")
-		Rs("Occupation")=Request("Occupation")
-		Rs("Address")=Request("Address")
-		Rs("WebAddress")=Request("WebAddress")
-		Rs("WebLog")=Request("WebLog")
-		Rs("WebGallery")=Request("WebGallery")
+		Rs("RealName")=HTMLEncode(Request("RealName"))
+		Rs("Occupation")=HTMLEncode(Request("Occupation"))
+		Rs("Address")=HTMLEncode(Request("Address"))
+		Rs("WebAddress")=HTMLEncode(SafeUrl(Request("WebAddress")))
+		Rs("WebLog")=HTMLEncode(SafeUrl(Request("WebLog")))
+		Rs("WebGallery")=HTMLEncode(SafeUrl(Request("WebGallery")))
 	Rs.update
 	Rs.close
 	

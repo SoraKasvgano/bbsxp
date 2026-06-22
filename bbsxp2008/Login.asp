@@ -4,7 +4,7 @@
 
 if Request("menu")="OUT" then
 	HtmlTop
-	if ReturnUrl="" and Http_Referer<>"" then ReturnUrl=Http_Referer
+	if ReturnUrl="" and Http_Referer<>"" then ReturnUrl=SafeRedirectUrl(Http_Referer)
 	if ReturnUrl="" then ReturnUrl="Default.asp"
 	
 	if Request_Method <> "POST" then error("<li>提交方式错误！</li><li>您本次使用的是"&Request_Method&"提交方式！</li>")
@@ -21,7 +21,7 @@ if Request("menu")="OUT" then
 	succeed "已经成功退出",ReturnUrl
 	
 elseif Request_Method = "POST" then
-	ReturnUrl=Request.Form("ReturnUrl")
+	ReturnUrl=SafeRedirectUrl(Request.Form("ReturnUrl"))
 	UserName=HTMLEncode(Request.Form("UserName"))
 	UserPassword=Trim(Request.Form("UserPassword"))
 	IsMD5=False
@@ -59,7 +59,7 @@ elseif Request_Method = "POST" then
 %>
 	<script language="javascript" type="text/javascript">
 		<%if ReturnUrl<>"" then%>
-		window.location.href = "<%=ReturnUrl%>";
+		window.location.href = "<%=SafeJsString(ReturnUrl)%>";
 		<%else%>
 		if(top == self){window.location.href = "Default.asp";}else{parent.window.location.reload();}
 		<%end if%>

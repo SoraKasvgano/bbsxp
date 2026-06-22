@@ -2,7 +2,7 @@
 <%
 top
 if CookieUserName=empty then error("<li>您还未<a href=Login.asp>登录</a>论坛")
-ForumID=int(Request("ForumID"))
+ForumID=RequestInt("ForumID")
 
 sql="select * from [BBSXP_Forums] where id="&ForumID&""
 Set Rs=Conn.Execute(sql)
@@ -27,15 +27,15 @@ error2("请选择您要操作的项目")
 
 case "BatchRecycle"
 for each ho in request.form("ThreadID")
-ho=int(ho)
-Conn.execute("update [BBSXP_Threads] set IsDel=0,lasttime="&SqlNowString&",lastname='"&CookieUserName&"' where id="&ho&" and IsDel=1 and ForumID="&ForumID&"")
+ho=SafeLongValue(ho,0)
+Conn.execute("update [BBSXP_Threads] set IsDel=0,lasttime="&SqlNowString&",lastname='"&SqlString(CookieUserName)&"' where id="&ho&" and IsDel=1 and ForumID="&ForumID&"")
 next
 Log("还原回收站内的帖子，主题ID："&Request.form("ThreadID")&"")
 error2("成功还原回收站内的帖子")
 
 case "BatchCensorship"
 for each ho in request.form("ThreadID")
-ho=int(ho)
+ho=SafeLongValue(ho,0)
 Conn.execute("update [BBSXP_Threads] set IsDel=0 where id="&ho&" and IsDel=1 and ForumID="&ForumID&"")
 next
 Log("帖子通过审查，主题ID："&Request.form("ThreadID")&"")
@@ -44,8 +44,8 @@ error2("帖子已经成功通过审查")
 case "BatchDel"
 IsDel=int(Request.form("IsDel"))
 for each ho in Request.form("ThreadID")
-ho=int(ho)
-Conn.execute("update [BBSXP_Threads] set IsDel="&IsDel&",lasttime="&SqlNowString&",lastname='"&CookieUserName&"' where id="&ho&" and ForumID="&ForumID&"")
+ho=SafeLongValue(ho,0)
+Conn.execute("update [BBSXP_Threads] set IsDel="&IsDel&",lasttime="&SqlNowString&",lastname='"&SqlString(CookieUserName)&"' where id="&ho&" and ForumID="&ForumID&"")
 next
 Log("批量删除，主题ID："&Request.form("ThreadID")&"")
 error2("操作成功")
@@ -53,34 +53,34 @@ error2("操作成功")
 case "BatchGOOD"
 IsGOOD=int(Request.form("IsGOOD"))
 for each ho in Request.form("ThreadID")
-ho=int(ho)
-Conn.execute("update [BBSXP_Threads] set IsGOOD="&IsGOOD&",lasttime="&SqlNowString&",lastname='"&CookieUserName&"' where id="&ho&" and ForumID="&ForumID&"")
+ho=SafeLongValue(ho,0)
+Conn.execute("update [BBSXP_Threads] set IsGOOD="&IsGOOD&",lasttime="&SqlNowString&",lastname='"&SqlString(CookieUserName)&"' where id="&ho&" and ForumID="&ForumID&"")
 next
 Log("批量精华，主题ID："&Request.form("ThreadID")&"")
 error2("操作成功")
 
 case "BatchLocked"
-IsLocked=int(Request.form("IsLocked"))
+IsLocked=SafeLongValue(Request.form("IsLocked"),0)
 for each ho in Request.form("ThreadID")
-ho=int(ho)
-Conn.execute("update [BBSXP_Threads] set IsLocked="&IsLocked&",lasttime="&SqlNowString&",lastname='"&CookieUserName&"' where id="&ho&" and ForumID="&ForumID&"")
+ho=SafeLongValue(ho,0)
+Conn.execute("update [BBSXP_Threads] set IsLocked="&IsLocked&",lasttime="&SqlNowString&",lastname='"&SqlString(CookieUserName)&"' where id="&ho&" and ForumID="&ForumID&"")
 next
 Log("批量锁定，主题ID："&Request.form("ThreadID")&"")
 error2("操作1"&IsLocked&"成功")
 
 case "BatchSpecialTopic"
 for each ho in Request.form("ThreadID")
-ho=int(ho)
-Conn.execute("update [BBSXP_Threads] set SpecialTopic='"&Request.form("SpecialTopic")&"',lasttime="&SqlNowString&",lastname='"&CookieUserName&"' where id="&ho&" and ForumID="&ForumID&"")
+ho=SafeLongValue(ho,0)
+Conn.execute("update [BBSXP_Threads] set SpecialTopic='"&SqlString(HTMLEncode(Request.form("SpecialTopic")))&"',lasttime="&SqlNowString&",lastname='"&SqlString(CookieUserName)&"' where id="&ho&" and ForumID="&ForumID&"")
 next
 Log("批量专题，主题ID："&Request.form("ThreadID")&"")
 error2("操作成功")
 
 case "BatchMoveTopic"
-AimForumID=int(Request.form("AimForumID"))
-if AimForumID="" then error("<li>您没有选择要将主题移动哪个论坛")
+AimForumID=SafeLongValue(Request.form("AimForumID"),0)
+if AimForumID=0 then error("<li>您没有选择要将主题移动哪个论坛")
 for each ho in Request.form("ThreadID")
-ho=int(ho)
+ho=SafeLongValue(ho,0)
 if Conn.Execute("Select ForumPass From [BBSXP_Forums] where id="&AimForumID&"")(0)=4 then error("<li>目标论坛为授权发帖状态")
 Conn.execute("update [BBSXP_Threads] set ForumID="&AimForumID&",IsTop=0,IsGood=0,IsLocked=0 where id="&ho&" and ForumID="&ForumID&"")
 next
@@ -103,7 +103,7 @@ case "ForumDataUp"
 ForumName=HTMLEncode(Request.Form("ForumName"))
 TolSpecialTopic=HTMLEncode(Request.Form("TolSpecialTopic"))
 ForumIcon=HTMLEncode(Request.Form("ForumIcon"))
-ForumLogo=HTMLEncode(Request.Form("ForumLogo"))
+ForumLogo=HTMLEncode(SafeUrl(Request.Form("ForumLogo")))
 moderated=HTMLEncode(Request.Form("moderated"))
 ForumIntro=HTMLEncode(Request.Form("ForumIntro"))
 ForumRules=HTMLEncode(Request.Form("ForumRules"))
@@ -140,7 +140,7 @@ ForumRules=replace(""&Rs("ForumRules")&"","<br>",vbCrlf)
 %>
 
 <script>
-if ("<%=Rs("ForumLogo")%>"!=''){Logo.innerHTML="<img border=0 src=<%=Rs("ForumLogo")%> onload='javascript:if(this.height>60)this.height=60;'>"}
+if ("<%=SafeJsString(SafeUrl(Rs("ForumLogo")))%>"!=''){Logo.innerHTML="<img border=0 src=<%=SafeUrl(Rs("ForumLogo"))%> onload='javascript:if(this.height>60)this.height=60;'>"}
 </script>
 	<table border="0" width="100%" align="center" cellspacing="1" cellpadding="4" class=a2>
 		<tr class=a3>
@@ -150,7 +150,7 @@ if ("<%=Rs("ForumLogo")%>"!=''){Logo.innerHTML="<img border=0 src=<%=Rs("ForumLo
 <table border="0" width="100%">
 	<tr>
 		<td valign="top" width="20%">
-		
+
 
 
 <table width=100% cellspacing=1 cellpadding=4 border=0 class=a2 align=center>
@@ -180,14 +180,14 @@ if ("<%=Rs("ForumLogo")%>"!=''){Logo.innerHTML="<img border=0 src=<%=Rs("ForumLo
 	</tr>
 	<tr class=a3>
 		<td><a href="ForumManage.asp?menu=Fix&ForumID=<%=ForumID%>">修复论坛统计数据</a></td>
-	</tr>		
+	</tr>
 </table>
 
 
 		</td>
 		<td align="center">
-		
-		
+
+
 <table width=100% cellspacing=1 cellpadding=4 border=0 class=a2 align=center>
 <tr class=a1>
 <td height="20" align="center" colspan="2"><b>论坛资料</b></td>
@@ -211,7 +211,7 @@ if ("<%=Rs("ForumLogo")%>"!=''){Logo.innerHTML="<img border=0 src=<%=Rs("ForumLo
 <tr class=a4>
 <td align="right" valign="middle" width="20%">帖子专题：</td>
 <td align="Left" valign="middle" width="78%">
-<input size="30" name="TolSpecialTopic" value="<%=Rs("TolSpecialTopic")%>"> 
+<input size="30" name="TolSpecialTopic" value="<%=HTMLEncode(""&Rs("TolSpecialTopic")&"")%>">
 添加请用“|”隔开，如：原创|转贴|贴图</td>
 </tr>
 <tr class=a3>
@@ -233,17 +233,17 @@ if ("<%=Rs("ForumLogo")%>"!=''){Logo.innerHTML="<img border=0 src=<%=Rs("ForumLo
 <tr class=a4>
 <td align="right" valign="bottom" width="20%">大图标URL：</td>
 <td align="Left" valign="bottom" width="78%">
-<input size="30" name="ForumLogo" value="<%=Rs("ForumLogo")%>">　显示在论坛左上角</td>
+<input size="30" name="ForumLogo" value="<%=HTMLEncode(SafeUrl(Rs("ForumLogo")))%>">　显示在论坛左上角</td>
 </tr>
 <tr class=a3>
 <td align="right" valign="bottom" width="98%" colspan="2"><input type="submit" value=" 更 新 &gt;&gt;下 一 步 "></td>
 </tr>
 </table>
 </form>
-		
-		
-		
-		
+
+
+
+
 		</td>
 	</tr>
 </table>
@@ -257,12 +257,12 @@ end select
 
 %>
 <script>
-if ("<%=ForumLogo%>"!=''){Logo.innerHTML="<img border=0 src=<%=ForumLogo%> onload='javascript:if(this.height>60)this.height=60;'>"}
+if ("<%=SafeJsString(SafeUrl(ForumLogo))%>"!=''){Logo.innerHTML="<img border=0 src=<%=SafeUrl(ForumLogo)%> onload='javascript:if(this.height>60)this.height=60;'>"}
 </script>
 	<table border="0" width="100%" align="center" cellspacing="1" cellpadding="4" class=a2>
 		<tr class=a3>
-			<td height="25">&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> → <%ForumTree(followid)%><%=ForumTreeList%> <a href="ShowForum.asp?ForumID=<%=ForumID%>"><%=ForumName%></a> → 
-			<a href="?menu=<%=Request("menu")%>&ForumID=<%=ForumID%>&checkbox=1"><span id=menu>回收站</span></a></td>
+			<td height="25">&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> → <%ForumTree(followid)%><%=ForumTreeList%> <a href="ShowForum.asp?ForumID=<%=ForumID%>"><%=ForumName%></a> →
+			<a href="?menu=<%=HTMLEncode(Request("menu"))%>&ForumID=<%=ForumID%>&checkbox=1"><span id=menu>回收站</span></a></td>
 		</tr>
 	</table><br><form method="POST" action="?"><input type=hidden name=ForumID value=<%=ForumID%>>
 <%
@@ -306,7 +306,7 @@ Rs.MoveNext
 loop
 Rs.Close
 %>
-	
+
 </table>
 
 <table cellspacing="0" cellpadding="1" width="100%" align="center" border="0">

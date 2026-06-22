@@ -12,7 +12,7 @@ Set Statistics=Conn.Execute("[BBSXP_Statistics_Site]")
 			<%
 if CookieUserName<>"" then
 
-sql="select * from [BBSXP_Users] where UserName='"&CookieUserName&"'"
+sql="select * from [BBSXP_Users] where UserName='"&SqlString(CookieUserName)&"'"
 Set Rs1=Conn.Execute(sql)
 ShowRank()
 
@@ -26,7 +26,7 @@ ShowRank()
 				<table width="100%" border="0" cellpadding="3" cellspacing="1">
 					<tr>
 						<td width="25%" align="Left" valign="middle">
-						<a href="Profile.asp?UserName=<%=CookieUserName%>">我的资料</a></td>
+						<a href="Profile.asp?UserName=<%=Server.URLEncode(CookieUserName)%>">我的资料</a></td>
 						<td width="26%" align="Left" valign="middle">
 						<a href="UpFace.asp">上传头像</a></td>
 						<td width="28%" align="Left" valign="middle">
@@ -35,9 +35,9 @@ ShowRank()
 					<tr>
 						<td align="Left" valign="middle">
 						<span style="text-decoration: none">
-						<a href="Calendar.asp?UserName=<%=CookieUserName%>">我的日志</a></span></td>
+						<a href="Calendar.asp?UserName=<%=Server.URLEncode(CookieUserName)%>">我的日志</a></span></td>
 						<td align="Left" valign="middle">
-						<a href="ShowBBS.asp?menu=5&UserName=<%=CookieUserName%>">我的帖子</a></td>
+						<a href="ShowBBS.asp?menu=5&UserName=<%=Server.URLEncode(CookieUserName)%>">我的帖子</a></td>
 						<td align="Left" valign="middle">
 						<a href="MyFavorites.asp">我的收藏</a></td>
 					</tr>
@@ -67,11 +67,11 @@ else
 					<table border="0" width="100%">
 						<tr>
 							<td rowspan="3">用户名称:
-							<input size="20" name="UserName" value="<%=CookieUserName%>"><br>用户密码:
+							<input size="20" name="UserName" value="<%=HTMLEncode(CookieUserName)%>"><br>用户密码:
 							<input type="password" size="20" value name="Userpass">
 <%if sitesettings("EnableAntiSpamTextGenerateForLogin")=1 then%>
 							<br>验 证 码: <input size="10" name="VerifyCode">&nbsp;&nbsp;<img src="VerifyCode.asp" alt="验证码,看不清楚?请点击刷新验证码" style=cursor:pointer onclick="this.src='VerifyCode.asp'">
-<%end if%>							
+<%end if%>
 							　</td>
 							<td>
 							<input type="checkbox" value="1" name="eremite" id="eremite"><label for="eremite">隐身登录</label>
@@ -104,7 +104,7 @@ end if
 				主题总数：<%=Statistics("TotalThread")%>&nbsp;
 				帖子总数：<%=Statistics("TotalPost")%>&nbsp;
 				今日帖数：<%=Statistics("TodayPost")%>&nbsp;
-				新会员：<a href="Profile.asp?UserName=<%=Statistics("NewUser")%>"><%=Statistics("NewUser")%></a>
+				新会员：<a href="Profile.asp?UserName=<%=Server.URLEncode(""&Statistics("NewUser")&"")%>"><%=HTMLEncode(""&Statistics("NewUser")&"")%></a>
 </td>
 			</tr>
 		</table>
@@ -213,8 +213,8 @@ if SiteSettings("DisplayWhoIsOnline")=1 then
 		<td valign="top" class="a4">
 		<table cellspacing="0" cellpadding="3" width="100%">
 			<tr>
-				<td height="15">&nbsp;<img loaded="no" src="images/plus.gif" id="followImg0" style="cursor:hand;" onclick="loadThreadFollow(0,<%=ForumID%>)"> 
-				目前论坛总共 有 <b><%=Onlinemany%></b> 人在线。其中注册用户 <b><%=regOnline%></b> 
+				<td height="15">&nbsp;<img loaded="no" src="images/plus.gif" id="followImg0" style="cursor:hand;" onclick="loadThreadFollow(0,<%=ForumID%>)">
+				目前论坛总共 有 <b><%=Onlinemany%></b> 人在线。其中注册用户 <b><%=regOnline%></b>
 				人，访客 <b><%=Onlinemany-regOnline%></b> 人。最高在线 <font color="red">
 				<b><%=Statistics("BestOnline")%></b></font> 人，发生在 <b><%=Statistics("BestOnlineTime")%></b>
 				</td>
@@ -257,10 +257,10 @@ Rs.close
 </table>
 <br>
 <%end if%>
-<center>&nbsp;<img src="images/skins/<%=Request.Cookies("skins")%>/Board0.gif" alt="禁止浏览"> 关闭论坛&nbsp; 
-<img src="images/skins/<%=Request.Cookies("skins")%>/Board1.gif" alt="任何人均可浏览"> 正规论坛&nbsp; 
-<img src="images/skins/<%=Request.Cookies("skins")%>/Board2.gif" alt="游客禁止浏览"> 会员论坛&nbsp; 
-<img src="images/skins/<%=Request.Cookies("skins")%>/Board3.gif" alt="需要授权才能浏览"> 特殊论坛</center>
+<center>&nbsp;<img src="images/skins/<%=SafeThemeName(Request.Cookies("skins"))%>/Board0.gif" alt="禁止浏览"> 关闭论坛&nbsp;
+<img src="images/skins/<%=SafeThemeName(Request.Cookies("skins"))%>/Board1.gif" alt="任何人均可浏览"> 正规论坛&nbsp;
+<img src="images/skins/<%=SafeThemeName(Request.Cookies("skins"))%>/Board2.gif" alt="游客禁止浏览"> 会员论坛&nbsp;
+<img src="images/skins/<%=SafeThemeName(Request.Cookies("skins"))%>/Board3.gif" alt="需要授权才能浏览"> 特殊论坛</center>
 <%
 Set Statistics=Nothing
 
@@ -272,7 +272,7 @@ ForumIntro=replace(Rs1("ForumIntro"),"<br>",CHR(10))
 if rs1("Moderated")<>empty then
 ModeratedList="版主："
 filtrate=split(rs1("Moderated"),"|")
-ModeratedList=ModeratedList&"<a href=Profile.asp?UserName="&filtrate(0)&">"&filtrate(0)&"</a> "
+ModeratedList=ModeratedList&"<a href=Profile.asp?UserName="&Server.URLEncode(filtrate(0))&">"&HTMLEncode(filtrate(0))&"</a> "
 if ubound(filtrate)>0 then ModeratedList=ModeratedList&" <font color=gray>...</font>"
 else
 ModeratedList="　"

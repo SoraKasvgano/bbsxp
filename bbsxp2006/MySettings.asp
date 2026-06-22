@@ -6,7 +6,7 @@ if Request.ServerVariables("request_method") = "POST" then
 Response.Cookies("DisabledShowFace")=Request("DisabledShowFace")
 Response.Cookies("DisabledShowSign")=Request("DisabledShowSign")
 Response.Cookies("DisabledShowMessage")=Request("DisabledShowMessage")
-Response.Cookies("BadUserList")=Request("BadUserList")
+Response.Cookies("BadUserList")=HTMLEncode(Request("BadUserList"))
 Response.Cookies("DisabledShowFace").Expires=date+9999
 Response.Cookies("DisabledShowSign").Expires=date+9999
 Response.Cookies("DisabledShowMessage").Expires=date+9999
@@ -64,7 +64,7 @@ end if
 <tr class=a4>
     <td height="1" align="right" width="45%"><b>过滤用户的名单：</b><br>用户发表的帖子将被过滤</td>
     <td height="1" align="left" width="55%">  
-<input size=30 name=BadUserList value="<%=Request.Cookies("BadUserList")%>">
+<input size=30 name=BadUserList value="<%=HTMLEncode(Request.Cookies("BadUserList"))%>">
 	<font color="FF0000">多人请用“|”分隔</font> </td>
 </tr>
 <tr class=a3>

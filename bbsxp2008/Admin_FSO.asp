@@ -26,7 +26,7 @@ select case Request("menu")
 		Rs.Open "Select * from ["&TablePrefix&"PostAttachments]",Conn,1,3
 			if Not Rs.eof then
 				do while not Rs.eof
-					if Execute("select PostID from ["&TablePrefix&"Posts] where PostID="&Rs("PostID")&"").eof or Execute("select UserName from ["&TablePrefix&"Users] where UserName='"&Rs("UserName")&"'").eof then
+					if Execute("select PostID from ["&TablePrefix&"Posts] where PostID="&Rs("PostID")&"").eof or Execute("select UserName from ["&TablePrefix&"Users] where UserName='"&SqlString(Rs("UserName"))&"'").eof then
 						if ""&Rs("FilePath")&""<>"" then IsDelFile=DelFile(""&Rs("FilePath")&"")
 						if ""&Rs("FilePath")&""="" or (""&Rs("FilePath")&""<>"" and IsDelFile=True) then
 							Rs.Delete
@@ -42,12 +42,16 @@ select case Request("menu")
 	case "bak"
 		bak
 	case "bakbf"
+		BakDbPath=SafeDbRelativePath(Request.Form("BakDbPath"))
+		if BakDbPath="" then Alert("备份数据库路径不合法！")
 		Set MyFileObject=Server.CreateOBject("Scripting.FileSystemObject")
-		MyFileObject.CopyFile ""&Server.MapPath(SqlDataBase)&"",""&Server.MapPath(Request.Form("BakDbPath"))&""
+		MyFileObject.CopyFile ""&Server.MapPath(SqlDataBase)&"",""&Server.MapPath(BakDbPath)&""
 		Alert("备份成功！")
 	case "bakhf"
+		BakDbPath=SafeDbRelativePath(Request.Form("BakDbPath"))
+		if BakDbPath="" then Alert("恢复数据库路径不合法！")
 		Set MyFileObject=Server.CreateOBject("Scripting.FileSystemObject")
-		MyFileObject.CopyFile ""&Server.MapPath(Request.Form("BakDbPath"))&"",""&Server.MapPath(SqlDataBase)&""
+		MyFileObject.CopyFile ""&Server.MapPath(BakDbPath)&"",""&Server.MapPath(SqlDataBase)&""
 		Alert("恢复成功！")
 	case "statroom"
 		statroom
@@ -67,11 +71,11 @@ Sub bak
 			<table cellpadding="0" cellspacing="0" width="90%">
 				<tr>
 					<td width="30%">数据库路径： </td>
-					<td width="70%"><%=SqlDataBase%></td>
+					<td width="70%">已隐藏</td>
 				</tr>
 				<tr>
 					<td width="30%">备份的数据库路径：</td>
-						<td width="70%"><input size="30" value="<%=replace(""&SqlDataBase&"",".mdb","("&Date()&").mdb")%>" name="BakDbPath" /></td>
+						<td width="70%"><input size="30" value="database/backup(<%=SafeDateSuffix()%>).mdb" name="BakDbPath" /></td>
 				</tr>
 				<tr>
 						<td width="100%" align="center" colspan="2"><input type="submit" value=" 备 份 " /><br /></td>
@@ -91,11 +95,11 @@ Sub bak
 			<table cellpadding="0" cellspacing="0" width="90%">
 				<tr>
 					<td width="30%">备份的数据库路径： </td>
-					<td width="70%"><input size="30" value="<%=replace(""&SqlDataBase&"",".mdb","("&Date()&").mdb")%>" name="BakDbPath" /></td>
+					<td width="70%"><input size="30" value="database/backup(<%=SafeDateSuffix()%>).mdb" name="BakDbPath" /></td>
 				</tr>
 				<tr>
 					<td width="30%">数据库路径：</td>
-					<td width="70%"><%=SqlDataBase%></td>
+					<td width="70%">已隐藏</td>
 				</tr>
 				<tr>
 					<td width="100%" align="center" colspan="2"><input type="submit" value=" 恢 复 " /><br /></td>
@@ -119,7 +123,7 @@ Sub bak
 						<table cellpadding="0" cellspacing="0" width="90%">
 							<tr>
 								<td width="30%">数据库路径： </td>
-								<td width="70%"><input size="30" value="<%=SqlDataBase%>" name="dbpath" /></td>
+								<td width="70%"><input type="hidden" value="__current__" name="dbpath" />当前 ACCESS 数据库（路径已隐藏）</td>
 							</tr>
 							<tr>
 								<td width="30%">数据库格式：</td>
@@ -188,12 +192,22 @@ End Sub
 
 Sub PostAttachment
 
-	Search=HTMLEncode(Request("Search"))
+	Search=Request("Search")
 	Key=HTMLEncode(Request("Key"))
-	order=HTMLEncode(Request("order"))
+	order=Request("order")
+
+	Select Case Search
+		Case "FileName","ContentType","UserName","Description"
+		Case Else
+			Search=""
+	End Select
+	Select Case order
+		Case "UpFileID","FileName","ContentSize","ContentType","Created","UserName","Description"
+		Case Else
+			order="UpFileID"
+	End Select
 
 	if Search<>"" then SearchSql="where "&Search&" like '%"&Key&"%'"
-	if order="" then order="UpFileID"
 	sql="["&TablePrefix&"PostAttachments] "&SearchSql&""
 	rs.Open ""&sql&" order by "&order&" Desc",Conn,1
 		TotalCount=Execute("Select count(UpFileID) From "&sql&"")(0) '获取数据数量
@@ -238,17 +252,17 @@ Sub PostAttachment
 		i=0
 		Do While Not Rs.EOF and i<PageSetup
 			i=i+1
-			FilePath=RS("FilePath")
+			FilePath=SafeUrl(RS("FilePath"))
 			if ""&FilePath&""="" then FilePath="GetAttachment.asp?AttachmentID="&Rs("UpFileID")&""
 %>
 	<tr class="CommonListCell" id="UpFile<%=Rs("UpFileID")%>">
 		<td align="center"><input type=checkbox name=UpFileID value="<%=RS("UpFileID")%>" onclick="CheckSelected(this.form,this.checked,'UpFile<%=Rs("UpFileID")%>')" /></td>
-		<td align=center><a target="_blank" href="<%=FilePath%>"><%=RS("FileName")%></a></td>
+		<td align=center><a target="_blank" href="<%=FilePath%>"><%=HTMLEncode(""&RS("FileName")&"")%></a></td>
 		<td align=center><%=CheckSize(RS("ContentSize"))%></td>
-		<td align=center><%=RS("ContentType")%></td>
+		<td align=center><%=HTMLEncode(""&RS("ContentType")&"")%></td>
 		<td align=center><%=RS("Created")%></td>
-		<td align=center><a target="_blank" href="Profile.asp?UserName=<%=RS("UserName")%>"><%=RS("UserName")%></a></td>
-		<td align=center><%if Rs("PostID")>0 then response.Write("<a href=ShowPost.asp?PostID="&Rs("PostID")&" target=_blank>"&RS("Description")&"</a>") else response.Write(RS("Description")) end if%></td>
+		<td align=center><a target="_blank" href="Profile.asp?UserName=<%=Server.URLEncode(""&RS("UserName")&"")%>"><%=HTMLEncode(""&RS("UserName")&"")%></a></td>
+		<td align=center><%if Rs("PostID")>0 then response.Write("<a href=ShowPost.asp?PostID="&Rs("PostID")&" target=_blank>"&HTMLEncode(""&RS("Description")&"")&"</a>") else response.Write(HTMLEncode(""&RS("Description")&"")) end if%></td>
 	</tr>
 <%
 			Rs.MoveNext

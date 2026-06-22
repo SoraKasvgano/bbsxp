@@ -66,13 +66,13 @@ Log("登录后台管理")
 		<td class="a1" colspan="2" height="25" align="center"><b>系统信息</b></td>
 	</tr>
 	<tr class="a4">
-		<td width="50%" height="23">服务器域名：<%=Request.ServerVariables("server_name")%> 
-		/ <%=Request.ServerVariables("LOCAL_ADDR")%></td>
+		<td width="50%" height="23">服务器域名：<%=HTMLEncode(Request.ServerVariables("server_name"))%>
+		/ <%=HTMLEncode(Request.ServerVariables("LOCAL_ADDR"))%></td>
 		<td width="50%">脚本解释引擎：<%=ScriptEngine & "/"& ScriptEngineMajorVersion &"."&ScriptEngineMinorVersion&"."& ScriptEngineBuildVersion %></td>
 	</tr>
 	<tr class="a4">
-		<td width="50%" height="23">服务器软件的名称：<%=Request.ServerVariables("SERVER_SOFTWARE")%></td>
-		<td width="50%">ACCESS 数据库路径：<a target="_blank" href="<%=datapath%><%=datafile%>"><%=datapath%><%=datafile%></a></td>
+		<td width="50%" height="23">服务器软件的名称：<%=HTMLEncode(Request.ServerVariables("SERVER_SOFTWARE"))%></td>
+		<td width="50%">ACCESS database path: hidden</td>
 	</tr>
 	<tr class="a4">
 		<td width="50%" height="23">FSO 文本读写：<%If Not IsObjInstalled("Scripting.FileSystemObject") Then%><font color="red"><b>×</b></font><%else%><b>√</b><%end if%></td>
@@ -99,7 +99,7 @@ Log("登录后台管理")
 		<td width="20%" height="23">快捷功能链接</td>
 		<td width="80%" height="23"><a href="Admin_bbs.asp?menu=classs">
 		<font color="000000">建立论坛数据</font></a> |
-		<a href="Admin_bbs.asp?menu=bbsManage"><font color="000000">管理论坛资料</font></a> 
+		<a href="Admin_bbs.asp?menu=bbsManage"><font color="000000">管理论坛资料</font></a>
 		| <a href="Admin_bbs.asp?menu=upSiteSettingsok"><font color="000000">更新论坛资料</font></a></td>
 	</tr>
 </table>
@@ -110,15 +110,15 @@ Log("登录后台管理")
 	</tr>
 	<tr class="a4">
 		<td width="20%">注册网址</td>
-		<td width="80%"><%=Request.ServerVariables("server_name")%></td>
+		<td width="80%"><%=HTMLEncode(Request.ServerVariables("server_name"))%></td>
 </tr>
 	<tr class="a4">
 		<td width="20%">授权时间</td>
-		<td width="80%"><span id="Licence">?</span></td>
+		<td width="80%">外部授权查询已禁用</td>
 </tr>
 	<tr class="a4">
 		<td width="20%">使用种类</td>
-		<td width="80%"><span id="Class">?</span></td>
+		<td width="80%">本地安装</td>
 </tr>
 	</table>
 <br>
@@ -143,7 +143,7 @@ Log("登录后台管理")
 		地址：中国福建省泉州市泉秀路农行大厦25楼I座</td>
 	</tr>
 	</table>
-<script src="http://Licence.yuzi.net/Licence.asp?BBSxpWeb=<%=Request.ServerVariables("server_name")%>"></script>
+
 
 <%
 Conn.execute("Delete from [BBSXP_Log] where DateCreated<"&SqlNowString&"-7")

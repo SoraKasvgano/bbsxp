@@ -33,6 +33,112 @@ End Class
 
 
 ''''''''''''''''''''''''''''''''''''
+
+''''''''''''''''''''''''''''''''''''
+Function SafeJsString(Value)
+	Value=""&Value&""
+    Value=Replace(Value,Chr(92),Chr(92)&Chr(92))
+    Value=Replace(Value,"'",Chr(92)&"'")
+    Value=Replace(Value,Chr(34),Chr(92)&Chr(34))
+    Value=Replace(Value,Chr(13),Chr(92)&"n")
+    Value=Replace(Value,Chr(10),Chr(92)&"n")
+    Value=Replace(Value,"</","<"&Chr(92)&"/")
+	SafeJsString=Value
+End Function
+
+Function SafeUrl(Value)
+	Dim TempUrl, LowerUrl, ColonPos, SchemePart
+	TempUrl=Trim(""&Value&"")
+	TempUrl=Replace(TempUrl,Chr(0),"")
+	TempUrl=Replace(TempUrl,Chr(9),"")
+	TempUrl=Replace(TempUrl,Chr(10),"")
+	TempUrl=Replace(TempUrl,Chr(13),"")
+	TempUrl=Replace(TempUrl,Chr(34),"")
+	TempUrl=Replace(TempUrl,"'","")
+	TempUrl=Replace(TempUrl,"<","")
+	TempUrl=Replace(TempUrl,">","")
+	LowerUrl=LCase(Replace(Replace(Replace(TempUrl,"&#58;",":"),"&#x3a;",":"),"&colon;",":"))
+	ColonPos=InStr(LowerUrl,":")
+	If ColonPos>0 Then
+		SchemePart=Left(LowerUrl,ColonPos-1)
+		If (InStr(SchemePart,"&")>0 Or InStr(SchemePart,"#")>0 Or InStr(SchemePart,";")>0) And InStr(SchemePart,"/")=0 And InStr(SchemePart,"?")=0 Then TempUrl=""
+	End If
+	If Left(LowerUrl,11)="javascript:" Or Left(LowerUrl,9)="vbscript:" Or Left(LowerUrl,5)="data:" Then TempUrl=""
+	SafeUrl=TempUrl
+End Function
+
+Function SafeRedirectUrl(Value)
+	Dim TempUrl, LowerUrl
+	TempUrl=SafeUrl(Value)
+	LowerUrl=LCase(TempUrl)
+	If TempUrl="" Then
+		SafeRedirectUrl=""
+	ElseIf Left(TempUrl,1)="/" Then
+		If Left(TempUrl,2)="//" Or InStr(TempUrl,"\")>0 Then TempUrl="Default.asp"
+		SafeRedirectUrl=TempUrl
+	ElseIf InStr(LowerUrl,":")>0 Or Left(TempUrl,1)="#" Then
+		SafeRedirectUrl="Default.asp"
+	Else
+		SafeRedirectUrl=TempUrl
+	End If
+End Function
+
+Function SafeThemeName(Value)
+	Dim TempValue
+	TempValue=Trim(""&Value&"")
+	If Not RegExpTest("^[A-Za-z0-9_-]+$",TempValue) Then TempValue="default"
+	SafeThemeName=TempValue
+End Function
+
+Function SafeFileName(Value)
+	Dim TempValue
+	TempValue=""&Value&""
+	TempValue=Replace(TempValue,"\","_")
+	TempValue=Replace(TempValue,"/","_")
+	TempValue=Replace(TempValue,":","_")
+	TempValue=Replace(TempValue,"*","_")
+	TempValue=Replace(TempValue,"?","_")
+	TempValue=Replace(TempValue,Chr(34),"_")
+	TempValue=Replace(TempValue,"<","_")
+	TempValue=Replace(TempValue,">","_")
+	TempValue=Replace(TempValue,"|","_")
+	TempValue=Replace(TempValue,Chr(13),"")
+	TempValue=Replace(TempValue,Chr(10),"")
+	If Trim(TempValue)="" Then TempValue="download"
+	SafeFileName=TempValue
+End Function
+
+Function SafeDbRelativePath(Value)
+	Dim TempPath, LowerPath
+	TempPath=Trim(""&Value&"")
+	TempPath=Replace(TempPath,"\","/")
+	TempPath=Replace(TempPath,Chr(0),"")
+	TempPath=Replace(TempPath,Chr(9),"")
+	TempPath=Replace(TempPath,Chr(10),"")
+	TempPath=Replace(TempPath,Chr(13),"")
+	LowerPath=LCase(TempPath)
+	If TempPath="" Or InStr(LowerPath,"..")>0 Or InStr(LowerPath,":")>0 Or Left(LowerPath,1)="/" Or Left(LowerPath,2)="//" Or Right(LowerPath,4)<>".mdb" Then
+		SafeDbRelativePath=""
+	Else
+		SafeDbRelativePath=TempPath
+	End If
+End Function
+
+Function SafeDateSuffix()
+	SafeDateSuffix=Year(Date())&Right("0"&Month(Date()),2)&Right("0"&Day(Date()),2)
+End Function
+Function SqlString(Value)
+	SqlString=Replace(""&Value&"","'","''")
+End Function
+
+Function SafeSqlOrder(Value,DefaultValue)
+	Value=LCase(Trim(""&Value&""))
+	If Value="asc" Or Value="desc" Then
+		SafeSqlOrder=Value
+	Else
+		SafeSqlOrder=DefaultValue
+	End If
+End Function
 Function SiteConfig(str)
 	TextStr=SiteConfigXMLDOM.documentElement.SelectSingleNode(str).text
 	if IsNumeric(TextStr) then
@@ -152,6 +258,7 @@ Function BBCode(str)
 	str=ReplaceText(str,"\[\/quote\]","</blockquote>")
 	str=Replace(str,"<%","&lt;%")
 	str=replace(str,vbcrlf,"<br />")
+    str=ReplaceText(str,"(href|src)=([""']?)(javascript|vbscript|data):","$1=$2#")
 
 	BBCode=str
 End Function
@@ -165,7 +272,17 @@ Function RequestInt(fString)
 		RequestInt=0
 	end if
 End Function
-
+Function SafeLongValue(Value, DefaultValue)
+	Dim TempNumber
+	On Error Resume Next
+	TempNumber=CLng(Value)
+	If Err.Number<>0 Then
+		Err.Clear
+		TempNumber=DefaultValue
+	End If
+	On Error GoTo 0
+	SafeLongValue=TempNumber
+End Function
 ''''''''''替换模块START''''''''''''
 Function ReplaceText(fString,patrn,replStr)
 	Set regEx = New RegExp   	' 建立正则表达式。
@@ -260,13 +377,27 @@ End Function
 Function DelFile(DelFilePath)
 	On Error Resume Next
 	DelFile = False
+	Dim SafePath, PhysicalPath, UpFileRoot
+	SafePath=Replace(""&DelFilePath&"","\","/")
+	If SafePath="" Or InStr(SafePath,"..")>0 Or InStr(SafePath,":")>0 Or Left(SafePath,1)="/" Or LCase(Left(SafePath,7))<>"upfile/" Then
+		Err.Clear
+		On Error GoTo 0
+		Exit Function
+	End If
+	PhysicalPath=Server.MapPath(SafePath)
+	UpFileRoot=Server.MapPath("UpFile/")
+	If LCase(Left(PhysicalPath,Len(UpFileRoot)))<>LCase(UpFileRoot) Then
+		Err.Clear
+		On Error GoTo 0
+		Exit Function
+	End If
 	Set MyFileObject=Server.CreateOBject("Scripting.FileSystemObject")
-	MyFileObject.DeleteFile""&Server.MapPath(""&DelFilePath&"")&""
+	MyFileObject.DeleteFile PhysicalPath
 	Set MyFileObject = Nothing
 	If 0 = Err or 53 = Err Then
 		DelFile = True
 	else
-		Alert("出错讯息："&Err.Description&"\n"&DelFilePath&" 无法删除！")
+		Alert("出错讯息："&Err.Description&"\n"&SafePath&" 无法删除！")
 	end if
 	On Error GoTo 0
 End Function
@@ -517,12 +648,12 @@ Function ForumTree(selec)
 	if selec=0 then
 		Set Rs1=Execute("Select * from ["&TablePrefix&"Groups] where GroupID="&GroupID&"")
 		if not Rs1.eof then
-			ForumTreeList="<span id=TempGroup"&GroupID&"><a onmouseover=Ajax_CallBack(false,'TempGroup"&GroupID&"','loading.asp?menu=ForumTree&GroupID="&GroupID&"') href=Default.asp?GroupID="&Rs1("GroupID")&">"&Rs1("GroupName")&"</a></span> → "&ForumTreeList&""
+            ForumTreeList="<span id=""TempGroup"&GroupID&"""><a onmouseover=""Ajax_CallBack(false,'TempGroup"&GroupID&"','loading.asp?menu=ForumTree&GroupID="&GroupID&"')"" href=""Default.asp?GroupID="&Rs1("GroupID")&""">"&Rs1("GroupName")&"</a></span> → "&ForumTreeList&""
 		end if
 	else
 		Set Rs1=Execute("Select * From ["&TablePrefix&"Forums] where ForumID="&selec&"")
 		if not Rs1.eof then
-			ForumTreeList="<span id=tempForum"&selec&"><a onmouseover=Ajax_CallBack(false,'tempForum"&selec&"','loading.asp?menu=ForumTree&ParentID="&selec&"') href=ShowForum.asp?ForumID="&Rs1("ForumID")&">"&Rs1("ForumName")&"</a></span> → "&ForumTreeList&""
+            ForumTreeList="<span id=""tempForum"&selec&"""><a onmouseover=""Ajax_CallBack(false,'tempForum"&selec&"','loading.asp?menu=ForumTree&ParentID="&selec&"')"" href=""ShowForum.asp?ForumID="&Rs1("ForumID")&""">"&Rs1("ForumName")&"</a></span> → "&ForumTreeList&""
 			ForumTree Rs1("ParentID")
 		end if
 	end if
@@ -541,7 +672,7 @@ Function ClubTree()
 	loop
 	Rs1.Close
 	Set Rs1 = Nothing
-	ClubTree="<a onmouseover="&Chr(34)&"showmenu(event,'"&ClubTreeList&"')"&Chr(34)&" href=Default.asp>"&SiteConfig("SiteName")&"</a>" 
+    ClubTree="<a onmouseover=""showmenu(event,'"&SafeJsString(ClubTreeList)&"')"" href=""Default.asp"">"&SiteConfig("SiteName")&"</a>"
 End Function
 
 
@@ -581,7 +712,7 @@ Function AjaxShowPage(TotalPage,PageIndex,url)
 			if PageIndex=i then
 				AjaxShowPage=AjaxShowPage&"<a class=CurrentPage>"& i &"</a>"
 			else
-				AjaxShowPage=AjaxShowPage&"<a class=PageNum href=""Javascript:Ajax_CallBack(false,'CommentArea','"&url&"&PageIndex="&i&"')"">"& i &"</a>"
+                AjaxShowPage=AjaxShowPage&"<a class=PageNum href=""Javascript:Ajax_CallBack(false,'CommentArea','"&SafeJsString(url)&"&PageIndex="&i&"')"">"& i &"</a>"
 			end if
 		end if
 	next
