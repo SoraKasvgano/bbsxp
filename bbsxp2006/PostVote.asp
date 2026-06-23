@@ -1,17 +1,17 @@
 <!-- #include file="Setup.asp" -->
 <%
 
-id=int(Request("id"))
+id=RequestInt("id")
 
 
-if CookieUserName=empty then error2("您必须登录后才能投票")
-if Request("PostVote")="" then error2("请选择，您要投票的项目！")
+if CookieUserName=empty then error2("锟斤拷锟斤拷锟斤拷锟铰硷拷锟斤拷锟斤拷投票")
+if Request("PostVote")="" then error2("锟斤拷选锟斤拷锟斤拷要投票锟斤拷锟斤拷目锟斤拷")
 
 
 sql="select * from [BBSXP_Vote] where ThreadID="&id&""
 Rs.Open sql,Conn,1,3
-if instr(Rs("BallotUserList"),""&CookieUserName&"|")>0 then error2("您已经投过票了，无需重复投票！")
-if Rs("Expiry")< now() then error2("投票已过期")
+if instr(Rs("BallotUserList"),""&CookieUserName&"|")>0 then error2("锟斤拷锟窖撅拷投锟斤拷票锟剿ｏ拷锟斤拷锟斤拷锟截革拷投票锟斤拷")
+if Rs("Expiry")< now() then error2("投票锟窖癸拷锟斤拷")
 
 for each ho in request.form("PostVote")
 pollresult=split(Rs("Result"),"|")
@@ -32,9 +32,9 @@ next
 Rs("BallotUserList")=""&Rs("BallotUserList")&""&CookieUserName&"|"
 Rs.update
 Rs.close
-Conn.execute("update [BBSXP_Threads] set lasttime="&SqlNowString&",lastname='"&CookieUserName&"' where id="&id&"")
+Conn.execute("update [BBSXP_Threads] set lasttime="&SqlNowString&",lastname='"&SqlString(CookieUserName)&"' where id="&id&"")
 
-error2("投票成功!")
+error2("投票锟缴癸拷!")
 
 
 %>
