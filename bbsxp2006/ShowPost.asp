@@ -342,3 +342,10 @@ end if
 
 <!-- #include file="inc/line.asp" -->
 <%htmlend%>
+
+<!-- Render Markdown content -->
+<script>
+if (typeof renderMarkdown === 'function') {
+    renderMarkdown('.markdown-content');
+}
+</script>
