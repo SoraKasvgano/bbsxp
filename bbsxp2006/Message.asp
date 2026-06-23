@@ -1,35 +1,35 @@
 <!-- #include file="Setup.asp" -->
 <%
-if CookieUserName=empty then error2("Äú»¹Î´µÇÂ¼ÂÛÌ³")
+if CookieUserName=empty then error2("ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½Â¼ï¿½ï¿½Ì³")
 
-id=int(Request("id"))
+id=RequestInt("id")
 UserName=HTMLEncode(Trim(Request("UserName")))
 
 
 
 if Request("menu")="Post" then
 %>
-<title>·¢ËÍÑ¶Ï¢ - Powered By BBSXP</title>
+<title>ï¿½ï¿½ï¿½ï¿½Ñ¶Ï¢ - Powered By BBSXP</title>
 <SCRIPT>
 function check(theForm) {
 
 if(theForm.incept.value == "" ) {
-alert("êÇ³Æ²»ÄÜÃ»ÓÐÌîÐ´£¡");
+alert("ï¿½Ç³Æ²ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½");
 return false;
 }
 
 if(theForm.incept.value == "<%=SafeJsString(CookieUserName)%>" ) {
-alert("ÇëÊäÈëÄúÒª·¢ËÍµÄ¶ÔÏó£¬²»ÄÜ·¢Ñ¶Ï¢¸ø×Ô¼º£¡");
+alert("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ÍµÄ¶ï¿½ï¿½ó£¬²ï¿½ï¿½Ü·ï¿½Ñ¶Ï¢ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½");
 return false;
 }
 
 if(theForm.content.value == "" ) {
-alert("²»ÄÜ·¢¿ÕÑ¶Ï¢£¡");
+alert("ï¿½ï¿½ï¿½Ü·ï¿½ï¿½ï¿½Ñ¶Ï¢ï¿½ï¿½");
 return false;
 }
 
 if (theForm.content.value.length > 255){
-alert("¶Ô²»Æð£¬ÄúµÄÑ¶Ï¢²»ÄÜ³¬¹ý 255 ¸ö×Ö½Ú£¡");
+alert("ï¿½Ô²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¶Ï¢ï¿½ï¿½ï¿½Ü³ï¿½ï¿½ï¿½ 255 ï¿½ï¿½ï¿½Ö½Ú£ï¿½");
 return false;
 }
 }
@@ -42,7 +42,7 @@ document.form.incept.value=addTitle
 }
 
 function Check(){var Name=document.form.incept.value;
-if(Name == ""){alert("êÇ³Æ²»ÄÜÎª¿Õ£¡");return false;}
+if(Name == ""){alert("ï¿½Ç³Æ²ï¿½ï¿½ï¿½Îªï¿½Õ£ï¿½");return false;}
 window.open("Friend.asp?menu=Post&Log=1&incept="+Name+"&content="+document.form.content.value+"","_blank","width=320,height=270");window.close()
 }
 
@@ -50,7 +50,7 @@ window.open("Friend.asp?menu=Post&Log=1&incept="+Name+"&content="+document.form.
 <TABLE WIDTH=300 BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><form name=form action="Friend.asp" method="POST">
 <input type="hidden" name="menu" value="addPost">
 <TD height="35">
-&nbsp;êÇ³Æ£º<input name="incept" type="text" size="10"></TD>
+&nbsp;ï¿½Ç³Æ£ï¿½<input name="incept" type="text" size="10"></TD>
 
 <TD align=right height="35">
 
@@ -60,7 +60,7 @@ window.open("Friend.asp?menu=Post&Log=1&incept="+Name+"&content="+document.form.
 <%
 if Request("report")="1" then
 %>
-<option>°æÖ÷ÁÐ±í</option>
+<option>ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½</option>
 <SCRIPT>
 var moderated="<%=SafeJsString(Request("moderated"))%>"
 var list= moderated.split ('|'); 
@@ -72,7 +72,7 @@ if (list[i] !=""){document.write("<option value="+list[i]+">"+list[i]+"</option>
 else
 
 %>
-<option>ºÃÓÑÁÐ±í</option>
+<option>ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½</option>
 <SCRIPT>
 var moderated="<%=SafeJsString(Conn.Execute("Select UserFriend From [BBSXP_Users] where UserName='"&SqlString(CookieUserName)&"'")(0))%>"
 var list= moderated.split ('|'); 
@@ -92,8 +92,8 @@ end if
     <textarea name="content" cols="39" rows="6" onkeydown=presskey()><%=HTMLEncode(Request("body"))%></textarea>
 </TD></TR></TABLE><TABLE WIDTH=300 BORDER=0 CELLSPACING=0 CELLPADDING=0 height="30">
 <tr ALIGN=center><TD>
-<input onclick=javascript:Check() type="button" value="ÁÄÌì¼ÇÂ¼">
-</td><TD><input type="reset" value="È¡Ïû·¢ËÍ" OnClick="window.close();"> </td><TD><input type="submit" value="·¢ËÍÑ¶Ï¢" onclick="return check(this.form)"></td>
+<input onclick=javascript:Check() type="button" value="ï¿½ï¿½ï¿½ï¿½ï¿½Â¼">
+</td><TD><input type="reset" value="È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" OnClick="window.close();"> </td><TD><input type="submit" value="ï¿½ï¿½ï¿½ï¿½Ñ¶Ï¢" onclick="return check(this.form)"></td>
 </TR></form>
 </TABLE>
 <%
@@ -104,10 +104,10 @@ end if
 
 if Request("menu")="Del" then
 Conn.execute("Delete from [BBSXP_Messages] where id="&id&" and incept='"&SqlString(CookieUserName)&"'")
-error2("É¾³ý³É¹¦")
+error2("É¾ï¿½ï¿½ï¿½É¹ï¿½")
 elseif Request("menu")="allDel" then
 Conn.execute("Delete from [BBSXP_Messages] where incept='"&SqlString(CookieUserName)&"'")
-error2("ÒÑ¾­³É¹¦Çå¿ÕÊÕ¼þÏä")
+error2("ï¿½Ñ¾ï¿½ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½")
 end if
 
 
@@ -121,19 +121,19 @@ top
 
 <table border=0 width=100% align=center cellspacing=1 cellpadding=4 class=a2>
 <tr class=a3>
-<td height=25>&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ¡ú ¿ØÖÆÃæ°å</td>
+<td height=25>&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</td>
 </tr>
 </table><br>
 
 <table cellspacing=1 cellpadding=1 width=100% align=center border=0 class=a2>
   <TR id=TableTitleLink class=a1 height="25">
-      <Td align="center"><b><a href="UserCp.asp">¿ØÖÆÃæ°å</a></b></td>
-      <TD align="center"><b><a href="EditProfile.asp">×ÊÁÏÐÞ¸Ä</a></b></td>
-      <TD align="center"><b><a href="EditProfile.asp?menu=pass">ÃÜÂëÐÞ¸Ä</a></b></td>
-      <TD align="center"><b><a href="MySettings.asp">¸öÐÔÉèÖÃ</a></b></td>
-      <TD align="center"><b><a href="MyAttachment.asp">¸½¼þ¹ÜÀí</a></b></td>
-      <TD align="center"><b><a href="Message.asp">¶ÌÐÅ·þÎñ</a></b></td>
-      <TD align="center"><b><a href="Friend.asp">ºÃÓÑÁÐ±í</a></b></td>
+      <Td align="center"><b><a href="UserCp.asp">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></b></td>
+      <TD align="center"><b><a href="EditProfile.asp">ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½</a></b></td>
+      <TD align="center"><b><a href="EditProfile.asp?menu=pass">ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½</a></b></td>
+      <TD align="center"><b><a href="MySettings.asp">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></b></td>
+      <TD align="center"><b><a href="MyAttachment.asp">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></b></td>
+      <TD align="center"><b><a href="Message.asp">ï¿½ï¿½ï¿½Å·ï¿½ï¿½ï¿½</a></b></td>
+      <TD align="center"><b><a href="Friend.asp">ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½</a></b></td>
       </TR></TABLE>
 <br>
 
@@ -143,31 +143,31 @@ top
 <TABLE  cellSpacing=1 border=0 width="100%" class=a2 cellpadding="3">
 <TR class=a3><TD align="center" colspan=5>
           <a style="text-decoration: none; color: #000000" href="Message.asp">
-          <img alt src="images/m_inbox.gif" border="0" dypop="ÊÕ¼þÏä"></a>&nbsp;
+          <img alt src="images/m_inbox.gif" border="0" dypop="ï¿½Õ¼ï¿½ï¿½ï¿½"></a>&nbsp;
           <a style="text-decoration: none; color: #000000" href="Message.asp?send=1">
-          <img alt src="images/M_issend.gif" border="0" dypop="ÒÑ·¢ËÍÓÊ¼þ"></a>&nbsp;
-          <a href="Message.asp?menu=allDel" onclick=checkclick('ÄúÈ·¶¨ÒªÇå¿ÕÊÕ¼þÏä?')>
-          <img alt src="images/Recycle.gif" border="0" dypop="Çå¿ÕÊÕ¼þÏä"></a>&nbsp;
+          <img alt src="images/M_issend.gif" border="0" dypop="ï¿½Ñ·ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½"></a>&nbsp;
+          <a href="Message.asp?menu=allDel" onclick=checkclick('ï¿½ï¿½È·ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½?')>
+          <img alt src="images/Recycle.gif" border="0" dypop="ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½"></a>&nbsp;
           <a href="Friend.asp">
-          <img alt src="images/M_address.gif" border="0" dypop="·¢ËÍÑ¶Ï¢"></a>&nbsp;
-          <a style=cursor:hand onclick="javascript:open('?menu=Post','','width=320,height=170')"><img alt src="images/m_write.gif" border="0" dypop="·¢ËÍÑ¶Ï¢"></a></td></TR>
+          <img alt src="images/M_address.gif" border="0" dypop="ï¿½ï¿½ï¿½ï¿½Ñ¶Ï¢"></a>&nbsp;
+          <a style=cursor:hand onclick="javascript:open('?menu=Post','','width=320,height=170')"><img alt src="images/m_write.gif" border="0" dypop="ï¿½ï¿½ï¿½ï¿½Ñ¶Ï¢"></a></td></TR>
 
   <TR>
           
     <TD vAlign=center align=middle 
-          width=5% class=a1 height="20">¡¡</TD>
+          width=5% class=a1 height="20">ï¿½ï¿½</TD>
           
     <TD vAlign=center align=middle 
-          width=12% class=a1 height="20"><B><span id=send>·¢¼þÈË</span></B></TD>
+          width=12% class=a1 height="20"><B><span id=send>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</span></B></TD>
           
     <TD vAlign=center align=middle 
-          width=50% class=a1 height="20"><B>ÄÚÈÝ</B></TD>
+          width=50% class=a1 height="20"><B>ï¿½ï¿½ï¿½ï¿½</B></TD>
           
     <TD align=middle 
-          width=17% class=a1 height="20"><B>ÈÕÆÚ</B></TD>
+          width=17% class=a1 height="20"><B>ï¿½ï¿½ï¿½ï¿½</B></TD>
           
     <TD vAlign=center align=middle 
-          width=16% class=a1 height="20"><B>²Ù×÷</B></TD>
+          width=16% class=a1 height="20"><B>ï¿½ï¿½ï¿½ï¿½</B></TD>
   </TR>
 
 
@@ -178,7 +178,7 @@ top
 
 if Request("send")="1" then
 sql="select * from [BBSXP_Messages] where UserName='"&SqlString(CookieUserName)&"' order by id Desc"
-response.write "<script>send.innerText='ÊÕ¼þÈË'</script>"
+response.write "<script>send.innerText='ï¿½Õ¼ï¿½ï¿½ï¿½'</script>"
 else
 sql="select * from [BBSXP_Messages] where incept='"&SqlString(CookieUserName)&"' order by id Desc"
 
@@ -186,13 +186,13 @@ end if
 
 Rs.Open sql,Conn,1
 
-PageSetup=10 'Éè¶¨Ã¿Ò³µÄÏÔÊ¾ÊýÁ¿
+PageSetup=10 'ï¿½è¶¨Ã¿Ò³ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
 Rs.Pagesize=PageSetup
-TotalPage=Rs.Pagecount  '×ÜÒ³Êý
+TotalPage=Rs.Pagecount  'ï¿½ï¿½Ò³ï¿½ï¿½
 PageCount = cint(Request.QueryString("PageIndex"))
 if PageCount <1 then PageCount = 1
 if PageCount > TotalPage then PageCount = TotalPage
-if TotalPage>0 then Rs.absolutePage=PageCount 'Ìø×ªµ½Ö¸¶¨Ò³Êý
+if TotalPage>0 then Rs.absolutePage=PageCount 'ï¿½ï¿½×ªï¿½ï¿½Ö¸ï¿½ï¿½Ò³ï¿½ï¿½
 
 i=0
 Do While Not Rs.EOF and i<PageSetup
@@ -201,11 +201,11 @@ i=i+1
 
 if Request("send")="1" then
 UserName=Rs("incept")
-Del="<a style=cursor:hand onclick=javascript:open('Friend.asp?menu=Post&Log=1&incept="&UserName&"','','width=320,height=270')>ÁÄÌì¼ÇÂ¼</a>"
+Del="<a style=cursor:hand onclick=javascript:open('Friend.asp?menu=Post&Log=1&incept="&UserName&"','','width=320,height=270')>ï¿½ï¿½ï¿½ï¿½ï¿½Â¼</a>"
 
 else
 UserName=Rs("UserName")
-Del="<a class=CommonImageTextButton style=BACKGROUND-IMAGE:url(images/NewPost.gif) style=cursor:hand onclick=javascript:open('Friend.asp?menu=Post&incept="&Rs("UserName")&"','','width=320,height=170') title='»Ø¸´Ñ¶Ï¢'>»Ø¸´</a><a class=CommonImageTextButton style=BACKGROUND-IMAGE:url(images/del.gif) onclick=checkclick('ÄúÈ·¶¨ÒªÉ¾³ý´ËÌõÑ¶Ï¢?') href=?menu=Del&id="&Rs("id")&" title='É¾³ýÑ¶Ï¢'>É¾³ý</a>"
+Del="<a class=CommonImageTextButton style=BACKGROUND-IMAGE:url(images/NewPost.gif) style=cursor:hand onclick=javascript:open('Friend.asp?menu=Post&incept="&Rs("UserName")&"','','width=320,height=170') title='ï¿½Ø¸ï¿½Ñ¶Ï¢'>ï¿½Ø¸ï¿½</a><a class=CommonImageTextButton style=BACKGROUND-IMAGE:url(images/del.gif) onclick=checkclick('ï¿½ï¿½È·ï¿½ï¿½ÒªÉ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¶Ï¢?') href=?menu=Del&id="&Rs("id")&" title='É¾ï¿½ï¿½Ñ¶Ï¢'>É¾ï¿½ï¿½</a>"
 end if
 %>
 <TR class=a3>

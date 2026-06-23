@@ -1,9 +1,9 @@
 <!-- #include file="Setup.asp" -->
 <%
 top
-if CookieUserName=empty then error("<li>Äú»¹Î´<a href=Login.asp>µÇÂ¼</a>ÂÛÌ³")
+if CookieUserName=empty then error("<li>ï¿½ï¿½ï¿½ï¿½Î´<a href=Login.asp>ï¿½ï¿½Â¼</a>ï¿½ï¿½Ì³")
 
-sql="select * from [BBSXP_Users] where UserName='"&CookieUserName&"'"
+sql="select * from [BBSXP_Users] where UserName='"&SqlString(CookieUserName)&"'"
 Rs.Open sql,Conn,1,3
 
 accrual=fix(Rs("savemoney")/1000*(now-Rs("SaveMoneyTime")))
@@ -22,8 +22,8 @@ end select
 
 <table border=0 width=100% align=center cellspacing=1 cellpadding=4 class=a2>
 <tr class=a3>
-<td height=25>&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ¡ú 
-<a href="Bank.asp">ÉçÇøÒøÐÐ</a></td>
+<td height=25>&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ï¿½ï¿½ 
+<a href="Bank.asp">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></td>
 </tr>
 </table><br>
 
@@ -36,66 +36,66 @@ end select
 		<td width="50%" align="center" valign="top">
 
 <img src="images/Bank.gif"><br>
-¡¡<table border="0" cellpadding="4" cellspacing="1" width="377" class=a2>
+ï¿½ï¿½<table border="0" cellpadding="4" cellspacing="1" width="377" class=a2>
 <tr>
-<td width="50%" colspan="4" class=a1 align="center">ÄúµÄÒøÐÐÕËºÅ</td>
+<td width="50%" colspan="4" class=a1 align="center">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëºï¿½</td>
 </tr>
 <tr class=a4>
-<td width="16%" align="center">ÏÖ½ð£º</td>
+<td width="16%" align="center">ï¿½Ö½ï¿½</td>
 <td width="28%"><b><font color="aa0000"><%=Rs("UserMoney")%> </font>
-½ð±Ò</b></td>
-<td width="16%" align="center">ÀûÏ¢£º</td>
-<td width="31%"><b><font color="aa0000"><%=accrual%></font> ½ð±Ò</b></td>
+ï¿½ï¿½ï¿½</b></td>
+<td width="16%" align="center">ï¿½ï¿½Ï¢ï¿½ï¿½</td>
+<td width="31%"><b><font color="aa0000"><%=accrual%></font> ï¿½ï¿½ï¿½</b></td>
 </tr>
 <tr class=a4>
-<td width="16%" align="center">´æ¿î£º</td>
-<td width="28%"><b><font color="aa0000"><%=Rs("savemoney")%></font> ½ð±Ò</b></td>
-<td width="16%" align="center">×Ü¹²£º</td>
+<td width="16%" align="center">ï¿½ï¿½î£º</td>
+<td width="28%"><b><font color="aa0000"><%=Rs("savemoney")%></font> ï¿½ï¿½ï¿½</b></td>
+<td width="16%" align="center">ï¿½Ü¹ï¿½ï¿½ï¿½</td>
 <td width="31%"><b><font color="aa0000"><%=Rs("savemoney")+Rs("UserMoney")+accrual%></font>
-½ð±Ò</b></td>
+ï¿½ï¿½ï¿½</b></td>
 </tr>
 <tr class=a4>
-<td width="23%" align="center">´æ¿îÊ±¼ä£º</td>
+<td width="23%" align="center">ï¿½ï¿½ï¿½Ê±ï¿½ä£º</td>
 <td width="68%" colspan="3"><%=Rs("SaveMoneyTime")%></td>
 </tr>
 <tr class=a4>
-<td width="91%" colspan="4">±¾ÒøÐÐµÄÀûÏ¢ÎªÃ¿Ìì <font color="#FF0000"><b>0.1%</b></font>£¬Ã¿´Î´æ¿î¡¢È¡¿î×Ô¶¯½áËãÀûÏ¢¡£</td>
+<td width="91%" colspan="4">ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½Ï¢ÎªÃ¿ï¿½ï¿½ <font color="#FF0000"><b>0.1%</b></font>ï¿½ï¿½Ã¿ï¿½Î´ï¿½î¡¢È¡ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½</td>
 </tr>
 </table>
 		</td>
 		<td align="center">
 		
 <table cellSpacing="1" cellPadding="3" border="0" width="377" height="47" class=a2><tr>
-<td class=a1 height="25">&nbsp; <b>ÎÒÒª´æ¿î</b>&nbsp;</td>
-<td class=a1 height="25" align="center">ÄúÓÐÏÖ½ð <b><%=Rs("UserMoney")%></b> <b>½ð±Ò</b></td></tr><tr class=a4>
+<td class=a1 height="25">&nbsp; <b>ï¿½ï¿½Òªï¿½ï¿½ï¿½</b>&nbsp;</td>
+<td class=a1 height="25" align="center">ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ <b><%=Rs("UserMoney")%></b> <b>ï¿½ï¿½ï¿½</b></td></tr><tr class=a4>
 <td height="25" align="center">
-<form action="Bank.asp" method="POST"><input type=hidden name=menu value="save">&nbsp; ÎÒÒª´æ
-<input size="10" value="1000" name="qmoney" MAXSIZE="32"><b> ½ð±Ò</b>
+<form action="Bank.asp" method="POST"><input type=hidden name=menu value="save">&nbsp; ï¿½ï¿½Òªï¿½ï¿½
+<input size="10" value="1000" name="qmoney" MAXSIZE="32"><b> ï¿½ï¿½ï¿½</b>
 </td>
 <td height="25" align="center">
-<input type="submit" value=" ´æ ÁË " name="B2"></td></tr></table></form>
+<input type="submit" value=" ï¿½ï¿½ ï¿½ï¿½ " name="B2"></td></tr></table></form>
 
 <table cellSpacing="1" cellPadding="3" border="0" width="377" height="47" class=a2><tr>
-<td class=a1 height="25">&nbsp; <b>ÎÒÒªÈ¡¿î</b>&nbsp;
+<td class=a1 height="25">&nbsp; <b>ï¿½ï¿½ÒªÈ¡ï¿½ï¿½</b>&nbsp;
 </td>
-<td class=a1 height="25" align="center">ÄúÓÐ´æ¿î <b><%=Rs("savemoney")%></b> <b>½ð±Ò</b></td></tr><tr class=a4>
+<td class=a1 height="25" align="center">ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ <b><%=Rs("savemoney")%></b> <b>ï¿½ï¿½ï¿½</b></td></tr><tr class=a4>
 <td height="25" align="center">
-<form action="Bank.asp" method="POST"><input type=hidden name=menu value="draw">&nbsp; ÎÒÒªÈ¡
-<input size="10" value="1000" name="qmoney" MAXSIZE="32"><b> ½ð±Ò</b>
+<form action="Bank.asp" method="POST"><input type=hidden name=menu value="draw">&nbsp; ï¿½ï¿½ÒªÈ¡
+<input size="10" value="1000" name="qmoney" MAXSIZE="32"><b> ï¿½ï¿½ï¿½</b>
 </td>
 <td height="25" align="center">
-<input type="submit" value=" È¡ ÁË " name="B2"></td></tr></table></form>
+<input type="submit" value=" È¡ ï¿½ï¿½ " name="B2"></td></tr></table></form>
 		
 		
 <table cellSpacing="1" cellPadding="3" border="0" width="377" height="47" class=a2><tr>
-<td class=a1 height="25">&nbsp; <b>ÎÒÒª×ªÕÊ</b>&nbsp;
+<td class=a1 height="25">&nbsp; <b>ï¿½ï¿½Òª×ªï¿½ï¿½</b>&nbsp;
 </td>
-<td class=a1 height="25" align="right">×îµÍ×ªÕË½ð¶îÎª <b>1000</b> <b>½ð±Ò</b></td></tr><tr class=a4>
+<td class=a1 height="25" align="right">ï¿½ï¿½ï¿½×ªï¿½Ë½ï¿½ï¿½Îª <b>1000</b> <b>ï¿½ï¿½ï¿½</b></td></tr><tr class=a4>
 <td height="25" align="center" colspan="2">
-<form action="Bank.asp" method="POST"><input type=hidden name=menu value="virement">&nbsp; ÎÒÒª½«
-<input size="5" value="1000" name="qmoney" MAXSIZE="32"><b> ½ð±Ò</b> ×ªµ½
-<input size="10" name="dxname" MAXSIZE="32"> µÄÕË»§
-<input type="submit" value=" È· ¶¨ " name="B2"></td>
+<form action="Bank.asp" method="POST"><input type=hidden name=menu value="virement">&nbsp; ï¿½ï¿½Òªï¿½ï¿½
+<input size="5" value="1000" name="qmoney" MAXSIZE="32"><b> ï¿½ï¿½ï¿½</b> ×ªï¿½ï¿½
+<input size="10" name="dxname" MAXSIZE="32"> ï¿½ï¿½ï¿½Ë»ï¿½
+<input type="submit" value=" È· ï¿½ï¿½ " name="B2"></td>
 </tr></table></form>
 		
 		</td>
@@ -112,44 +112,44 @@ Rs.close
 htmlend
 
 sub save
-qmoney=int(Request("qmoney"))
-if qmoney > Rs("UserMoney") then error("<li>ÄúµÄÏÖ½ðÃ»ÓÐÕâÃ´¶à°É£¡")
-if qmoney<1 then error("<li>´æ¿î²»ÄÜÎªÁã£¡")
+qmoney=RequestInt("qmoney")
+if qmoney > Rs("UserMoney") then error("<li>ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ã´ï¿½ï¿½É£ï¿½")
+if qmoney<1 then error("<li>ï¿½ï¿½î²»ï¿½ï¿½Îªï¿½ã£¡")
 
 Rs("savemoney")=Rs("savemoney")+qmoney+accrual
 Rs("UserMoney")=Rs("UserMoney")-qmoney
 Rs("SaveMoneyTime")=now()
 Rs.update
 Rs.close
-Message="<li>´æ¿î³É¹¦<li><a href=Bank.asp>·µ»ØÒøÐÐ</a><li><a href=Default.asp>·µ»ØÂÛÌ³Ê×Ò³</a>"
+Message="<li>ï¿½ï¿½ï¿½É¹ï¿½<li><a href=Bank.asp>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a><li><a href=Default.asp>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½Ò³</a>"
 succeed(Message&"<meta http-equiv=refresh content=3;url='Bank.asp'>")
 end sub
 
 
 sub draw
-qmoney=int(Request("qmoney"))
-if qmoney>Rs("savemoney") then error("<li>ÄúµÄ´æ¿î²»¹»£¡")
-if qmoney<1 then error("<li>È¡¿î²»ÄÜÎªÁã£¡")
+qmoney=RequestInt("qmoney")
+if qmoney>Rs("savemoney") then error("<li>ï¿½ï¿½ï¿½Ä´ï¿½î²»ï¿½ï¿½ï¿½ï¿½")
+if qmoney<1 then error("<li>È¡ï¿½î²»ï¿½ï¿½Îªï¿½ã£¡")
 
 Rs("savemoney")=Rs("savemoney")-qmoney+accrual
 Rs("UserMoney")=Rs("UserMoney")+qmoney
 Rs("SaveMoneyTime")=now()
 Rs.update
 Rs.close
-Message="<li>È¡¿î³É¹¦<li><a href=Bank.asp>·µ»ØÒøÐÐ</a><li><a href=Default.asp>·µ»ØÂÛÌ³Ê×Ò³</a>"
+Message="<li>È¡ï¿½ï¿½É¹ï¿½<li><a href=Bank.asp>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a><li><a href=Default.asp>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½Ò³</a>"
 succeed(Message&"<meta http-equiv=refresh content=3;url='Bank.asp'>")
 end sub
 
 sub virement
 dxname=HTMLEncode(Request.form("dxname"))
 
-if dxname=CookieUserName then error("<li>ÄúÊäÈëµÄÊÇ×Ô¼ºµÄÕËºÅ£¿")
+if dxname=CookieUserName then error("<li>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ËºÅ£ï¿½")
 
 
-qmoney=int(Request("qmoney"))
-if qmoney>Rs("savemoney") then error"<li>ÄúµÄÕÊ»§Óà¶î²»¹»£¡£¡"
-if qmoney<1000 then error"<li>×ªÕÊ²»ÄÜµÍÓÚ1000£¡"
-If Conn.Execute("Select id From [BBSXP_Users] where UserName='"&dxname&"'" ).eof Then error("<li>²éÎÞ"&dxname&"µÄÕËºÅ")
+qmoney=RequestInt("qmoney")
+if qmoney>Rs("savemoney") then error"<li>ï¿½ï¿½ï¿½ï¿½ï¿½Ê»ï¿½ï¿½ï¿½î²»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
+if qmoney<1000 then error"<li>×ªï¿½Ê²ï¿½ï¿½Üµï¿½ï¿½ï¿½1000ï¿½ï¿½"
+If Conn.Execute("Select id From [BBSXP_Users] where UserName='"&dxname&"'" ).eof Then error("<li>ï¿½ï¿½ï¿½ï¿½"&dxname&"ï¿½ï¿½ï¿½Ëºï¿½")
 
 Rs("savemoney")=Rs("savemoney")-qmoney+accrual
 Rs("SaveMoneyTime")=now()
@@ -158,9 +158,9 @@ Rs.close
 
 Conn.execute("update [BBSXP_Users] set [UserMoney]=[UserMoney]+"&qmoney&" where UserName='"&dxname&"'")
 
-Log(""&CookieUserName&" Í¨¹ýÒøÐÐ×ªÕÊ "&qmoney&" ½ð±Ò¸ø "&dxname&"")
+Log(""&CookieUserName&" Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ "&qmoney&" ï¿½ï¿½Ò¸ï¿½ "&dxname&"")
 
-Message="<li>×ªÕË³É¹¦<li><a href=Bank.asp>·µ»ØÒøÐÐ</a><li><a href=Default.asp>·µ»ØÂÛÌ³Ê×Ò³</a>"
+Message="<li>×ªï¿½Ë³É¹ï¿½<li><a href=Bank.asp>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a><li><a href=Default.asp>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½Ò³</a>"
 succeed(Message&"<meta http-equiv=refresh content=3;url='Bank.asp'>")
 end sub
 
