@@ -8,7 +8,7 @@ if SiteSettings("AdminPassword")<>"" and Request.ServerVariables("REMOTE_ADDR")<
 top
 
 if Request("menu")="ok" then
-Administrators=Request.Form("Administrators")
+Administrators=HTMLEncode(Request.Form("Administrators"))
 if Administrators="" then error("<li>��û�����ù���Ա")
 if Request("Adminpassword")="" then error("<li>��û�����ù�������")
 If Conn.Execute("Select id From [BBSXP_Users] where UserName='"&Administrators&"'" ).eof Then error("<li>"&Administrators&"���û����ϻ�δ<a href=CreateUser.asp>ע��</a>")
