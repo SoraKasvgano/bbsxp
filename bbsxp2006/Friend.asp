@@ -58,15 +58,15 @@ end sub
 
 sub look
 
-Conn.execute("update [BBSXP_Users] set NewMessage=0 where UserName='"&CookieUserName&"'")
+Conn.execute("update [BBSXP_Users] set NewMessage=0 where UserName='"&SqlString(CookieUserName)&"'")
 
 Page=Request("Page")
 if Page<1 then
 disabled="disabled=true"
 Page=0
 end if
-count=Conn.execute("Select count(id)from [BBSXP_Messages] where incept='"&CookieUserName&"'")(0)
-sql="select UserName,content from [BBSXP_Messages] where incept='"&CookieUserName&"' order by id Desc"
+count=Conn.execute("Select count(id)from [BBSXP_Messages] where incept='"&SqlString(CookieUserName)&"'")(0)
+sql="select UserName,content from [BBSXP_Messages] where incept='"&SqlString(CookieUserName)&"' order by id Desc"
 Set Rs=Conn.Execute(sql)
 if Count-Page<2 then disabled2="disabled=true"
 
@@ -101,7 +101,7 @@ frames.HtmlEditor.document.close();
 end sub
 
 sub loadLog
-sql="select * from [BBSXP_Messages] where (UserName='"&CookieUserName&"' and incept='"&incept&"') or (UserName='"&incept&"' and incept='"&CookieUserName&"') order by id Desc"
+sql="select * from [BBSXP_Messages] where (UserName='"&CookieUserName&"' and incept='"&incept&"') or (UserName='"&incept&"' and incept='"&SqlString(CookieUserName)&"') order by id Desc"
 Set Rs=Conn.Execute(sql)
 do while not Rs.eof
 content=content&"<font color=red>("&Rs("DateCreated")&")����"&Rs("UserName")&"</font><br><font color=0000FF>"&Rs("content")&"</font><br>"
@@ -251,7 +251,7 @@ document.location='Friend.asp?menu=add&UserName='+id+'';
 
 on error resume next '�Ҳ�����������ʱ����Դ���
 
-sql="select UserFriend,Userface from [BBSXP_Users] where UserName='"&CookieUserName&"'"
+sql="select UserFriend,Userface from [BBSXP_Users] where UserName='"&SqlString(CookieUserName)&"'"
 Set Rs=Conn.Execute(sql)
 master=split(Rs("UserFriend"),"|")
 for i = 1 to ubound(master)-1

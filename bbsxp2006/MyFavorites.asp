@@ -1,6 +1,6 @@
 <!-- #include file="Setup.asp" --><%
 
-if CookieUserName=empty then error("<li>Äú»¹Î´<a href=Login.asp>µÇÂ¼</a>ÂÛÌ³")
+if CookieUserName=empty then error("<li>ï¿½ï¿½ï¿½ï¿½Î´<a href=Login.asp>ï¿½ï¿½Â¼</a>ï¿½ï¿½Ì³")
 
 id=int(Request("id"))
 url=HTMLEncode(Request("url"))
@@ -12,21 +12,21 @@ top
 select case Request("menu")
 case "add"
 
-If not Conn.Execute("Select id From [BBSXP_Favorites] where UserName='"&CookieUserName&"' and name='"&name&"' and url='"&url&"'" ).eof Then error("<li>ÊÕ²Ø¼ÐÖÐÒÑ¾­´æÔÚ´Ë×ÊÁÏ")
+If not Conn.Execute("Select id From [BBSXP_Favorites] where UserName='"&SqlString(CookieUserName)&"' and name='"&name&"' and url='"&url&"'" ).eof Then error("<li>ï¿½Õ²Ø¼ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½")
 Conn.execute("insert into [BBSXP_Favorites](UserName,name,url)values('"&CookieUserName&"','"&name&"','"&url&"')")
-Message="<li>Ìí¼Ó³É¹¦<li><a href="&Request.ServerVariables("http_referer")&">"&Request.ServerVariables("http_referer")&"</a><li><a href=Default.asp>·µ»ØÉçÇøÊ×Ò³</a>"
+Message="<li>ï¿½ï¿½ï¿½Ó³É¹ï¿½<li><a href="&Request.ServerVariables("http_referer")&">"&Request.ServerVariables("http_referer")&"</a><li><a href=Default.asp>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³</a>"
 succeed(""&Message&"<meta http-equiv=refresh content=3;url="&Request.ServerVariables("http_referer")&">")
 
 
 case "Delweb"
-Conn.execute("Delete from [BBSXP_Favorites] where UserName='"&CookieUserName&"' and id="&id&"")
-Message="<li>É¾³ý³É¹¦<li><a href="&Request.ServerVariables("http_referer")&">"&Request.ServerVariables("http_referer")&"</a><li><a href=Default.asp>·µ»ØÉçÇøÊ×Ò³</a>"
+Conn.execute("Delete from [BBSXP_Favorites] where UserName='"&SqlString(CookieUserName)&"' and id="&id&"")
+Message="<li>É¾ï¿½ï¿½ï¿½É¹ï¿½<li><a href="&Request.ServerVariables("http_referer")&">"&Request.ServerVariables("http_referer")&"</a><li><a href=Default.asp>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³</a>"
 succeed(""&Message&"<meta http-equiv=refresh content=3;url="&Request.ServerVariables("http_referer")&">")
 
 
 case "Del"
-Conn.execute("Delete from [BBSXP_Favorites] where UserName='"&CookieUserName&"' and url='"&url&"' and name='"&name&"'")
-Message="<li>É¾³ý³É¹¦<li><a href="&Request.ServerVariables("http_referer")&">"&Request.ServerVariables("http_referer")&"</a><li><a href=Default.asp>·µ»ØÉçÇøÊ×Ò³</a>"
+Conn.execute("Delete from [BBSXP_Favorites] where UserName='"&SqlString(CookieUserName)&"' and url='"&url&"' and name='"&name&"'")
+Message="<li>É¾ï¿½ï¿½ï¿½É¹ï¿½<li><a href="&Request.ServerVariables("http_referer")&">"&Request.ServerVariables("http_referer")&"</a><li><a href=Default.asp>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³</a>"
 succeed(""&Message&"<meta http-equiv=refresh content=3;url="&Request.ServerVariables("http_referer")&">")
 
 
@@ -35,35 +35,35 @@ end select
 %>
 <table border=0 width=100% align=center cellspacing=1 cellpadding=4 class=a2>
 <tr class=a3>
-<td height=25>&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ¡ú 
-ÊÕ²Ø¼Ð</td>
+<td height=25>&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ï¿½ï¿½ 
+ï¿½Õ²Ø¼ï¿½</td>
 </tr>
 </table><br>
 
 
 <%
 
-PageSetup=10 'Éè¶¨Ã¿Ò³µÄÏÔÊ¾ÊýÁ¿
+PageSetup=10 'ï¿½è¶¨Ã¿Ò³ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
 
 select case Request("menu")
 case ""
 %>
 
 <table width="100%" border=0 align=center cellPadding=3 cellSpacing=1 class=a2>
-<tr class=a1><td width="69%" align="center" height="25"><b>±ê Ìâ</b></td>
+<tr class=a1><td width="69%" align="center" height="25"><b>ï¿½ï¿½ ï¿½ï¿½</b></td>
 	<td width="20%" align="center" height="25">
-		<b>Ìí¼ÓÊ±¼ä</b></td>
-	<td width="11%" align="center" height="25"><b>²Ù×÷</b></td></tr><%
+		<b>ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½</b></td>
+	<td width="11%" align="center" height="25"><b>ï¿½ï¿½ï¿½ï¿½</b></td></tr><%
 
-sql="select * from [BBSXP_Favorites] where UserName='"&CookieUserName&"' and url<>'Topic' and url<>'forum' order by id Desc"
+sql="select * from [BBSXP_Favorites] where UserName='"&SqlString(CookieUserName)&"' and url<>'Topic' and url<>'forum' order by id Desc"
 Rs.Open sql,Conn,1
 
 Rs.Pagesize=PageSetup
-TotalPage=Rs.Pagecount  '×ÜÒ³Êý
+TotalPage=Rs.Pagecount  'ï¿½ï¿½Ò³ï¿½ï¿½
 PageCount = cint(Request.QueryString("PageIndex"))
 if PageCount <1 then PageCount = 1
 if PageCount > TotalPage then PageCount = TotalPage
-if TotalPage>0 then Rs.absolutePage=PageCount 'Ìø×ªµ½Ö¸¶¨Ò³Êý
+if TotalPage>0 then Rs.absolutePage=PageCount 'ï¿½ï¿½×ªï¿½ï¿½Ö¸ï¿½ï¿½Ò³ï¿½ï¿½
 
 i=0 
 Do While Not Rs.EOF and i<PageSetup 
@@ -73,8 +73,8 @@ i=i+1
 Rs.MoveNext
 loop
 Rs.Close      
-%> <tr><td colSpan="3"  class=a1 align="center" height="25"><b>&gt;&gt; Ìí¼ÓÐÂÁ´½Ó &lt;&lt;</b></td></tr><tr class=a3><td align="center" colspan="3"><form method=Post name=form action=MyFavorites.asp><input type=hidden name=menu value=add>
-<b>Ãû³Æ£º</b><INPUT size=20 name=name>¡¡<b>Á´½ÓµØÖ·£º</b><INPUT size=40 name=url value="http://">¡¡<input type=submit value="Ìí ¼Ó"> </td></form></tr></table>
+%> <tr><td colSpan="3"  class=a1 align="center" height="25"><b>&gt;&gt; ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ &lt;&lt;</b></td></tr><tr class=a3><td align="center" colspan="3"><form method=Post name=form action=MyFavorites.asp><input type=hidden name=menu value=add>
+<b>ï¿½ï¿½ï¿½Æ£ï¿½</b><INPUT size=20 name=name>ï¿½ï¿½<b>ï¿½ï¿½ï¿½Óµï¿½Ö·ï¿½ï¿½</b><INPUT size=40 name=url value="http://">ï¿½ï¿½<input type=submit value="ï¿½ï¿½ ï¿½ï¿½"> </td></form></tr></table>
 
 
 <%
@@ -83,23 +83,23 @@ case "Topic"
 %>
 <table cellspacing="1" cellpadding="5" width="100%" align="center" border="0" class="a2">
 <tr height="25" id="TableTitleLink" class="a1">
-<td align="center" colspan="3">Ö÷Ìâ</td>
-<td align="center" width="10%">×÷Õß</td>
-<td align="center" width="6%">»Ø¸´</td>
-<td align="center" width="6%">µã»÷</td>
-<td align="center" width="25%">×îºó¸üÐÂ</td>
+<td align="center" colspan="3">ï¿½ï¿½ï¿½ï¿½</td>
+<td align="center" width="10%">ï¿½ï¿½ï¿½ï¿½</td>
+<td align="center" width="6%">ï¿½Ø¸ï¿½</td>
+<td align="center" width="6%">ï¿½ï¿½ï¿½</td>
+<td align="center" width="25%">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</td>
 </tr>
 <%
 Set rs1 = Server.CreateObject("ADODB.Recordset")
-sql="select * from [BBSXP_Favorites] where UserName='"&CookieUserName&"' and url='Topic' order by id Desc"
+sql="select * from [BBSXP_Favorites] where UserName='"&SqlString(CookieUserName)&"' and url='Topic' order by id Desc"
 Rs1.Open sql,Conn,1
-PageSetup=SiteSettings("ThreadsPerPage") 'Éè¶¨Ã¿Ò³µÄÏÔÊ¾ÊýÁ¿
+PageSetup=SiteSettings("ThreadsPerPage") 'ï¿½è¶¨Ã¿Ò³ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
 Rs1.Pagesize=PageSetup
-TotalPage=Rs1.Pagecount  '×ÜÒ³Êý
+TotalPage=Rs1.Pagecount  'ï¿½ï¿½Ò³ï¿½ï¿½
 PageCount = cint(Request.QueryString("PageIndex"))
 if PageCount <1 then PageCount = 1
 if PageCount > TotalPage then PageCount = TotalPage
-if TotalPage>0 then Rs1.absolutePage=PageCount 'Ìø×ªµ½Ö¸¶¨Ò³Êý
+if TotalPage>0 then Rs1.absolutePage=PageCount 'ï¿½ï¿½×ªï¿½ï¿½Ö¸ï¿½ï¿½Ò³ï¿½ï¿½
 
 
 i=0
@@ -131,14 +131,14 @@ case "Forum"
 %>
 <table width="100%" align="center" border="0" class="a2" cellspacing=1>
 <%
-sql="select * from [BBSXP_Favorites] where UserName='"&CookieUserName&"' and url='forum' order by id Desc"
+sql="select * from [BBSXP_Favorites] where UserName='"&SqlString(CookieUserName)&"' and url='forum' order by id Desc"
 Rs.Open sql,Conn,1
 Rs.Pagesize=PageSetup
-TotalPage=Rs.Pagecount  '×ÜÒ³Êý
+TotalPage=Rs.Pagecount  'ï¿½ï¿½Ò³ï¿½ï¿½
 PageCount = cint(Request.QueryString("PageIndex"))
 if PageCount <1 then PageCount = 1
 if PageCount > TotalPage then PageCount = TotalPage
-if TotalPage>0 then Rs.absolutePage=PageCount 'Ìø×ªµ½Ö¸¶¨Ò³Êý
+if TotalPage>0 then Rs.absolutePage=PageCount 'ï¿½ï¿½×ªï¿½ï¿½Ö¸ï¿½ï¿½Ò³ï¿½ï¿½
 
 
 i=0

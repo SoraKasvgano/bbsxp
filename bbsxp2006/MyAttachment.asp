@@ -1,22 +1,22 @@
 <!-- #include file="Setup.asp" -->
 <%
 top
-if CookieUserName=empty then error("<li>Äú»¹Î´<a href=Login.asp>µÇÂ¼</a>ÂÛÌ³")
+if CookieUserName=empty then error("<li>ï¿½ï¿½ï¿½ï¿½Î´<a href=Login.asp>ï¿½ï¿½Â¼</a>ï¿½ï¿½Ì³")
 
 if Request("menu")="DelPostAttachment" then
 for each ho in Request.form("ID")
 ho=int(ho)
 Conn.execute("Delete from [BBSXP_PostAttachments] where id="&ho&" and UserName='"&CookieUserName&"'")
 next
-error2("É¾³ý³É¹¦")
+error2("É¾ï¿½ï¿½ï¿½É¹ï¿½")
 end if
 
-sql="[BBSXP_PostAttachments] where UserName='"&CookieUserName&"'"
+sql="[BBSXP_PostAttachments] where UserName='"&SqlString(CookieUserName)&"'"
 rs.Open ""&sql&" order by id Desc",Conn,1
-TotalCount=conn.Execute("Select count(ID) From "&sql&"")(0) '»ñÈ¡Êý¾ÝÊýÁ¿
-PageSetup=20 'Éè¶¨Ã¿Ò³µÄÏÔÊ¾ÊýÁ¿
-TotalPage=Abs(Int(TotalCount/PageSetup*(-1))) '×ÜÒ³Êý
-PageCount = cint(Request.QueryString("PageIndex")) '»ñÈ¡µ±Ç°Ò³
+TotalCount=conn.Execute("Select count(ID) From "&sql&"")(0) 'ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+PageSetup=20 'ï¿½è¶¨Ã¿Ò³ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
+TotalPage=Abs(Int(TotalCount/PageSetup*(-1))) 'ï¿½ï¿½Ò³ï¿½ï¿½
+PageCount = cint(Request.QueryString("PageIndex")) 'ï¿½ï¿½È¡ï¿½ï¿½Ç°Ò³
 if PageCount <1 then PageCount = 1
 if PageCount > TotalPage then PageCount = TotalPage
 if TotalPage>1 then RS.Move (PageCount-1) * pagesetup
@@ -28,23 +28,23 @@ BytesUsed=int(TotalUserPostAttachments/SiteSettings("MaxPostAttachmentsSize")*10
 
 <table border=0 width=100% align=center cellspacing=1 cellpadding=4 class=a2>
 <tr class=a3>
-<td height=25>&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ¡ú ¿ØÖÆÃæ°å</td>
+<td height=25>&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</td>
 </tr>
 </table><br>
 
 <table cellspacing=1 cellpadding=1 width=100% align=center border=0 class=a2>
   <TR id=TableTitleLink class=a1 height="25">
-      <Td align="center"><b><a href="UserCp.asp">¿ØÖÆÃæ°å</a></b></td>
-      <TD align="center"><b><a href="EditProfile.asp">×ÊÁÏÐÞ¸Ä</a></b></td>
-      <TD align="center"><b><a href="EditProfile.asp?menu=pass">ÃÜÂëÐÞ¸Ä</a></b></td>
-      <TD align="center"><b><a href="MySettings.asp">¸öÐÔÉèÖÃ</a></b></td>
-      <TD align="center"><b><a href="MyAttachment.asp">¸½¼þ¹ÜÀí</a></b></td>
-      <TD align="center"><b><a href="Message.asp">¶ÌÐÅ·þÎñ</a></b></td>
-      <TD align="center"><b><a href="Friend.asp">ºÃÓÑÁÐ±í</a></b></td>
+      <Td align="center"><b><a href="UserCp.asp">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></b></td>
+      <TD align="center"><b><a href="EditProfile.asp">ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½</a></b></td>
+      <TD align="center"><b><a href="EditProfile.asp?menu=pass">ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½</a></b></td>
+      <TD align="center"><b><a href="MySettings.asp">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></b></td>
+      <TD align="center"><b><a href="MyAttachment.asp">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></b></td>
+      <TD align="center"><b><a href="Message.asp">ï¿½ï¿½ï¿½Å·ï¿½ï¿½ï¿½</a></b></td>
+      <TD align="center"><b><a href="Friend.asp">ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½</a></b></td>
       </TR></TABLE>
 <br>
 <%if TotalUserPostAttachments=0 and SiteSettings("AttachmentsSaveOption")=0 then%>
-<center>±¾¹¦ÄÜÖ»ÄÜ¹ÜÀí´æ´¢ÓÚÊý¾Ý¿âÖÐµÄ¸½¼þ£¡<br>ÂÛÌ³ÉÏ´«µÄ¸½¼þ²¢·Ç´æ´¢ÓÚÊý¾Ý¿âÖÐ£¡</center>
+<center>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½Ü¹ï¿½ï¿½ï¿½ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ÐµÄ¸ï¿½ï¿½ï¿½ï¿½ï¿½<br>ï¿½ï¿½Ì³ï¿½Ï´ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç´æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½Ð£ï¿½</center>
 <%
 htmlend
 
@@ -52,7 +52,7 @@ end if
 %>
 <table cellSpacing="0" cellPadding="4" width="100%" align="center" border="0">
 	<tr>
-		<td align="center">ÄúµÄ¸½¼þ¿Õ¼äÊ¹ÓÃÐÅÏ¢£ºÒÑÊ¹ÓÃ <%=CheckSize(""&TotalUserPostAttachments&"")%>£¬Ê£Óà <%=CheckSize((SiteSettings("MaxPostAttachmentsSize")-TotalUserPostAttachments))%></td>
+		<td align="center">ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ <%=CheckSize(""&TotalUserPostAttachments&"")%>ï¿½ï¿½Ê£ï¿½ï¿½ <%=CheckSize((SiteSettings("MaxPostAttachmentsSize")-TotalUserPostAttachments))%></td>
 	</tr>
 	<tr>
 		<td>
@@ -65,7 +65,7 @@ end if
 						<td class=a3 style="BORDER-RIGHT: #ffffff 1px solid; BORDER-TOP: #ffffff 1px solid; BORDER-LEFT: #ffffff 1px solid; BORDER-BOTTOM: #ffffff 1px solid">
 						<table cellSpacing="0" cellPadding="0" width=<%=BytesUsed%>% border="0" class=a1>
 							<tr>
-								<td>¡¡</td>
+								<td>ï¿½ï¿½</td>
 							</tr>
 						</table>
 						</td>
@@ -83,12 +83,12 @@ end if
 <table cellspacing="1" cellpadding="2" border="0" width=100% class="a2"><form method=Post name=form action="?menu=DelPostAttachment">
 <tr class=a1 id="TableTitleLink">
 <td align="center" width=30><input type=checkbox name=chkall onclick=CheckAll(this.form) value="ON"></td>
-<td align=center width="20%">¸½¼þÃû³Æ</td>
-<td align=center width="60">´óÐ¡</td>
-<td align="center">ÀàÐÍ</td>
-<td align="center">ÉÏ´«Ê±¼ä</td>
-<td align="center" width="50">ÏÂÔØ´ÎÊý</td>
-<td align="center" width="25%">¹ØÁªÌû×Ó</td></tr>
+<td align=center width="20%">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</td>
+<td align=center width="60">ï¿½ï¿½Ð¡</td>
+<td align="center">ï¿½ï¿½ï¿½ï¿½</td>
+<td align="center">ï¿½Ï´ï¿½Ê±ï¿½ï¿½</td>
+<td align="center" width="50">ï¿½ï¿½ï¿½Ø´ï¿½ï¿½ï¿½</td>
+<td align="center" width="25%">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</td></tr>
 
 <%
 
@@ -118,7 +118,7 @@ Rs.Close
 </table>
 <table border="0" width="100%">
 	<tr>
-		<td><input type="submit" value="É¾ ³ý"></form></td>
+		<td><input type="submit" value="É¾ ï¿½ï¿½"></form></td>
 		<td align="right" valign="top"><%ShowPage()%></td>
 	</tr>
 </table>

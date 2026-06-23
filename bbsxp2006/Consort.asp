@@ -18,9 +18,9 @@ aim=HTMLEncode(Request("aim"))
 if content=empty then error("<li>�������ݲ���Ϊ��")
 if aim=CookieUserName then error("<li>�����Լ�׷���Լ���")
 
-If Conn.Execute("Select id From [BBSXP_Users] where UserName='"&aim&"'" ).eof Then error("<li>ϵͳ������"&aim&"������")
+If Conn.Execute("Select id From [BBSXP_Users] where UserName='"&SqlString(aim)&"'" ).eof Then error("<li>ϵͳ������"&aim&"������")
 
-If Not Conn.Execute("Select id From [BBSXP_Consort] where UserName='"&CookieUserName&"' and aim='"&aim&"'" ).eof Then error("<li>"&aim&"�Ѿ�������׷���б�����")
+If Not Conn.Execute("Select id From [BBSXP_Consort] where UserName='"&SqlString(CookieUserName)&"' and aim='"&SqlString(aim)&"'" ).eof Then error("<li>"&aim&"�Ѿ�������׷���б�����")
 
 sql="insert into [BBSXP_Consort] (UserName,aim,unburden) values ('"&CookieUserName&"','"&aim&"','"&content&"')"
 Conn.Execute(SQL)
@@ -30,7 +30,7 @@ sql="insert into [BBSXP_Messages](UserName,incept,content) values ('"&CookieUser
 Conn.Execute(SQL)
 
 
-Conn.execute("update [BBSXP_Users] set NewMessage=NewMessage+1 where UserName='"&aim&"'")
+Conn.execute("update [BBSXP_Users] set NewMessage=NewMessage+1 where UserName='"&SqlString(aim)&"'")
 
 case "accept"
 
@@ -43,18 +43,18 @@ Consort=Conn.Execute("Select UserName From [BBSXP_Consort] where id="&id&"")(0)
 if Conn.Execute("Select Consort From [BBSXP_Users] where UserName='"&Consort&"'")(0)<>empty then error("<li>"&Consort&"�Ѿ�����ż��")
 
 Conn.execute("update [BBSXP_Users] set Consort='"&aim&"' where UserName='"&Consort&"'")
-Conn.execute("update [BBSXP_Users] set Consort='"&Consort&"' where UserName='"&aim&"'")
+Conn.execute("update [BBSXP_Users] set Consort='"&Consort&"' where UserName='"&SqlString(aim)&"'")
 Conn.execute("Delete from [BBSXP_Consort] where id="&id&"")
 succeed("<li>���Ѿ�������"&Consort&"��׷��<li><a href=Consort.asp>����������ż</a><meta http-equiv=refresh content=3;url=Consort.asp>")
 
 
 
 case "Del"
-Conn.execute("Delete from [BBSXP_Consort] where id="&id&" and (UserName='"&CookieUserName&"' or aim='"&CookieUserName&"') ")
+Conn.execute("Delete from [BBSXP_Consort] where id="&id&" and (UserName='"&SqlString(CookieUserName)&"' or aim='"&SqlString(CookieUserName)&"') ")
 
 case "part"
-Conn.execute("update [BBSXP_Users] set Consort='' where UserName='"&Consort&"'")
-Conn.execute("update [BBSXP_Users] set Consort='' where UserName='"&CookieUserName&"'")
+Conn.execute("update [BBSXP_Users] set Consort='' where UserName='"&SqlString(Consort)&"'")
+Conn.execute("update [BBSXP_Users] set Consort='' where UserName='"&SqlString(CookieUserName)&"'")
 succeed("<li>���ֳɹ�<li><a href=Consort.asp>����������ż</a><meta http-equiv=refresh content=3;url=Consort.asp>")
 
 end select
@@ -81,7 +81,7 @@ end select
 		<td width="15%" height="5" align="middle">����</td>
 	</tr>
 	<%
-sql="select * from [BBSXP_Consort] where aim='"&CookieUserName&"' order by id Desc"
+sql="select * from [BBSXP_Consort] where aim='"&SqlString(CookieUserName)&"' order by id Desc"
 Set Rs=Conn.Execute(sql)
 Do While Not Rs.EOF 
 %>
@@ -115,7 +115,7 @@ Rs.Close
 		<td width="15%" height="5" align="middle">����</td>
 	</tr>
 	<%
-sql="select * from [BBSXP_Consort] where UserName='"&CookieUserName&"' order by id Desc"
+sql="select * from [BBSXP_Consort] where UserName='"&SqlString(CookieUserName)&"' order by id Desc"
 Set Rs=Conn.Execute(sql)
 Do While Not Rs.EOF 
 %>
@@ -144,7 +144,7 @@ Rs.Close
 sql="select * from [BBSXP_Users] where UserName='"&Consort&"'"
 Set Rs=Conn.Execute(sql)
 
-if Rs.eof then Conn.execute("update [BBSXP_Users] set Consort='' where UserName='"&CookieUserName&"'")
+if Rs.eof then Conn.execute("update [BBSXP_Users] set Consort='' where UserName='"&SqlString(CookieUserName)&"'")
 
 select case Rs("UserSex")
 case "male"
