@@ -20,7 +20,7 @@ SafeFileName=TempValue
 End Function
 
 set Rs=server.CreateObject("adodb.recordset")
-sql="SELECT top 1 * FROM [BBSXP_PostAttachments] where id="&int(Request("AttachmentID"))
+sql="SELECT top 1 * FROM [BBSXP_PostAttachments] where id="&RequestInt("AttachmentID")
 Rs.Open sql,conn,1,3
 if Rs.Eof then CloseDatabase
 response.contenttype=Rs("ContentType")
@@ -31,9 +31,9 @@ Set Jpeg = Server.CreateObject("Persits.Jpeg")
 Jpeg.OpenBinary rs("Content").Value
 
 if sitesettings("WatermarkType")=0 then
-'Jpeg.Canvas.Font.Color = &H000000	'ÑÕÉ«
-'Jpeg.Canvas.Font.Family = "ºÚÌå"  	'×ÖÌå
-'Jpeg.Canvas.Font.size = "15"		'´óÐ¡
+'Jpeg.Canvas.Font.Color = &H000000	'ï¿½ï¿½É«
+'Jpeg.Canvas.Font.Family = "ï¿½ï¿½ï¿½ï¿½"  	'ï¿½ï¿½ï¿½ï¿½
+'Jpeg.Canvas.Font.size = "15"		'ï¿½ï¿½Ð¡
 Jpeg.Canvas.Print 10, 10, ""&SiteSettings("WatermarkText")&""
 elseif sitesettings("WatermarkType")=1 then
 Set Jpeg2 = Server.CreateObject("Persits.Jpeg")
@@ -55,7 +55,7 @@ case "4"
 ImageWidth=Jpeg.OriginalWidth-Jpeg2.OriginalWidth-10
 ImageHeight=Jpeg.OriginalHeight-Jpeg2.OriginalHeight-10
 end select
-Jpeg.Canvas.DrawImage ImageWidth, ImageHeight, Jpeg2, 0.5, &HFFFFFF	'0.5Í¸Ã÷¶È, Í¸Ã÷ÑÕÉ«FFFFFF
+Jpeg.Canvas.DrawImage ImageWidth, ImageHeight, Jpeg2, 0.5, &HFFFFFF	'0.5Í¸ï¿½ï¿½ï¿½ï¿½, Í¸ï¿½ï¿½ï¿½ï¿½É«FFFFFF
 Set Jpeg2 = Nothing
 end if
 Jpeg.SendBinary

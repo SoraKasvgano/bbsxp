@@ -1,12 +1,12 @@
 <!-- #include file="Setup.asp" -->
 <%
 top
-if CookieUserName=empty then error("<li>Äú»¹Î´<a href=Login.asp>µÇÂ¼</a>ÂÛÌ³")
+if CookieUserName=empty then error("<li>ï¿½ï¿½ï¿½ï¿½Î´<a href=Login.asp>ï¿½ï¿½Â¼</a>ï¿½ï¿½Ì³")
 ForumID=RequestInt("ForumID")
 
 sql="select * from [BBSXP_Forums] where id="&ForumID&""
 Set Rs=Conn.Execute(sql)
-ForumLogo=Rs("ForumLogo")
+ForumLogo=SafeUrl(Rs("ForumLogo"))
 followid=Rs("followid")
 ForumName=Rs("ForumName")
 moderated=Rs("moderated")
@@ -16,30 +16,30 @@ if ""&moderated&""="" then moderated="|"
 moderated=split(moderated,"|")
 
 if membercode<4 and moderated(0)<>CookieUserName then
-error("<li>ÄúµÄÈ¨ÏÞ²»¹»<li>Ö»ÓÐÕý°æÖ÷ <font color=red>"&moderated(0)&"</font> ¡¢³¬¼¶°æÖ÷¡¢¹ÜÀíÔ±²ÅÓµÓÐ´ËÈ¨ÏÞ")
+error("<li>ï¿½ï¿½ï¿½ï¿½È¨ï¿½Þ²ï¿½ï¿½ï¿½<li>Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ <font color=red>"&moderated(0)&"</font> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½Óµï¿½Ð´ï¿½È¨ï¿½ï¿½")
 end if
 
 
 
 select case Request("menu")
 case ""
-error2("ÇëÑ¡ÔñÄúÒª²Ù×÷µÄÏîÄ¿")
+error2("ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿")
 
 case "BatchRecycle"
 for each ho in request.form("ThreadID")
 ho=SafeLongValue(ho,0)
 Conn.execute("update [BBSXP_Threads] set IsDel=0,lasttime="&SqlNowString&",lastname='"&SqlString(CookieUserName)&"' where id="&ho&" and IsDel=1 and ForumID="&ForumID&"")
 next
-Log("»¹Ô­»ØÊÕÕ¾ÄÚµÄÌû×Ó£¬Ö÷ÌâID£º"&Request.form("ThreadID")&"")
-error2("³É¹¦»¹Ô­»ØÊÕÕ¾ÄÚµÄÌû×Ó")
+Log("ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½Úµï¿½ï¿½ï¿½ï¿½Ó£ï¿½ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½"&Request.form("ThreadID")&"")
+error2("ï¿½É¹ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½")
 
 case "BatchCensorship"
 for each ho in request.form("ThreadID")
 ho=SafeLongValue(ho,0)
 Conn.execute("update [BBSXP_Threads] set IsDel=0 where id="&ho&" and IsDel=1 and ForumID="&ForumID&"")
 next
-Log("Ìû×ÓÍ¨¹ýÉó²é£¬Ö÷ÌâID£º"&Request.form("ThreadID")&"")
-error2("Ìû×ÓÒÑ¾­³É¹¦Í¨¹ýÉó²é")
+Log("ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½é£¬ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½"&Request.form("ThreadID")&"")
+error2("ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½É¹ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½")
 
 case "BatchDel"
 IsDel=int(Request.form("IsDel"))
@@ -47,8 +47,8 @@ for each ho in Request.form("ThreadID")
 ho=SafeLongValue(ho,0)
 Conn.execute("update [BBSXP_Threads] set IsDel="&IsDel&",lasttime="&SqlNowString&",lastname='"&SqlString(CookieUserName)&"' where id="&ho&" and ForumID="&ForumID&"")
 next
-Log("ÅúÁ¿É¾³ý£¬Ö÷ÌâID£º"&Request.form("ThreadID")&"")
-error2("²Ù×÷³É¹¦")
+Log("ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½"&Request.form("ThreadID")&"")
+error2("ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½")
 
 case "BatchGOOD"
 IsGOOD=int(Request.form("IsGOOD"))
@@ -56,8 +56,8 @@ for each ho in Request.form("ThreadID")
 ho=SafeLongValue(ho,0)
 Conn.execute("update [BBSXP_Threads] set IsGOOD="&IsGOOD&",lasttime="&SqlNowString&",lastname='"&SqlString(CookieUserName)&"' where id="&ho&" and ForumID="&ForumID&"")
 next
-Log("ÅúÁ¿¾«»ª£¬Ö÷ÌâID£º"&Request.form("ThreadID")&"")
-error2("²Ù×÷³É¹¦")
+Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½"&Request.form("ThreadID")&"")
+error2("ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½")
 
 case "BatchLocked"
 IsLocked=SafeLongValue(Request.form("IsLocked"),0)
@@ -65,27 +65,27 @@ for each ho in Request.form("ThreadID")
 ho=SafeLongValue(ho,0)
 Conn.execute("update [BBSXP_Threads] set IsLocked="&IsLocked&",lasttime="&SqlNowString&",lastname='"&SqlString(CookieUserName)&"' where id="&ho&" and ForumID="&ForumID&"")
 next
-Log("ÅúÁ¿Ëø¶¨£¬Ö÷ÌâID£º"&Request.form("ThreadID")&"")
-error2("²Ù×÷1"&IsLocked&"³É¹¦")
+Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½"&Request.form("ThreadID")&"")
+error2("ï¿½ï¿½ï¿½ï¿½1"&IsLocked&"ï¿½É¹ï¿½")
 
 case "BatchSpecialTopic"
 for each ho in Request.form("ThreadID")
 ho=SafeLongValue(ho,0)
 Conn.execute("update [BBSXP_Threads] set SpecialTopic='"&SqlString(HTMLEncode(Request.form("SpecialTopic")))&"',lasttime="&SqlNowString&",lastname='"&SqlString(CookieUserName)&"' where id="&ho&" and ForumID="&ForumID&"")
 next
-Log("ÅúÁ¿×¨Ìâ£¬Ö÷ÌâID£º"&Request.form("ThreadID")&"")
-error2("²Ù×÷³É¹¦")
+Log("ï¿½ï¿½ï¿½ï¿½×¨ï¿½â£¬ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½"&Request.form("ThreadID")&"")
+error2("ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½")
 
 case "BatchMoveTopic"
 AimForumID=SafeLongValue(Request.form("AimForumID"),0)
-if AimForumID=0 then error("<li>ÄúÃ»ÓÐÑ¡ÔñÒª½«Ö÷ÌâÒÆ¶¯ÄÄ¸öÂÛÌ³")
+if AimForumID=0 then error("<li>ï¿½ï¿½Ã»ï¿½ï¿½Ñ¡ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½Ì³")
 for each ho in Request.form("ThreadID")
 ho=SafeLongValue(ho,0)
-if Conn.Execute("Select ForumPass From [BBSXP_Forums] where id="&AimForumID&"")(0)=4 then error("<li>Ä¿±êÂÛÌ³ÎªÊÚÈ¨·¢Ìû×´Ì¬")
+if Conn.Execute("Select ForumPass From [BBSXP_Forums] where id="&AimForumID&"")(0)=4 then error("<li>Ä¿ï¿½ï¿½ï¿½ï¿½Ì³Îªï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½×´Ì¬")
 Conn.execute("update [BBSXP_Threads] set ForumID="&AimForumID&",IsTop=0,IsGood=0,IsLocked=0 where id="&ho&" and ForumID="&ForumID&"")
 next
-Log("ÅúÁ¿ÒÆ¶¯£¬Ö÷ÌâID£º"&Request.form("ThreadID")&"")
-error2("²Ù×÷³É¹¦")
+Log("ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½"&Request.form("ThreadID")&"")
+error2("ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½")
 
 
 case "Fix"
@@ -96,7 +96,7 @@ else
 allrearticle=0
 end if
 Conn.execute("update [BBSXP_Forums] set ForumThreads="&allarticle&",ForumPosts="&allarticle+allrearticle&" where ID="&ForumID&"")
-error2("ÐÞ¸´ÂÛÌ³Í³¼ÆÊý¾Ý³É¹¦")
+error2("ï¿½Þ¸ï¿½ï¿½ï¿½Ì³Í³ï¿½ï¿½ï¿½ï¿½ï¿½Ý³É¹ï¿½")
 
 
 case "ForumDataUp"
@@ -107,14 +107,14 @@ ForumLogo=HTMLEncode(SafeUrl(Request.Form("ForumLogo")))
 moderated=HTMLEncode(Request.Form("moderated"))
 ForumIntro=HTMLEncode(Request.Form("ForumIntro"))
 ForumRules=HTMLEncode(Request.Form("ForumRules"))
-if ForumName="" then error("<li>ÇëÊäÈëÂÛÌ³Ãû³Æ")
-if Len(ForumName)>30 then  error("<li>ÂÛÌ³Ãû³Æ²»ÄÜ´óÓÚ 30 ¸ö×Ö·û")
-if Len(ForumIntro)>255 then  error("<li>ÂÛÌ³¼ò½é²»ÄÜ´óÓÚ 255 ¸ö×Ö·û")
-if instr(TolSpecialTopic,";") > 0 then error("<li>×¨ÌâÖÐ²»ÄÜº¬ÓÐÌØÊâ·ûºÅ")
+if ForumName="" then error("<li>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½")
+if Len(ForumName)>30 then  error("<li>ï¿½ï¿½Ì³ï¿½ï¿½ï¿½Æ²ï¿½ï¿½Ü´ï¿½ï¿½ï¿½ 30 ï¿½ï¿½ï¿½Ö·ï¿½")
+if Len(ForumIntro)>255 then  error("<li>ï¿½ï¿½Ì³ï¿½ï¿½é²»ï¿½Ü´ï¿½ï¿½ï¿½ 255 ï¿½ï¿½ï¿½Ö·ï¿½")
+if instr(TolSpecialTopic,";") > 0 then error("<li>×¨ï¿½ï¿½ï¿½Ð²ï¿½ï¿½Üºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")
 
 master=split(moderated,"|")
 for i = 0 to ubound(master)
-If Conn.Execute("Select id From [BBSXP_Users] where UserName='"&master(i)&"'" ).eof and master(i)<>"" Then error("<li>"&master(i)&"µÄÓÃ»§×ÊÁÏ»¹Î´×¢²á")
+If Conn.Execute("Select id From [BBSXP_Users] where UserName='"&master(i)&"'" ).eof and master(i)<>"" Then error("<li>"&master(i)&"ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ï»ï¿½Î´×¢ï¿½ï¿½")
 next
 
 sql="select * from [BBSXP_Forums] where id="&ForumID&""
@@ -128,8 +128,8 @@ Rs("ForumIntro")=ForumIntro
 Rs("ForumRules")=ForumRules
 Rs.update
 Rs.close
-Log("¸üÐÂÂÛÌ³£¨ID:"&ForumID&"£©µÄÐÅÏ¢£¡")
-Message="<li>¸üÐÂ³É¹¦£¡<li><a href=ShowForum.asp?ForumID="&ForumID&">·µ»ØÂÛÌ³</a><li><a href=Default.asp>·µ»ØÂÛÌ³Ê×Ò³</a>"
+Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½ID:"&ForumID&"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½")
+Message="<li>ï¿½ï¿½ï¿½Â³É¹ï¿½ï¿½ï¿½<li><a href=ShowForum.asp?ForumID="&ForumID&">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³</a><li><a href=Default.asp>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½Ò³</a>"
 succeed(""&Message&"<meta http-equiv=refresh content=3;url=ShowForum.asp?ForumID="&ForumID&">")
 
 case "ForumData"
@@ -144,7 +144,7 @@ if ("<%=SafeJsString(SafeUrl(Rs("ForumLogo")))%>"!=''){Logo.innerHTML="<img bord
 </script>
 	<table border="0" width="100%" align="center" cellspacing="1" cellpadding="4" class=a2>
 		<tr class=a3>
-			<td height="25">&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ¡ú <%ForumTree(Rs("followid"))%><%=ForumTreeList%> <a href="ShowForum.asp?ForumID=<%=ForumID%>"><%=Rs("ForumName")%></a> ¡ú ¹ÜÀíÂÛÌ³</td>
+			<td height="25">&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ï¿½ï¿½ <%ForumTree(Rs("followid"))%><%=ForumTreeList%> <a href="ShowForum.asp?ForumID=<%=ForumID%>"><%=Rs("ForumName")%></a> ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³</td>
 		</tr>
 	</table><br>
 <table border="0" width="100%">
@@ -155,31 +155,31 @@ if ("<%=SafeJsString(SafeUrl(Rs("ForumLogo")))%>"!=''){Logo.innerHTML="<img bord
 
 <table width=100% cellspacing=1 cellpadding=4 border=0 class=a2 align=center>
 	<tr class=a1>
-		<td align="center">ÂÛÌ³ÐÅÏ¢ </td>
+		<td align="center">ï¿½ï¿½Ì³ï¿½ï¿½Ï¢ </td>
 	</tr>
 	<tr class=a3>
-		<td>½ñÈÕÌû£º<%=Rs("ForumToday")%></td>
+		<td>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½<%=Rs("ForumToday")%></td>
 	</tr>
 	<tr class=a3>
-		<td>Ö÷ÌâÊý£º<%=Rs("ForumThreads")%> </td>
+		<td>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½<%=Rs("ForumThreads")%> </td>
 	</tr>
 	<tr class=a3>
-		<td>Ìû×ÓÊý£º<%=Rs("ForumPosts")%> </td>
+		<td>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½<%=Rs("ForumPosts")%> </td>
 	</tr>
 	<tr class=a1>
-		<td align="center">¹ÜÀíÑ¡Ïî</td>
+		<td align="center">ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½</td>
 	</tr>
 	<tr class=a3>
-		<td><a href="ShowForum.asp?ForumID=<%=ForumID%>&checkbox=1">ÅúÁ¿¹ÜÀíÌû×Ó</a></td>
+		<td><a href="ShowForum.asp?ForumID=<%=ForumID%>&checkbox=1">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></td>
 	</tr>
 	<tr class=a3>
-		<td><a href="ForumManage.asp?menu=Censorship&ForumID=<%=ForumID%>&checkbox=1">Ö÷ÌâÉó²é</a></td>
+		<td><a href="ForumManage.asp?menu=Censorship&ForumID=<%=ForumID%>&checkbox=1">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></td>
 	</tr>
 	<tr class=a3>
-		<td><a href="ForumManage.asp?menu=Recycle&ForumID=<%=ForumID%>&checkbox=1">»Ø ÊÕ Õ¾</a></td>
+		<td><a href="ForumManage.asp?menu=Recycle&ForumID=<%=ForumID%>&checkbox=1">ï¿½ï¿½ ï¿½ï¿½ Õ¾</a></td>
 	</tr>
 	<tr class=a3>
-		<td><a href="ForumManage.asp?menu=Fix&ForumID=<%=ForumID%>">ÐÞ¸´ÂÛÌ³Í³¼ÆÊý¾Ý</a></td>
+		<td><a href="ForumManage.asp?menu=Fix&ForumID=<%=ForumID%>">ï¿½Þ¸ï¿½ï¿½ï¿½Ì³Í³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></td>
 	</tr>
 </table>
 
@@ -190,53 +190,53 @@ if ("<%=SafeJsString(SafeUrl(Rs("ForumLogo")))%>"!=''){Logo.innerHTML="<img bord
 
 <table width=100% cellspacing=1 cellpadding=4 border=0 class=a2 align=center>
 <tr class=a1>
-<td height="20" align="center" colspan="2"><b>ÂÛÌ³×ÊÁÏ</b></td>
+<td height="20" align="center" colspan="2"><b>ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½</b></td>
 </tr>
 <form name="form2" method="POST" action="?">
 <input type=hidden name=menu value="ForumDataUp">
 <input type=hidden name=ForumID value="<%=ForumID%>">
 <tr class=a4>
-<td align="right" valign="middle" width="20%">ÂÛÌ³Ãû³Æ£º</td>
+<td align="right" valign="middle" width="20%">ï¿½ï¿½Ì³ï¿½ï¿½ï¿½Æ£ï¿½</td>
 <td align="Left" valign="middle" width="78%">
 <input type="text" name="ForumName" size="30" maxlength="12" value="<%=Rs("ForumName")%>">
 </td>
 </tr>
 <tr class=a3>
-<td align="right" valign="middle" width="20%">ÂÛÌ³°æÖ÷£º</td>
+<td align="right" valign="middle" width="20%">ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</td>
 <td align="Left" valign="middle" width="78%">
 <input size="30" name="moderated" value="<%=Rs("moderated")%>">
-¶à°æÖ÷Ìí¼ÓÇëÓÃ¡°|¡±¸ô¿ª£¬Èç£ºyuzi|Ô£Ô£
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¡ï¿½|ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç£ºyuzi|Ô£Ô£
 </td>
 </tr>
 <tr class=a4>
-<td align="right" valign="middle" width="20%">Ìû×Ó×¨Ìâ£º</td>
+<td align="right" valign="middle" width="20%">ï¿½ï¿½ï¿½ï¿½×¨ï¿½â£º</td>
 <td align="Left" valign="middle" width="78%">
 <input size="30" name="TolSpecialTopic" value="<%=HTMLEncode(""&Rs("TolSpecialTopic")&"")%>">
-Ìí¼ÓÇëÓÃ¡°|¡±¸ô¿ª£¬Èç£ºÔ­´´|×ªÌù|ÌùÍ¼</td>
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¡ï¿½|ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç£ºÔ­ï¿½ï¿½|×ªï¿½ï¿½|ï¿½ï¿½Í¼</td>
 </tr>
 <tr class=a3>
-<td align="right" width="20%">ÂÛÌ³½éÉÜ£º</td>
+<td align="right" width="20%">ï¿½ï¿½Ì³ï¿½ï¿½ï¿½Ü£ï¿½</td>
 <td align="Left" valign="middle" width="78%">
 <textarea name="ForumIntro" rows="4" cols="50"><%=ForumIntro%></textarea>&nbsp;
 </td>
 <tr class=a4>
-<td align="right" width="20%">ÂÛÌ³¹æÔò£º</td>
+<td align="right" width="20%">ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½</td>
 <td align="Left" valign="middle" width="78%">
 <textarea name="ForumRules" rows="4" cols="50"><%=ForumRules%></textarea>&nbsp;
 </td>
 </tr>
 <tr class=a3>
-<td align="right" valign="middle" width="20%">Ð¡Í¼±êURL£º</td>
+<td align="right" valign="middle" width="20%">Ð¡Í¼ï¿½ï¿½URLï¿½ï¿½</td>
 <td align="Left" valign="middle" width="78%">
-<input size="30" name="ForumIcon" value="<%=Rs("ForumIcon")%>">¡¡ÏÔÊ¾ÔÚÉçÇøÊ×Ò³ÂÛÌ³½éÉÜÓÒ±ß</td>
+<input size="30" name="ForumIcon" value="<%=Rs("ForumIcon")%>">ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½ï¿½Ò±ï¿½</td>
 </tr>
 <tr class=a4>
-<td align="right" valign="bottom" width="20%">´óÍ¼±êURL£º</td>
+<td align="right" valign="bottom" width="20%">ï¿½ï¿½Í¼ï¿½ï¿½URLï¿½ï¿½</td>
 <td align="Left" valign="bottom" width="78%">
-<input size="30" name="ForumLogo" value="<%=HTMLEncode(SafeUrl(Rs("ForumLogo")))%>">¡¡ÏÔÊ¾ÔÚÂÛÌ³×óÉÏ½Ç</td>
+<input size="30" name="ForumLogo" value="<%=HTMLEncode(SafeUrl(Rs("ForumLogo")))%>">ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½ï¿½Ï½ï¿½</td>
 </tr>
 <tr class=a3>
-<td align="right" valign="bottom" width="98%" colspan="2"><input type="submit" value=" ¸ü ÐÂ &gt;&gt;ÏÂ Ò» ²½ "></td>
+<td align="right" valign="bottom" width="98%" colspan="2"><input type="submit" value=" ï¿½ï¿½ ï¿½ï¿½ &gt;&gt;ï¿½ï¿½ Ò» ï¿½ï¿½ "></td>
 </tr>
 </table>
 </form>
@@ -261,39 +261,39 @@ if ("<%=SafeJsString(SafeUrl(ForumLogo))%>"!=''){Logo.innerHTML="<img border=0 s
 </script>
 	<table border="0" width="100%" align="center" cellspacing="1" cellpadding="4" class=a2>
 		<tr class=a3>
-			<td height="25">&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ¡ú <%ForumTree(followid)%><%=ForumTreeList%> <a href="ShowForum.asp?ForumID=<%=ForumID%>"><%=ForumName%></a> ¡ú
-			<a href="?menu=<%=HTMLEncode(Request("menu"))%>&ForumID=<%=ForumID%>&checkbox=1"><span id=menu>»ØÊÕÕ¾</span></a></td>
+			<td height="25">&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ï¿½ï¿½ <%ForumTree(followid)%><%=ForumTreeList%> <a href="ShowForum.asp?ForumID=<%=ForumID%>"><%=ForumName%></a> ï¿½ï¿½
+			<a href="?menu=<%=HTMLEncode(Request("menu"))%>&ForumID=<%=ForumID%>&checkbox=1"><span id=menu>ï¿½ï¿½ï¿½ï¿½Õ¾</span></a></td>
 		</tr>
 	</table><br><form method="POST" action="?"><input type=hidden name=ForumID value=<%=ForumID%>>
 <%
 
 if Request("menu")="Recycle" then
 sql="select * from [BBSXP_Threads] where IsDel=1 and PostTime<>lasttime and ForumID="&ForumID&" order by lasttime Desc"
-response.write "<script>menu.innerText='»ØÊÕÕ¾'</script>"
+response.write "<script>menu.innerText='ï¿½ï¿½ï¿½ï¿½Õ¾'</script>"
 elseif Request("menu")="Censorship" then
 sql="select * from [BBSXP_Threads] where IsDel=1 and PostTime=lasttime and ForumID="&ForumID&" order by lasttime Desc"
-response.write "<script>menu.innerText='Éó²éÇø'</script>"
+response.write "<script>menu.innerText='ï¿½ï¿½ï¿½ï¿½ï¿½'</script>"
 end if
 Rs.Open sql,Conn,1
 
-PageSetup=20 'Éè¶¨Ã¿Ò³µÄÏÔÊ¾ÊýÁ¿
+PageSetup=20 'ï¿½è¶¨Ã¿Ò³ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
 Rs.Pagesize=PageSetup
-TotalPage=Rs.Pagecount  '×ÜÒ³Êý
+TotalPage=Rs.Pagecount  'ï¿½ï¿½Ò³ï¿½ï¿½
 PageCount = cint(Request.QueryString("PageIndex"))
 if PageCount <1 then PageCount = 1
 if PageCount > TotalPage then PageCount = TotalPage
-if TotalPage>0 then Rs.absolutePage=PageCount 'Ìø×ªµ½Ö¸¶¨Ò³Êý
+if TotalPage>0 then Rs.absolutePage=PageCount 'ï¿½ï¿½×ªï¿½ï¿½Ö¸ï¿½ï¿½Ò³ï¿½ï¿½
 
 
 %>
 
 <table cellspacing="1" cellpadding="5" width="100%" align="center" border="0" class="a2">
 <tr height="25" id="TableTitleLink" class="a1">
-<td align="center" colspan="3">Ö÷Ìâ</td>
-<td align="center" width="10%">×÷Õß</td>
-<td align="center" width="6%">»Ø¸´</td>
-<td align="center" width="6%">µã»÷</td>
-<td align="center" width="25%">×îºó¸üÐÂ</td>
+<td align="center" colspan="3">ï¿½ï¿½ï¿½ï¿½</td>
+<td align="center" width="10%">ï¿½ï¿½ï¿½ï¿½</td>
+<td align="center" width="6%">ï¿½Ø¸ï¿½</td>
+<td align="center" width="6%">ï¿½ï¿½ï¿½</td>
+<td align="center" width="25%">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</td>
 </tr>
 		<%
 
@@ -317,13 +317,13 @@ Rs.Close
 				<td height="2" valign="top"><input type="checkbox" name="chkall" onclick="ThreadIDCheckAll(this.form)" value="ON">È«Ñ¡
 <%
 if Request("menu")="Recycle" then
-%><input type="radio" value="BatchRecycle" name=menu checked>»¹Ô­Ö÷Ìâ<%
+%><input type="radio" value="BatchRecycle" name=menu checked>ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½<%
 elseif Request("menu")="Censorship" then
-%><input type="radio" value="BatchCensorship" name=menu checked>Í¨¹ýÉó²é <input type="radio" value="BatchDel" name=menu><input type=hidden name=IsDel value=1>É¾³ýÖ÷Ìâ<%
+%><input type="radio" value="BatchCensorship" name=menu checked>Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ <input type="radio" value="BatchDel" name=menu><input type=hidden name=IsDel value=1>É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½<%
 end if
 %>
 
-<input onclick="checkclick('ÄúÈ·¶¨Ö´ÐÐ±¾´Î²Ù×÷?');" type="submit" value=" Ö´ ÐÐ ">
+<input onclick="checkclick('ï¿½ï¿½È·ï¿½ï¿½Ö´ï¿½Ð±ï¿½ï¿½Î²ï¿½ï¿½ï¿½?');" type="submit" value=" Ö´ ï¿½ï¿½ ">
 
 
 
