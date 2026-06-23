@@ -1,32 +1,32 @@
 <!-- #include file="Setup.asp" --><%
-id=int(Request("id"))
+id=RequestInt("id")
 
 content=HTMLEncode(Request.Form("content"))
 
 top
 
-if CookieUserName=empty then error("<li>Äú»¹Î´<a href=Login.asp>µÇÂ¼</a>ÂÛÌ³")
+if CookieUserName=empty then error("<li>ï¿½ï¿½ï¿½ï¿½Î´<a href=Login.asp>ï¿½ï¿½Â¼</a>ï¿½ï¿½Ì³")
 
 
-Consort=Conn.Execute("Select Consort From [BBSXP_Users] where UserName='"&CookieUserName&"'")(0)
+Consort=Conn.Execute("Select Consort From [BBSXP_Users] where UserName='"&SqlString(CookieUserName)&"'")(0)
 
 
 
 select case Request("menu")
 case "add"
 aim=HTMLEncode(Request("aim"))
-if content=empty then error("<li>±í°×ÄÚÈÝ²»ÄÜÎª¿Õ")
-if aim=CookieUserName then error("<li>²»ÄÜ×Ô¼º×·Çó×Ô¼º£¡")
+if content=empty then error("<li>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½Îªï¿½ï¿½")
+if aim=CookieUserName then error("<li>ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½×·ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½")
 
-If Conn.Execute("Select id From [BBSXP_Users] where UserName='"&aim&"'" ).eof Then error("<li>ÏµÍ³²»´æÔÚ"&aim&"µÄ×ÊÁÏ")
+If Conn.Execute("Select id From [BBSXP_Users] where UserName='"&aim&"'" ).eof Then error("<li>ÏµÍ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"&aim&"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")
 
-If Not Conn.Execute("Select id From [BBSXP_Consort] where UserName='"&CookieUserName&"' and aim='"&aim&"'" ).eof Then error("<li>"&aim&"ÒÑ¾­ÔÚÄúµÄ×·ÇóÁÐ±íµ±ÖÐ")
+If Not Conn.Execute("Select id From [BBSXP_Consort] where UserName='"&CookieUserName&"' and aim='"&aim&"'" ).eof Then error("<li>"&aim&"ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×·ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½")
 
 sql="insert into [BBSXP_Consort] (UserName,aim,unburden) values ('"&CookieUserName&"','"&aim&"','"&content&"')"
 Conn.Execute(SQL)
 
 
-sql="insert into [BBSXP_Messages](UserName,incept,content) values ('"&CookieUserName&"','"&aim&"','<font color=0000FF>¡¾ÉçÇøÅäÅ¼¡¿£º"&content&"</font>')"
+sql="insert into [BBSXP_Messages](UserName,incept,content) values ('"&CookieUserName&"','"&aim&"','<font color=0000FF>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¼ï¿½ï¿½ï¿½ï¿½"&content&"</font>')"
 Conn.Execute(SQL)
 
 
@@ -34,18 +34,18 @@ Conn.execute("update [BBSXP_Users] set NewMessage=NewMessage+1 where UserName='"
 
 case "accept"
 
-if Consort<>empty then error("<li>Äúµ±Ç°ÒÑÓÐÅäÅ¼")
+if Consort<>empty then error("<li>ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¼")
 
 aim=Conn.Execute("Select aim From [BBSXP_Consort] where id="&id&"")(0)
-if aim<>CookieUserName then error("<li>·Ç·¨²Ù×÷")
+if aim<>CookieUserName then error("<li>ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½")
 
 Consort=Conn.Execute("Select UserName From [BBSXP_Consort] where id="&id&"")(0)
-if Conn.Execute("Select Consort From [BBSXP_Users] where UserName='"&Consort&"'")(0)<>empty then error("<li>"&Consort&"ÒÑ¾­ÓÐÅäÅ¼ÁË")
+if Conn.Execute("Select Consort From [BBSXP_Users] where UserName='"&Consort&"'")(0)<>empty then error("<li>"&Consort&"ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½Å¼ï¿½ï¿½")
 
 Conn.execute("update [BBSXP_Users] set Consort='"&aim&"' where UserName='"&Consort&"'")
 Conn.execute("update [BBSXP_Users] set Consort='"&Consort&"' where UserName='"&aim&"'")
 Conn.execute("Delete from [BBSXP_Consort] where id="&id&"")
-succeed("<li>ÄúÒÑ¾­½ÓÊÜÁË"&Consort&"µÄ×·Çó<li><a href=Consort.asp>·µ»ØÉçÇøÅäÅ¼</a><meta http-equiv=refresh content=3;url=Consort.asp>")
+succeed("<li>ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"&Consort&"ï¿½ï¿½×·ï¿½ï¿½<li><a href=Consort.asp>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¼</a><meta http-equiv=refresh content=3;url=Consort.asp>")
 
 
 
@@ -55,7 +55,7 @@ Conn.execute("Delete from [BBSXP_Consort] where id="&id&" and (UserName='"&Cooki
 case "part"
 Conn.execute("update [BBSXP_Users] set Consort='' where UserName='"&Consort&"'")
 Conn.execute("update [BBSXP_Users] set Consort='' where UserName='"&CookieUserName&"'")
-succeed("<li>·ÖÊÖ³É¹¦<li><a href=Consort.asp>·µ»ØÉçÇøÅäÅ¼</a><meta http-equiv=refresh content=3;url=Consort.asp>")
+succeed("<li>ï¿½ï¿½ï¿½Ö³É¹ï¿½<li><a href=Consort.asp>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¼</a><meta http-equiv=refresh content=3;url=Consort.asp>")
 
 end select
 
@@ -63,7 +63,7 @@ end select
 <table border="0" width="100%" align="center" cellspacing="1" cellpadding="4" class="a2">
 	<tr class="a3">
 		<td height="25">&nbsp;<img src="images/Forum_nav.gif">&nbsp; <%ClubTree%> 
-		¡ú <a href="Consort.asp">ÉçÇøÅäÅ¼</a></td>
+		ï¿½ï¿½ <a href="Consort.asp">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¼</a></td>
 	</tr>
 </table>
 <br>
@@ -72,13 +72,13 @@ end select
 <table cellspacing="1" cellpadding="6" width="100%" border="0" class="a2">
 	<tr>
 		<td width="100%" height="10" align="middle" class="a1" colspan="4">
-		<font face="ËÎÌå">ÎÒµÄ×·ÇóÕß</font></td>
+		<font face="ï¿½ï¿½ï¿½ï¿½">ï¿½Òµï¿½×·ï¿½ï¿½ï¿½ï¿½</font></td>
 	</tr>
 	<tr class="a3">
-		<td width="10%" height="5" align="middle">ÓÃ»§Ãû</td>
-		<td height="5" align="middle">°®µÄ±í°×</td>
-		<td width="20%" height="5" align="middle"><font face="ËÎÌå">×·Çó</font>Ê±¼ä</td>
-		<td width="15%" height="5" align="middle">²Ù×÷</td>
+		<td width="10%" height="5" align="middle">ï¿½Ã»ï¿½ï¿½ï¿½</td>
+		<td height="5" align="middle">ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½</td>
+		<td width="20%" height="5" align="middle"><font face="ï¿½ï¿½ï¿½ï¿½">×·ï¿½ï¿½</font>Ê±ï¿½ï¿½</td>
+		<td width="15%" height="5" align="middle">ï¿½ï¿½ï¿½ï¿½</td>
 	</tr>
 	<%
 sql="select * from [BBSXP_Consort] where aim='"&CookieUserName&"' order by id Desc"
@@ -91,9 +91,9 @@ Do While Not Rs.EOF
 		<td height="5" align="middle"><%=Rs("unburden")%></td>
 		<td height="5" align="middle"><%=Rs("DateCreated")%></td>
 		<td height="5" align="middle"><%if Consort=Rs("UserName") then%>
-		<a href="?menu=part">·Ö ÊÖ</a> <%else%>
-		<a href="?menu=accept&id=<%=Rs("id")%>">½ÓÊÜ</a>
-		<a href="?menu=Del&id=<%=Rs("id")%>">¾Ü¾ø</a> <%end if%></td>
+		<a href="?menu=part">ï¿½ï¿½ ï¿½ï¿½</a> <%else%>
+		<a href="?menu=accept&id=<%=Rs("id")%>">ï¿½ï¿½ï¿½ï¿½</a>
+		<a href="?menu=Del&id=<%=Rs("id")%>">ï¿½Ü¾ï¿½</a> <%end if%></td>
 	</tr>
 	<%
 Rs.MoveNext
@@ -106,13 +106,13 @@ Rs.Close
 
 <table cellspacing="1" cellpadding="6" width="100%" border="0" class="a2">
 	<tr class="a1">
-		<td width="100%" height="10" align="middle" colspan="4">ÎÒ×·ÇóµÄÈË</td>
+		<td width="100%" height="10" align="middle" colspan="4">ï¿½ï¿½×·ï¿½ï¿½ï¿½ï¿½ï¿½</td>
 	</tr>
 	<tr class="a3">
-		<td width="10%" height="5" align="middle">ÓÃ»§Ãû</td>
-		<td height="5" align="middle">°®µÄ±í°×</td>
-		<td width="20%" height="5" align="middle"><font face="ËÎÌå">×·Çó</font>Ê±¼ä</td>
-		<td width="15%" height="5" align="middle">²Ù×÷</td>
+		<td width="10%" height="5" align="middle">ï¿½Ã»ï¿½ï¿½ï¿½</td>
+		<td height="5" align="middle">ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½</td>
+		<td width="20%" height="5" align="middle"><font face="ï¿½ï¿½ï¿½ï¿½">×·ï¿½ï¿½</font>Ê±ï¿½ï¿½</td>
+		<td width="15%" height="5" align="middle">ï¿½ï¿½ï¿½ï¿½</td>
 	</tr>
 	<%
 sql="select * from [BBSXP_Consort] where UserName='"&CookieUserName&"' order by id Desc"
@@ -125,8 +125,8 @@ Do While Not Rs.EOF
 		<td height="5" align="middle"><%=Rs("unburden")%></td>
 		<td height="5" align="middle"><%=Rs("DateCreated")%></td>
 		<td height="5" align="middle"><%if Consort=Rs("aim") then%>
-		<a href="?menu=part">·Ö ÊÖ</a> <%else%>
-		<a href="?menu=Del&id=<%=Rs("id")%>">È¡Ïû×·Çó</a> <%end if%> </td>
+		<a href="?menu=part">ï¿½ï¿½ ï¿½ï¿½</a> <%else%>
+		<a href="?menu=Del&id=<%=Rs("id")%>">È¡ï¿½ï¿½×·ï¿½ï¿½</a> <%end if%> </td>
 	</tr>
 	<%
 Rs.MoveNext
@@ -148,7 +148,7 @@ if Rs.eof then Conn.execute("update [BBSXP_Users] set Consort='' where UserName=
 
 select case Rs("UserSex")
 case "male"
-UserSex="ÄÐ"
+UserSex="ï¿½ï¿½"
 case "female"
 UserSex="Å®"
 end select
@@ -174,7 +174,7 @@ Rs.close
 %>
 <table cellspacing="1" cellpadding="6" width="100%" border="0" class="a2">
 	<tr class="a1" id="TableTitleLink">
-		<td align="middle" class="a1" colspan="7">ÎÒµÄÅäÅ¼</td>
+		<td align="middle" class="a1" colspan="7">ï¿½Òµï¿½ï¿½ï¿½Å¼</td>
 	</tr>
 	<tr>
 		<td width="20%" align="Left" class="a4" rowspan="3"><script>
@@ -184,29 +184,29 @@ document.write("<img src=<%=Userphoto%> border=0 onload='javascript:if(this.widt
 </script>
 		
 		</td>
-		<td width="80" align="Left" class="a4">êÇ³Æ£º</td>
+		<td width="80" align="Left" class="a4">ï¿½Ç³Æ£ï¿½</td>
 		<td align="Left" class="a4" width="15%"><a href="Profile.asp?UserName=<%=Consort%>">
 		<%=Consort%></a></td>
-		<td width="80" align="Left" class="a4">ÐÕÃû£º</td>
+		<td width="80" align="Left" class="a4">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</td>
 		<td align="Left" class="a4" width="15%"><%=realname%></td>
-		<td width="80" align="Left" class="a4">ÐÔ±ð£º</td>
+		<td width="80" align="Left" class="a4">ï¿½Ô±ï¿½</td>
 		<td align="Left" class="a4" width="15%"><%=UserSex%></td>
 	</tr>
 	<tr>
-		<td width="80" align="Left" class="a4" valign="top">¹ú¼Ò£º</td>
+		<td width="80" align="Left" class="a4" valign="top">ï¿½ï¿½ï¿½Ò£ï¿½</td>
 		<td align="Left" class="a4" width="15%"><%=country%></td>
-		<td width="80" align="Left" class="a4">Ê¡·Ý£º</td>
+		<td width="80" align="Left" class="a4">Ê¡ï¿½Ý£ï¿½</td>
 		<td align="Left" class="a4" width="15%"><%=province%></td>
-		<td width="80" align="Left" class="a4">³ÇÊÐ£º</td>
+		<td width="80" align="Left" class="a4">ï¿½ï¿½ï¿½Ð£ï¿½</td>
 		<td align="Left" class="a4" width="15%"><%=city%></td>
 	</tr>
 	<tr>
-		<td width="80" align="Left" class="a4" valign="top">¸öÈËËµÃ÷£º</td>
+		<td width="80" align="Left" class="a4" valign="top">ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½</td>
 		<td align="Left" class="a4" colspan="5"><%=personal%></td>
 	</tr>
 	<tr>
 		<td align="right" class="a4" valign="top" colspan="7">
-		<a onclick="checkclick('ÄúÈ·¶¨ÒªÓëµ±Ç°ÅäÅ¼·ÖÊÖ£¿')" href="?menu=part">Óëµ±Ç°ÅäÅ¼·ÖÊÖ</a></td>
+		<a onclick="checkclick('ï¿½ï¿½È·ï¿½ï¿½Òªï¿½ëµ±Ç°ï¿½ï¿½Å¼ï¿½ï¿½ï¿½Ö£ï¿½')" href="?menu=part">ï¿½ëµ±Ç°ï¿½ï¿½Å¼ï¿½ï¿½ï¿½ï¿½</a></td>
 	</tr>
 </table>
 <%else%>
@@ -214,22 +214,22 @@ document.write("<img src=<%=Userphoto%> border=0 onload='javascript:if(this.widt
 	<form action="Consort.asp" method="POST">
 		<input type="hidden" value="add" name="menu">
 		<tr>
-			<td width="77%" height="2" align="middle" class="a1" colspan="2">Ìí¼ÓÎÒÏë×·ÇóµÄÈË</td>
+			<td width="77%" height="2" align="middle" class="a1" colspan="2">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×·ï¿½ï¿½ï¿½ï¿½ï¿½</td>
 		</tr>
 		<tr>
-			<td width="12%" height="2" align="Left" class="a4">¶Ô·½ÓÃ»§Ãû£º</td>
+			<td width="12%" height="2" align="Left" class="a4">ï¿½Ô·ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½</td>
 			<td width="64%" height="2" align="Left" class="a4">
 			<input maxlength="30" size="15" name="aim"></td>
 		</tr>
 		<tr>
-			<td width="12%" height="1" align="Left" class="a4" valign="top">°®µÄ±í°×£º</td>
+			<td width="12%" height="1" align="Left" class="a4" valign="top">ï¿½ï¿½ï¿½Ä±ï¿½ï¿½×£ï¿½</td>
 			<td width="64%" height="1" align="Left" class="a4">
 			<textarea name="content" rows="5" style="width:95%"></textarea></td>
 		</tr>
 		<tr>
 			<td width="77%" height="1" align="center" class="a4" colspan="2">
-			<input type="submit" value=" È· ¶¨ ">
-			<input onclick="checkclick('¸ÃÏî²Ù×÷ÒªÇå³ýÈ«²¿µÄÄÚÈÝ£¬ÄúÈ·¶¨ÒªÇå³ýÂð?');" type="reset" value=" ÖØ Ð´ "></td>
+			<input type="submit" value=" È· ï¿½ï¿½ ">
+			<input onclick="checkclick('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½È·ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½?');" type="reset" value=" ï¿½ï¿½ Ð´ "></td>
 		</tr>
 	</form>
 </table>
