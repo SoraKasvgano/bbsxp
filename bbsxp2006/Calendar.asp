@@ -128,7 +128,7 @@ sub show
 			<%
 			
 if lookdate<>"" then lookdateSQL="and adddate='"&lookdate&"'"
-sql="select * from [BBSXP_Calendar] where (hide=0 or UserName='"&CookieUserName&"') "&lookdateSQL&" order by id Desc"
+sql="select * from [BBSXP_Calendar] where (hide=0 or UserName='"&SqlString(CookieUserName)&"') "&lookdateSQL&" order by id Desc"
 
 rs.Open sql,Conn,1
 pagesetup=10 '�趨ÿҳ����ʾ����
