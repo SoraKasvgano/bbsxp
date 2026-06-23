@@ -1,13 +1,15 @@
 <!-- #include file="Setup.asp" -->
 <%
 top
-if CookieUserName=empty then error("<li>Äú»¹Î´<a href=Login.asp>µÇÂ¼</a>ÂÛÌ³")
-ThreadID=int(Request("ThreadID"))
+if CookieUserName=empty then error("<li>ï¿½ï¿½ï¿½ï¿½Î´<a href=Login.asp>ï¿½ï¿½Â¼</a>ï¿½ï¿½Ì³")
+ThreadID=RequestInt("ThreadID")
 
 sql="Select * From [BBSXP_Threads] where ID="&ThreadID&""
 Rs.Open sql,Conn,1
+if Rs.eof then error("<li>è¯¥ä¸»é¢˜ä¸å­˜åœ¨")
 ForumID=Rs("ForumID")
-PostsTableName=Rs("PostsTableName")
+PostsTableName=SafeTableSuffix(Rs("PostsTableName"))
+if PostsTableName="" then PostsTableName="0"
 Topic=Rs("Topic")
 Rs.close
 
@@ -24,8 +26,8 @@ if membercode>3 or instr("|"&moderated&"|","|"&CookieUserName&"|")>0 then UserPo
 
 sql="select * from [BBSXP_Posts"&PostsTableName&"] where id="&Request("PostID")&""
 Set Rs=Conn.Execute(sql)
-if Rs.eof then error("<li>Êý¾Ý¿âÖÐ²»´æÔÚ´ËÌû×ÓµÄÊý¾Ý")
-if Rs("UserName")<>CookieUserName and UserPopedomPass<>1 then error("<li>¶Ô²»Æð£¬ÄúµÄÈ¨ÏÞ²»¹»£¡")
+if Rs.eof then error("<li>ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½Ð²ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½")
+if Rs("UserName")<>CookieUserName and UserPopedomPass<>1 then error("<li>ï¿½Ô²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¨ï¿½Þ²ï¿½ï¿½ï¿½ï¿½ï¿½")
 Subject=ReplaceText(""&Rs("Subject")&"","<[^>]*>","")
 content=Rs("content")
 Rs.close
@@ -48,8 +50,8 @@ next
 end if
 
 
-if content=empty then Message=Message&"<li>ÄÚÈÝÃ»ÓÐÌîÐ´"
-if sitesettings("DisplayEditNotes")=1 then content=""&content&"<p>£Û´ËÌû×ÓÒÑ±» "&CookieUserName&" ÔÚ "&now()&" ±à¼­¹ý£Ý"
+if content=empty then Message=Message&"<li>ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ð´"
+if sitesettings("DisplayEditNotes")=1 then content=""&content&"<p>ï¿½Û´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ±ï¿½ "&CookieUserName&" ï¿½ï¿½ "&now()&" ï¿½à¼­ï¿½ï¿½ï¿½ï¿½"
 
 if Message<>"" then error(""&Message&"")
 
@@ -69,7 +71,7 @@ Conn.execute("update [BBSXP_PostAttachments] set ThreadID="&ThreadID&",Descripti
 next
 end if
  
-Message="<li>ÐÞ¸ÄÌû×Ó³É¹¦<li><a href=ShowPost.asp?ThreadID="&ThreadID&">·µ»ØÖ÷Ìâ</a><li><a href=ShowForum.asp?ForumID="&ForumID&">·µ»ØÂÛÌ³</a><li><a href=Default.asp>·µ»ØÉçÇøÊ×Ò³</a>"
+Message="<li>ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½Ó³É¹ï¿½<li><a href=ShowPost.asp?ThreadID="&ThreadID&">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a><li><a href=ShowForum.asp?ForumID="&ForumID&">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³</a><li><a href=Default.asp>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³</a>"
 succeed(""&Message&"<meta http-equiv=refresh content=3;url=ShowForum.asp?ForumID="&ForumID&">")
 
 end if
@@ -84,7 +86,7 @@ function title_color(color){document.yuziform.Subject.style.color = color;}
 
 	<table border="0" width="100%" align="center" cellspacing="1" cellpadding="4" class=a2>
 		<tr class=a3>
-			<td height="25">&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ¡ú <%ForumTree(followid)%><%=ForumTreeList%> <a href=ShowForum.asp?ForumID=<%=ForumID%>><%=ForumName%></a> ¡ú <a href="ShowPost.asp?ThreadID=<%=ThreadID%>"><%=Topic%></a> ¡ú ±à¼­Ìû×Ó</td>
+			<td height="25">&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ï¿½ï¿½ <%ForumTree(followid)%><%=ForumTreeList%> <a href=ShowForum.asp?ForumID=<%=ForumID%>><%=ForumName%></a> ï¿½ï¿½ <a href="ShowPost.asp?ThreadID=<%=ThreadID%>"><%=Topic%></a> ï¿½ï¿½ ï¿½à¼­ï¿½ï¿½ï¿½ï¿½</td>
 		</tr>
 	</table><br>
 
@@ -94,25 +96,25 @@ function title_color(color){document.yuziform.Subject.style.color = color;}
 <input name="content" type="hidden" value='<%=server.htmlencode(content)%>'>
 <input name="UpFileID" type="hidden">
 <TR>
-<TD id=titlelarge vAlign=Left colSpan=2 height=25 class=a1><b>±à¼­Ìû×Ó</b></TD></TR>
+<TD id=titlelarge vAlign=Left colSpan=2 height=25 class=a1><b>ï¿½à¼­ï¿½ï¿½ï¿½ï¿½</b></TD></TR>
 <TR class=a4>
-<TD width="180" height=25><B>ÎÄÕÂ±êÌâ</B>&nbsp; </TD>
+<TD width="180" height=25><B>ï¿½ï¿½ï¿½Â±ï¿½ï¿½ï¿½</B>&nbsp; </TD>
 <TD height=25>
 <INPUT maxLength=50 size=60 name=Subject value="<%=Subject%>">
 
 <%if UserPopedomPass=1 then %>
 <SELECT name=color onchange="title_color(this.options[this.selectedIndex].value)">
-<option value="">ÑÕÉ«</option>
-<option style=background-color:Black;color:Black value=Black>ºÚÉ«</option>
-<option style=background-color:green;color:green value=green>ÂÌÉ«</option>
-<option style=background-color:red;color:red value=red>ºìÉ«</option>
-<option style=background-color:blue;color:blue value=blue>À¶É«</option>
-<option style=background-color:Navy;color:Navy value=Navy>ÉîÀ¶</option>
-<option style=background-color:Teal;color:Teal value=Teal>ÇàÉ«</option>
-<option style=background-color:Purple;color:Purple value=Purple>×ÏÉ«</option>
-<option style=background-color:Fuchsia;color:Fuchsia value=Fuchsia>×Ïºì</option>
-<option style=background-color:Gray;color:Gray value=Gray>»ÒÉ«</option>
-<option style=background-color:Olive;color:Olive value=Olive>éÏé­</option>
+<option value="">ï¿½ï¿½É«</option>
+<option style=background-color:Black;color:Black value=Black>ï¿½ï¿½É«</option>
+<option style=background-color:green;color:green value=green>ï¿½ï¿½É«</option>
+<option style=background-color:red;color:red value=red>ï¿½ï¿½É«</option>
+<option style=background-color:blue;color:blue value=blue>ï¿½ï¿½É«</option>
+<option style=background-color:Navy;color:Navy value=Navy>ï¿½ï¿½ï¿½ï¿½</option>
+<option style=background-color:Teal;color:Teal value=Teal>ï¿½ï¿½É«</option>
+<option style=background-color:Purple;color:Purple value=Purple>ï¿½ï¿½É«</option>
+<option style=background-color:Fuchsia;color:Fuchsia value=Fuchsia>ï¿½Ïºï¿½</option>
+<option style=background-color:Gray;color:Gray value=Gray>ï¿½ï¿½É«</option>
+<option style=background-color:Olive;color:Olive value=Olive>ï¿½ï¿½ï¿½</option>
 </SELECT>
 <%end if%>
 </TD></TR>
@@ -122,13 +124,13 @@ function title_color(color){document.yuziform.Subject.style.color = color;}
 <TABLE cellSpacing=0 cellPadding=0 width=100% align=Left border=0 height="100%">
 
 <TR>
-<TD vAlign=top align=Left width=100% class=a3><br><B>ÎÄÕÂÄÚÈÝ</B><BR>
-£¨<a href="javascript:CheckLength();">²é¿´ÄÚÈÝ³¤¶È</a>£©<BR><BR>
+<TD vAlign=top align=Left width=100% class=a3><br><B>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</B><BR>
+ï¿½ï¿½<a href="javascript:CheckLength();">ï¿½é¿´ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½</a>ï¿½ï¿½<BR><BR>
 <span id=UpFile></span>
 </TD></TR>
 
 <TR>
-<TD vAlign=bottom align=Left width=100% class=a3><INPUT id=DisableYBBCode name=DisableYBBCode type=checkbox value=1><label for=DisableYBBCode> ½ûÓÃYBB´úÂë</label>
+<TD vAlign=bottom align=Left width=100% class=a3><INPUT id=DisableYBBCode name=DisableYBBCode type=checkbox value=1><label for=DisableYBBCode> ï¿½ï¿½ï¿½ï¿½YBBï¿½ï¿½ï¿½ï¿½</label>
 </TD></TR>
 </TABLE></TD>
 <TD class=a3 height=250>
@@ -137,13 +139,13 @@ function title_color(color){document.yuziform.Subject.style.color = color;}
 <%if SiteSettings("UpFileOption")<>empty then%>
 <TR>
 <TD align=Left class=a4>
-<IMG src=images/affix.gif alt="Ö§³ÖÀàÐÍ<%=SiteSettings("UpFileTypes")%>"><b>Ôö¼Ó¸½¼þ</b>£¨ÏÞÖÆ:<%=CheckSize(SiteSettings("MaxFileSize"))%></b>£©</TD>
+<IMG src=images/affix.gif alt="Ö§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½<%=SiteSettings("UpFileTypes")%>"><b>ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½</b>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:<%=CheckSize(SiteSettings("MaxFileSize"))%></b>ï¿½ï¿½</TD>
 </TD>
 <TD align=Left class=a4><IFRAME src="PostUpFile.asp" frameBorder=0 width="100%" scrolling=no height=21></IFRAME></TD></TR>
 <%end if%>
 <TR>
 <TD align=middle class=a3 colSpan=2 height=27>
-<INPUT type=submit value=È·¶¨±à¼­ name=EditSubmit>&nbsp; <INPUT type=reset value=" ÖØ ÖÃ "></TD></TR></FORM>
+<INPUT type=submit value=È·ï¿½ï¿½ï¿½à¼­ name=EditSubmit>&nbsp; <INPUT type=reset value=" ï¿½ï¿½ ï¿½ï¿½ "></TD></TR></FORM>
 </TABLE>
 
 

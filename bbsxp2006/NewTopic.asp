@@ -1,14 +1,14 @@
 <!-- #include file="Setup.asp" -->
 <%
 top
-if CookieUserName=empty then error("<li>Äú»¹Î´<a href=Login.asp>µÇÂ¼</a>ÂÛÌ³")
-If not Conn.Execute("Select UserName From [BBSXP_Prison] where UserName='"&SqlString(CookieUserName)&"'" ).eof Then error("<li>Äú±»¹Ø½ø<a href=Prison.asp>¼àÓü</a>")
-ForumID=int(Request("ForumID"))
+if CookieUserName=empty then error("<li>ï¿½ï¿½ï¿½ï¿½Î´<a href=Login.asp>ï¿½ï¿½Â¼</a>ï¿½ï¿½Ì³")
+If not Conn.Execute("Select UserName From [BBSXP_Prison] where UserName='"&SqlString(CookieUserName)&"'" ).eof Then error("<li>ï¿½ï¿½ï¿½ï¿½ï¿½Ø½ï¿½<a href=Prison.asp>ï¿½ï¿½ï¿½ï¿½</a>")
+ForumID=RequestInt(Request("ForumID"))
 
 sql="select * from [BBSXP_Forums] where id="&ForumID&""
 Set Rs=Conn.Execute(sql)
 ForumName=Rs("ForumName")
-ForumLogo=Rs("ForumLogo")
+ForumLogo=SafeUrl(Rs("ForumLogo"))
 moderated=Rs("moderated")
 followid=Rs("followid")
 ForumPass=Rs("ForumPass")
@@ -27,17 +27,17 @@ if Request.ServerVariables("request_method") = "POST" then
 
 
 if sitesettings("EnableAntiSpamTextGenerateForPost")=1 then
-if Request.Form("VerifyCode")<>Session("VerifyCode") then Message=Message&"<li>ÑéÖ¤Âë´íÎó"
+if Request.Form("VerifyCode")<>Session("VerifyCode") then Message=Message&"<li>ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½ï¿½"
 end if
 
 color=HTMLEncode(Request.Form("color"))
-icon=Request.Form("icon")
+icon=RequestInt("icon")
 Subject=HTMLEncode(Request.Form("Subject"))
 Content=ContentEncode(Request.Form("Content"))
 if Request.Form("DisableYBBCode")<>1 then Content=YbbEncode(Content)
 
-if Len(Subject)<2 then Message=Message&"<li>ÎÄÕÂÖ÷Ìâ²»ÄÜÐ¡ÓÚ 2 ×Ö·û"
-if Len(content)<2 then Message=Message&"<li>ÎÄÕÂÄÚÈÝ²»ÄÜÐ¡ÓÚ 2 ×Ö·û"
+if Len(Subject)<2 then Message=Message&"<li>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â²»ï¿½ï¿½Ð¡ï¿½ï¿½ 2 ï¿½Ö·ï¿½"
+if Len(content)<2 then Message=Message&"<li>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ 2 ï¿½Ö·ï¿½"
 
 if SiteSettings("BannedText")<>empty then
 filtrate=split(SiteSettings("BannedText"),"|")
@@ -52,7 +52,7 @@ end if
 
 if Request.Form("Vote")<>"" then
 Vote=Request("Vote")
-if instr(Vote,"|") > 0 then error("<li>Í¶Æ±Ñ¡ÏîÖÐ²»ÄÜº¬ÓÐ¡°|¡±×Ö·û")
+if instr(Vote,"|") > 0 then error("<li>Í¶Æ±Ñ¡ï¿½ï¿½ï¿½Ð²ï¿½ï¿½Üºï¿½ï¿½Ð¡ï¿½|ï¿½ï¿½ï¿½Ö·ï¿½")
 pollTopic=split(Vote,chr(13)&chr(10))
 j=0
 for i = 0 to ubound(pollTopic)
@@ -62,7 +62,7 @@ j=j+1
 end if
 next
 
-if j<SiteSettings("MinVoteOptions") or j>SiteSettings("MaxVoteOptions") then error("<li>Í¶Æ±Ñ¡Ïî²»ÄÜÉÙÓÚ "&SiteSettings("MinVoteOptions")&" ¸ö<li>Í¶Æ±Ñ¡Ïî³¬¹ý "&SiteSettings("MaxVoteOptions")&" ¸ö")
+if j<SiteSettings("MinVoteOptions") or j>SiteSettings("MaxVoteOptions") then error("<li>Í¶Æ±Ñ¡ï¿½î²»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ "&SiteSettings("MinVoteOptions")&" ï¿½ï¿½<li>Í¶Æ±Ñ¡ï¿½î³¬ï¿½ï¿½ "&SiteSettings("MaxVoteOptions")&" ï¿½ï¿½")
 
 
 for y = 1 to j
@@ -80,10 +80,10 @@ sql="select * from [BBSXP_Users] where UserName='"&SqlString(CookieUserName)&"'"
 Rs.Open sql,Conn,1,3
 
 StopPostTime=int(DateDiff("s",Rs("UserLandTime"),Now()))
-if StopPostTime < int(SiteSettings("DuplicatePostIntervalInMinutes")) then Message=Message&"<li>ÂÛÌ³ÏÞÖÆÒ»¸öÈËÁ½´Î·¢Ìû¼ä¸ô±ØÐë´óÓÚ "&SiteSettings("DuplicatePostIntervalInMinutes")&" Ãë£¡<li>Äú±ØÐëÔÙµÈ´ý "&SiteSettings("DuplicatePostIntervalInMinutes")-StopPostTime&" Ãë£¡"
+if StopPostTime < int(SiteSettings("DuplicatePostIntervalInMinutes")) then Message=Message&"<li>ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ "&SiteSettings("DuplicatePostIntervalInMinutes")&" ï¿½ë£¡<li>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÙµÈ´ï¿½ "&SiteSettings("DuplicatePostIntervalInMinutes")-StopPostTime&" ï¿½ë£¡"
 
 StopPostTime=int(DateDiff("s",Rs("UserRegTime"),Now()))
-if StopPostTime < int(SiteSettings("RegUserTimePost")) then Message=Message&"<li>ÐÂ×¢²áÓÃ»§±ØÐëµÈ´ý "&SiteSettings("RegUserTimePost")&" Ãëºó²ÅÄÜ·¢Ìû£¡<li>Äú±ØÐëÔÙµÈ´ý "&SiteSettings("RegUserTimePost")-StopPostTime&" Ãë£¡"
+if StopPostTime < int(SiteSettings("RegUserTimePost")) then Message=Message&"<li>ï¿½ï¿½×¢ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½È´ï¿½ "&SiteSettings("RegUserTimePost")&" ï¿½ï¿½ï¿½ï¿½ï¿½Ü·ï¿½ï¿½ï¿½ï¿½ï¿½<li>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÙµÈ´ï¿½ "&SiteSettings("RegUserTimePost")-StopPostTime&" ï¿½ë£¡"
 
 if Message<>"" then error(""&Message&"")
 
@@ -137,12 +137,12 @@ Conn.execute("update [BBSXP_Statistics_Site] set TodayPost=TodayPost+1,TotalPost
 Session("VerifyCode")=""
 
 if ForumPass=5 then
-EnableCensorship="ÓÉÓÚÂÛÌ³ÉèÓÐÉó²éÖÆ¶È£¬Äú·¢±íµÄÌû×ÓÐèÒªµÈ´ý¼¤»î²ÅÄÜÏÔÊ¾¡£"
+EnableCensorship="ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶È£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½"
 else
-EnableCensorship="<a href=ShowPost.asp?ThreadID="&id&">·µ»ØÖ÷Ìâ</a>"
+EnableCensorship="<a href=ShowPost.asp?ThreadID="&id&">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a>"
 end if
 
-Message="<li>ÐÂÖ÷Ìâ·¢±í³É¹¦<li>"&EnableCensorship&"<li><a href=ShowForum.asp?ForumID="&ForumID&">·µ»ØÂÛÌ³</a><li><a href=Default.asp>·µ»ØÂÛÌ³Ê×Ò³</a>"
+Message="<li>ï¿½ï¿½ï¿½ï¿½ï¿½â·¢ï¿½ï¿½ï¿½É¹ï¿½<li>"&EnableCensorship&"<li><a href=ShowForum.asp?ForumID="&ForumID&">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³</a><li><a href=Default.asp>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½Ò³</a>"
 succeed(""&Message&"<meta http-equiv=refresh content=3;url=ShowForum.asp?ForumID="&ForumID&">")
 
 end if
@@ -165,7 +165,7 @@ function title_color(color){document.yuziform.Subject.style.color = color;}
 </script>
 	<table border="0" width="100%" align=center cellspacing="1" cellpadding="4" class=a2>
 		<tr class=a3>
-			<td height="25">&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ¡ú <%ForumTree(followid)%><%=ForumTreeList%> <a href=ShowForum.asp?ForumID=<%=ForumID%>><%=ForumName%></a> ¡ú ·¢±íÌû×Ó</td>
+			<td height="25">&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ï¿½ï¿½ <%ForumTree(followid)%><%=ForumTreeList%> <a href=ShowForum.asp?ForumID=<%=ForumID%>><%=ForumName%></a> ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</td>
 		</tr>
 	</table><br>
 
@@ -175,20 +175,20 @@ function title_color(color){document.yuziform.Subject.style.color = color;}
 <input name="content" type="hidden"><input name="UpFileID" type="hidden">
 <input type=hidden name=ForumID value=<%=ForumID%>>
 <TR>
-<TD vAlign=Left colSpan=2 height=25 class=a1><b>·¢±íÌû×Ó</b></TD></TR>
+<TD vAlign=Left colSpan=2 height=25 class=a1><b>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</b></TD></TR>
 <%if sitesettings("EnableAntiSpamTextGenerateForPost")=1 then%>
 	<tr>
-<TD class=a3 height=6><b>ÑéÖ¤Âë</b></TD>
+<TD class=a3 height=6><b>ï¿½ï¿½Ö¤ï¿½ï¿½</b></TD>
 <TD class=a3 height=6>
-<input name="VerifyCode" size="10"> <img src="VerifyCode.asp" alt="ÑéÖ¤Âë,¿´²»Çå³þ?Çëµã»÷Ë¢ÐÂÑéÖ¤Âë" style=cursor:pointer onclick="this.src='VerifyCode.asp'"></TD>
+<input name="VerifyCode" size="10"> <img src="VerifyCode.asp" alt="ï¿½ï¿½Ö¤ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½" style=cursor:pointer onclick="this.src='VerifyCode.asp'"></TD>
 	</tr>
 <%end if%>
 	
 <TR>
-<TD class=a3 width="180"><B>ÎÄÕÂ±êÌâ </B> 
+<TD class=a3 width="180"><B>ï¿½ï¿½ï¿½Â±ï¿½ï¿½ï¿½ </B> 
 <%
 if TolSpecialTopic<>empty then
-response.write "<SELECT name=SpecialTopic size=1><OPTION value='' selected>&nbsp;×¨Ìâ</OPTION>"
+response.write "<SELECT name=SpecialTopic size=1><OPTION value='' selected>&nbsp;×¨ï¿½ï¿½</OPTION>"
 filtrate=split(TolSpecialTopic,"|")
 for i = 0 to ubound(filtrate)
 response.write "<OPTION value='"&filtrate(i)&"'>["&filtrate(i)&"]</OPTION>"
@@ -202,26 +202,26 @@ end if
 <INPUT maxLength=50 size=60 name=Subject>
 <%if UserPopedomPass=1 then %>
 <SELECT name=color onchange="title_color(this.options[this.selectedIndex].value)">
-<option value="">ÑÕÉ«</option>
-<option style=background-color:Black;color:Black value=Black>ºÚÉ«</option>
-<option style=background-color:green;color:green value=green>ÂÌÉ«</option>
-<option style=background-color:red;color:red value=red>ºìÉ«</option>
-<option style=background-color:blue;color:blue value=blue>À¶É«</option>
-<option style=background-color:Navy;color:Navy value=Navy>ÉîÀ¶</option>
-<option style=background-color:Teal;color:Teal value=Teal>ÇàÉ«</option>
-<option style=background-color:Purple;color:Purple value=Purple>×ÏÉ«</option>
-<option style=background-color:Fuchsia;color:Fuchsia value=Fuchsia>×Ïºì</option>
-<option style=background-color:Gray;color:Gray value=Gray>»ÒÉ«</option>
-<option style=background-color:Olive;color:Olive value=Olive>éÏé­</option>
+<option value="">ï¿½ï¿½É«</option>
+<option style=background-color:Black;color:Black value=Black>ï¿½ï¿½É«</option>
+<option style=background-color:green;color:green value=green>ï¿½ï¿½É«</option>
+<option style=background-color:red;color:red value=red>ï¿½ï¿½É«</option>
+<option style=background-color:blue;color:blue value=blue>ï¿½ï¿½É«</option>
+<option style=background-color:Navy;color:Navy value=Navy>ï¿½ï¿½ï¿½ï¿½</option>
+<option style=background-color:Teal;color:Teal value=Teal>ï¿½ï¿½É«</option>
+<option style=background-color:Purple;color:Purple value=Purple>ï¿½ï¿½É«</option>
+<option style=background-color:Fuchsia;color:Fuchsia value=Fuchsia>ï¿½Ïºï¿½</option>
+<option style=background-color:Gray;color:Gray value=Gray>ï¿½ï¿½É«</option>
+<option style=background-color:Olive;color:Olive value=Olive>ï¿½ï¿½ï¿½</option>
 </SELECT>
 <%end if%>
 </TD></TR>
 <TR>
-<TD vAlign=top align=Left class=a4 height=23><B>ÄúµÄ±íÇé</B></TD>
+<TD vAlign=top align=Left class=a4 height=23><B>ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½</B></TD>
 <TD class=a4>
 <script>
 for(i=1;i<=12;i++) {
-document.write("<INPUT type=radio value="+i+" name=icon><IMG src=images/brow/"+i+".gif>¡¡")
+document.write("<INPUT type=radio value="+i+" name=icon><IMG src=images/brow/"+i+".gif>ï¿½ï¿½")
 }
 </script>
 
@@ -232,17 +232,17 @@ document.write("<INPUT type=radio value="+i+" name=icon><IMG src=images/brow/"+i
 <TABLE cellSpacing=0 cellPadding=0 align=Left border=0 width=100% height="100%">
 
 <TR>
-<TD vAlign=top align=Left width=100% class=a3><BR><B>ÎÄÕÂÄÚÈÝ</B><BR>
-£¨<a href="javascript:CheckLength();">²é¿´ÄÚÈÝ³¤¶È</a>£©<BR>
+<TD vAlign=top align=Left width=100% class=a3><BR><B>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</B><BR>
+ï¿½ï¿½<a href="javascript:CheckLength();">ï¿½é¿´ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½</a>ï¿½ï¿½<BR>
 <BR><span id=UpFile></span>
 
 
 </TD></TR>
 
 <TR><TD valign="bottom">
-<INPUT id=LockMyPost name=IsLocked type=checkbox value=1><label for=LockMyPost> Ö÷ÌâËø¶¨£¬²»ÔÊÐí»Ø¸´</label><br>
-<INPUT id=DisableYBBCode name=DisableYBBCode type=checkbox value=1><label for=DisableYBBCode> ½ûÓÃYBB´úÂë</label><br>
-<INPUT id=advcheck name=advShow type=checkbox value=1 onclick=ShowADv()><label for=advcheck> ÏÔÊ¾Í¶Æ±Ñ¡Ïî</label>
+<INPUT id=LockMyPost name=IsLocked type=checkbox value=1><label for=LockMyPost> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½</label><br>
+<INPUT id=DisableYBBCode name=DisableYBBCode type=checkbox value=1><label for=DisableYBBCode> ï¿½ï¿½ï¿½ï¿½YBBï¿½ï¿½ï¿½ï¿½</label><br>
+<INPUT id=advcheck name=advShow type=checkbox value=1 onclick=ShowADv()><label for=advcheck> ï¿½ï¿½Ê¾Í¶Æ±Ñ¡ï¿½ï¿½</label>
 
 </TD></TR>
 
@@ -259,13 +259,13 @@ document.write("<INPUT type=radio value="+i+" name=icon><IMG src=images/brow/"+i
 <TD vAlign=top align=Left class=a4>
 
 
-<FONT color=000000><B>Í¶Æ±ÏîÄ¿</B><BR>
-Ã¿ÐÐÒ»¸öÍ¶Æ±ÏîÄ¿<BR>
-¹ýÆÚÌìÊý <INPUT maxLength=3 size=2 name=Expiry value="7" onkeyup=if(isNaN(this.value))this.value=''> Ìì<br>
+<FONT color=000000><B>Í¶Æ±ï¿½ï¿½Ä¿</B><BR>
+Ã¿ï¿½ï¿½Ò»ï¿½ï¿½Í¶Æ±ï¿½ï¿½Ä¿<BR>
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ <INPUT maxLength=3 size=2 name=Expiry value="7" onkeyup=if(isNaN(this.value))this.value=''> ï¿½ï¿½<br>
 
 <INPUT type=radio CHECKED value=0 name=multiplicity id=multiplicity>
-<label for=multiplicity>µ¥Ñ¡Í¶Æ±</label>
-<BR><INPUT type=radio value=1 name=multiplicity id=multiplicity_1> <label for=multiplicity_1>¶àÑ¡Í¶Æ±</label></FONT> 
+<label for=multiplicity>ï¿½ï¿½Ñ¡Í¶Æ±</label>
+<BR><INPUT type=radio value=1 name=multiplicity id=multiplicity_1> <label for=multiplicity_1>ï¿½ï¿½Ñ¡Í¶Æ±</label></FONT> 
 </TD>
 <TD class=a4>
 <TEXTAREA name=Vote rows=5 style="width:100%"></TEXTAREA>
@@ -274,14 +274,14 @@ document.write("<INPUT type=radio value="+i+" name=icon><IMG src=images/brow/"+i
 <%if SiteSettings("UpFileOption")<>empty then%>
 <TR>
 <TD align=Left class=a4>
-<IMG src=images/affix.gif alt="Ö§³ÖÀàÐÍ<%=SiteSettings("UpFileTypes")%>"><b>Ôö¼Ó¸½¼þ</b>£¨ÏÞÖÆ:<%=CheckSize(SiteSettings("MaxFileSize"))%></b>£©</TD>
+<IMG src=images/affix.gif alt="Ö§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½<%=SiteSettings("UpFileTypes")%>"><b>ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½</b>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:<%=CheckSize(SiteSettings("MaxFileSize"))%></b>ï¿½ï¿½</TD>
 </TD>
 <TD align=Left class=a4><IFRAME src="PostUpFile.asp" frameBorder=0 width="100%" scrolling=no height=21></IFRAME></TD></TR>
 <%end if%>
 
 <TR>
 <TD align=middle class=a3 colSpan=2 height=27>
-<INPUT type=submit value=·¢±íÐÂÖ÷Ìâ name=EditSubmit>&nbsp; <INPUT type=reset value=" ÖØ ÖÃ "></TD></TR></FORM>
+<INPUT type=submit value=ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ name=EditSubmit>&nbsp; <INPUT type=reset value=" ï¿½ï¿½ ï¿½ï¿½ "></TD></TR></FORM>
 </TABLE>
 
 

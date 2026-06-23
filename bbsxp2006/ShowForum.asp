@@ -1,21 +1,21 @@
 <!-- #include file="Setup.asp" --><%
 top
 
-ForumID=int(Request("ForumID"))
+ForumID=RequestInt("ForumID")
 order=HTMLEncode(Request("order"))
 SpecialTopic=HTMLEncode(Request("SpecialTopic"))
-SortOrder=Request("SortOrder")
-TimeLimit=Request("TimeLimit")
-if Len(order)>10 then error("<li>·Ç·¨²Ù×÷")
-if Len(SpecialTopic)>20 then error("<li>×¨ÌâÃû×ÖÌ«³¤")
+SortOrder=RequestInt("SortOrder")
+TimeLimit=RequestInt("TimeLimit")
+if Len(order)>10 then error("<li>ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½")
+if Len(SpecialTopic)>20 then error("<li>×¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì«ï¿½ï¿½")
 
 sql="select * from [BBSXP_Forums] where id="&ForumID&""
 Set Rs=Conn.Execute(sql)
-if Rs.eof then error"<li>¸ÃÂÛÌ³ÒÑ¾­±»É¾³ý"
+if Rs.eof then error"<li>ï¿½ï¿½ï¿½ï¿½Ì³ï¿½Ñ¾ï¿½ï¿½ï¿½É¾ï¿½ï¿½"
 ForumName=Rs("ForumName")
 ForumThreads=Rs("ForumThreads")
 moderated=Rs("moderated")
-ForumLogo=Rs("ForumLogo")
+ForumLogo=SafeUrl(Rs("ForumLogo"))
 followid=Rs("followid")
 ForumHide=Rs("ForumHide")
 ForumPass=Rs("ForumPass")
@@ -47,10 +47,10 @@ BBSList(0)
 		<table border="0" width="100%" cellspacing="0" cellpadding="0" height="25">
 			<tr>
 				<td height="18">&nbsp;<img src="images/Forum_nav.gif">&nbsp; <%ClubTree%> 
-				¡ú <%ForumTree(followid)%><%=ForumTreeList%>
+				ï¿½ï¿½ <%ForumTree(followid)%><%=ForumTreeList%>
 				<a href="ShowForum.asp?ForumID=<%=ForumID%>"><%=ForumName%></a></td>
 				<td height="18" align="right"><img src="images/jt.gif">
-				<a href="ForumManage.asp?menu=ForumData&ForumID=<%=ForumID%>">¸ß¼¶¹ÜÀí</a> </td>
+				<a href="ForumManage.asp?menu=ForumData&ForumID=<%=ForumID%>">ï¿½ß¼ï¿½ï¿½ï¿½ï¿½ï¿½</a> </td>
 			</tr>
 		</table>
 		</td>
@@ -76,7 +76,7 @@ Set Rs1 = Nothing
 <br>
 <%if ForumRules<>"" then%>
 <div class=a3 style=" PADDING-TOP: 10px; PADDING-BOTTOM: 10px;PADDING-LEFT: 10px;  PADDING-RIGHT: 10px;  BORDER-RIGHT:#ccc 1px dotted; BORDER-TOP:#ccc 1px dotted; BORDER-LEFT:#ccc 1px dotted; BORDER-BOTTOM:#ccc 1px dotted;">
-<strong><font color="#ff0000">°æ ¹æ ºÍ µ¼ ¶Á</font></strong><br><%=ForumRules%></div><br>
+<strong><font color="#ff0000">ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½</font></strong><br><%=ForumRules%></div><br>
 <%end if%>
 
 <!-- #include file="inc/line.asp" --><%
@@ -88,16 +88,16 @@ ForumIDOnline=Conn.execute("Select count(sessionid)from [BBSXP_UsersOnline] wher
 regForumIDOnline=Conn.execute("Select count(sessionid)from [BBSXP_UsersOnline] where ForumID="&ForumID&" and UserName<>''")(0)
 %><table cellspacing="1" cellpadding="0" width="100%" align="center" border="0" class="a2">
 	<tr>
-		<td width="93%" height="25" class="a1">¡¡<img loaded="no" src="images/plus.gif" id="followImg0" style="cursor:hand;" onclick="loadThreadFollow(0,<%=ForumID%>)"> 
-		Ä¿Ç°ÂÛÌ³×ÜÔÚÏß <b><%=Onlinemany%></b> ÈË£¬±¾·ÖÂÛÌ³¹²ÓÐ <b><%=ForumIDOnline%></b> ÈËÔÚÏß¡£ÆäÖÐ×¢²áÓÃ»§ 
-		<b><%=regForumIDOnline%></b> ÈË£¬·Ã¿Í <b><%=ForumIDOnline-regForumIDOnline%></b> 
-		ÈË¡£</td>
+		<td width="93%" height="25" class="a1">ï¿½ï¿½<img loaded="no" src="images/plus.gif" id="followImg0" style="cursor:hand;" onclick="loadThreadFollow(0,<%=ForumID%>)"> 
+		Ä¿Ç°ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ <b><%=Onlinemany%></b> ï¿½Ë£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½ <b><%=ForumIDOnline%></b> ï¿½ï¿½ï¿½ï¿½ï¿½ß¡ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½ï¿½Ã»ï¿½ 
+		<b><%=regForumIDOnline%></b> ï¿½Ë£ï¿½ï¿½Ã¿ï¿½ <b><%=ForumIDOnline-regForumIDOnline%></b> 
+		ï¿½Ë¡ï¿½</td>
 		<td align="middle" width="7%" height="25" class="a1">
 		<a href="javascript:this.location.reload()">
 		<img src="images/refresh.gif" border="0"></a></td>
 	</tr>
 	<tr height="25" style="display:none" id="follow0">
-		<td id="followTd0" align="Left" class="a4" width="94%" colspan="5">¡¡Loading...</td>
+		<td id="followTd0" align="Left" class="a4" width="94%" colspan="5">ï¿½ï¿½Loading...</td>
 	</tr>
 	</tr>
 </table>
@@ -106,11 +106,11 @@ regForumIDOnline=Conn.execute("Select count(sessionid)from [BBSXP_UsersOnline] w
 	<tr>
 		<td align="Left" width="20%">
 		<a class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/NewPost.gif)" href="NewTopic.asp?ForumID=<%=ForumID%>">
-		·¢±íÐÂÖ÷Ìâ</a> </td>
+		ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a> </td>
 		<td align="right" width="80%">
 		<img src="images/Showdigest.gif">
-		<a onmouseover="showmenu(event,'&lt;div class=menuitems&gt;&lt;a href=MyFavorites.asp?menu=add&amp;url=forum&amp;name=<%=ForumID%>&gt;ÊÕ²ØÂÛÌ³&lt;/a&gt;&lt;/div&gt;&lt;div class=menuitems&gt;&lt;a href=MyFavorites.asp?menu=Del&amp;url=forum&amp;name=<%=ForumID%>&gt;È¡ÏûÊÕ²Ø&lt;/a&gt;&lt;/div&gt;')" style="cursor:default">
-		ÂÛÌ³ÊÕ²Ø</a>
+		<a onmouseover="showmenu(event,'&lt;div class=menuitems&gt;&lt;a href=MyFavorites.asp?menu=add&amp;url=forum&amp;name=<%=ForumID%>&gt;ï¿½Õ²ï¿½ï¿½ï¿½Ì³&lt;/a&gt;&lt;/div&gt;&lt;div class=menuitems&gt;&lt;a href=MyFavorites.asp?menu=Del&amp;url=forum&amp;name=<%=ForumID%>&gt;È¡ï¿½ï¿½ï¿½Õ²ï¿½&lt;/a&gt;&lt;/div&gt;')" style="cursor:default">
+		ï¿½ï¿½Ì³ï¿½Õ²ï¿½</a>
 <%
 if moderated<>empty then
 filtrate=split(moderated,"|")
@@ -118,8 +118,8 @@ for i = 0 to ubound(filtrate)
 ModeratedList=ModeratedList&"<div class=menuitems><a href=Profile.asp?UserName="&filtrate(i)&">"&filtrate(i)&"</a></div>"
 next
 %><img src=images/team.gif> <a onmouseover="showmenu(event,'<%=ModeratedList%>')" style=cursor:default>
-		ÂÛÌ³°æÖ÷</a>
-<%end if%> <a href="Rss.asp?ForumID=<%=ForumID%>"><img src="images/rss_button.gif" border="0" alt="RSS ¶©ÔÄµ±Ç°ÂÛÌ³"></a>
+		ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½</a>
+<%end if%> <a href="Rss.asp?ForumID=<%=ForumID%>"><img src="images/rss_button.gif" border="0" alt="RSS ï¿½ï¿½ï¿½Äµï¿½Ç°ï¿½ï¿½Ì³"></a>
 		</td>
 	</tr>
 </table>
@@ -129,7 +129,7 @@ next
 <table cellspacing="1" cellpadding="5" width="100%" align="center" border="0" class="a2">
 	<%
 if TolSpecialTopic<>empty then
-response.write "<tr height=25 class=a3><td width=100% colSpan=7>×¨Ìâ£º"
+response.write "<tr height=25 class=a3><td width=100% colSpan=7>×¨ï¿½â£º"
 filtrate=split(TolSpecialTopic,"|")
 for i = 0 to ubound(filtrate)
 response.write "<font face='Old English Text MT'><b>"&i+1&"</b></font>[<a href='ShowForum.asp?ForumID="&ForumID&"&SpecialTopic="&filtrate(i)&"'>"&filtrate(i)&"</a>] "
@@ -139,11 +139,11 @@ response.write "</td></tr>"
 end if
 %>
 <tr height="25" id="TableTitleLink" class="a1">
-<td align="center" colspan="3">Ö÷Ìâ</td>
-<td align="center" width="10%">×÷Õß</td>
-<td align="center" width="6%">»Ø¸´</td>
-<td align="center" width="6%">µã»÷</td>
-<td align="center" width="25%">×îºó¸üÐÂ</td>
+<td align="center" colspan="3">ï¿½ï¿½ï¿½ï¿½</td>
+<td align="center" width="10%">ï¿½ï¿½ï¿½ï¿½</td>
+<td align="center" width="6%">ï¿½Ø¸ï¿½</td>
+<td align="center" width="6%">ï¿½ï¿½ï¿½</td>
+<td align="center" width="25%">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</td>
 </tr>
 	<%
 if TimeLimit<>"" then SQLTimeLimit="and lasttime>"&SqlNowString&"-"&int(TimeLimit)&""
@@ -160,14 +160,14 @@ end if
 topsql="[BBSXP_Threads] where IsDel=0 and ForumID="&ForumID&" "&SQLSpecialTopic&" "&SQLTimeLimit&" or IsTop=2"
 
 if Request("TimeLimit")<>"" or Request("SpecialTopic")<>"" then
-TotalCount=conn.Execute("Select count(ID) From "&topsql&" ")(0) '»ñÈ¡Êý¾ÝÊýÁ¿
+TotalCount=conn.Execute("Select count(ID) From "&topsql&" ")(0) 'ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 else
-TotalCount=ForumThreads  '»ñÈ¡Êý¾ÝÊýÁ¿
+TotalCount=ForumThreads  'ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 end if
 
-PageSetup=SiteSettings("ThreadsPerPage") 'Éè¶¨Ã¿Ò³µÄÏÔÊ¾ÊýÁ¿
-TotalPage=Abs(Int(TotalCount/PageSetup*(-1))) '×ÜÒ³Êý
-PageCount = cint(Request.QueryString("PageIndex")) '»ñÈ¡µ±Ç°Ò³
+PageSetup=SiteSettings("ThreadsPerPage") 'ï¿½è¶¨Ã¿Ò³ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
+TotalPage=Abs(Int(TotalCount/PageSetup*(-1))) 'ï¿½ï¿½Ò³ï¿½ï¿½
+PageCount = cint(Request.QueryString("PageIndex")) 'ï¿½ï¿½È¡ï¿½ï¿½Ç°Ò³
 if PageCount <1 then PageCount = 1
 if PageCount > TotalPage then PageCount = TotalPage
 
@@ -198,33 +198,33 @@ if Request("checkbox")=1 then
 %><tr height="25" id="TableTitleLink" class="a3">
 <td colspan="7"><input type="checkbox" name="chkall" onclick="ThreadIDCheckAll(this.form)" value="ON">È«Ñ¡
 <input type="radio" value="BatchDel" name=menu><select name=IsDel>
-<option value="1">É¾³ýÌû×Ó</option>
-<option value="0">È¡ÏûÉ¾³ý</option>
+<option value="1">É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
+<option value="0">È¡ï¿½ï¿½É¾ï¿½ï¿½</option>
 </select>&nbsp;
 
 <input type="radio" value="BatchGOOD" name=menu><select name=IsGOOD>
-<option value="1">¼ÓÈë¾«»ª</option>
-<option value="0">È¡Ïû¾«»ª</option>
+<option value="1">ï¿½ï¿½ï¿½ë¾«ï¿½ï¿½</option>
+<option value="0">È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
 </select>&nbsp;
 
 <input type="radio" value="BatchLocked" name=menu><select name=IsLocked>
-<option value="1">Ëø¶¨</option>
-<option value="0">½âËø</option>
+<option value="1">ï¿½ï¿½ï¿½ï¿½</option>
+<option value="0">ï¿½ï¿½ï¿½ï¿½</option>
 </select>
 
 <input type="radio" value="BatchSpecialTopic" name=menu><select name=SpecialTopic>
-<option value="">È¡Ïû×¨Ìâ</option>
-<option selected value="">¸ü¸Ä×¨Ìâ</option>
+<option value="">È¡ï¿½ï¿½×¨ï¿½ï¿½</option>
+<option selected value="">ï¿½ï¿½ï¿½ï¿½×¨ï¿½ï¿½</option>
 <%=TolSpecialTopicOptionList%>
 </select>
 
 <input type="radio" value="BatchMoveTopic" name=menu><select name=AimForumID>
-<option selected value="">ÒÆ¶¯µ½ÒÔÏÂÂÛÌ³</option>
+<option selected value="">ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³</option>
 <%=ForumsList%>
 </select>&nbsp;
 
 
-<input onclick="checkclick('ÄúÈ·¶¨Ö´ÐÐ±¾´Î²Ù×÷?');" type="submit" value=" Ö´ ÐÐ ">
+<input onclick="checkclick('ï¿½ï¿½È·ï¿½ï¿½Ö´ï¿½Ð±ï¿½ï¿½Î²ï¿½ï¿½ï¿½?');" type="submit" value=" Ö´ ï¿½ï¿½ ">
 </td></form>
 </tr>
 
@@ -235,13 +235,13 @@ if Request("checkbox")=1 then
 	<tr>
 		<td>
 		<a onmousedown="ToggleMenuOnOff('ForumOption')" class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/ForumSettings.gif)" href="#ForumOption">
-		Ñ¡Ïî</a>
+		Ñ¡ï¿½ï¿½</a>
 		<a onmousedown="ToggleMenuOnOff('ForumSearch')" class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/finds.gif)" href="#ForumSearch">
-		ËÑË÷</a>
+		ï¿½ï¿½ï¿½ï¿½</a>
 		<div id="ForumSearch" style="position:absolute;display:none;">
 			<form name="form" action="Search.asp?menu=ok&ForumID=<%=ForumID%>&Search=key&sessionid=<%=session.sessionid%>" method="POST">
 				<input name="content" size="20" onkeyup="ValidateTextboxAdd(this, 'btnadd')" onpropertychange="ValidateTextboxAdd(this, 'btnadd')">
-				<input type="submit" value="ËÑË÷" id="btnadd" disabled>
+				<input type="submit" value="ï¿½ï¿½ï¿½ï¿½" id="btnadd" disabled>
 			</form>
 		</div>
 		</td>
@@ -252,32 +252,32 @@ if Request("checkbox")=1 then
 	<tr id="ForumOption" style="display:none;">
 		<td valign="top" colspan="2">
 		<form name="form" action="ShowForum.asp?ForumID=<%=ForumID%>" method="POST">
-			ÅÅÐò¹æÔò£º<select name="order">
-			<option value="">×îºó¸üÐÂÊ±¼ä</option>
-			<option value="id">Ö÷Ìâ·¢±íÊ±¼ä</option>
-			<option value="IsGood">¾«»ªÌû×Ó</option>
-			<option value="IsVote">Í¶Æ±Ìû×Ó</option>
-			<option value="Topic">Ö÷Ìâ</option>
-			<option value="UserName">×÷Õß</option>
-			<option value="Views">µã»÷Êý</option>
-			<option value="Replies">»Ø¸´Êý</option>
-			</select> ¸ù¾Ý <select name="SortOrder">
-			<option value="0" selected>½µÐò</option>
-			<option value="1">ÉýÐò</option>
-			</select> ÅÅÁÐ<br>
-			ÈÕÆÚ¹ýÂË£º<select name="TimeLimit">
-			<option value="">ÏÔÊ¾ËùÓÐ</option>
-			<option value="1">Ò»ÌìÒÔÀ´</option>
-			<option value="2">Á½ÌìÒÔÀ´</option>
-			<option value="3">ÈýÌìÒÔÀ´</option>
-			<option value="7">Ò»ÐÇÆÚÒÔÀ´</option>
-			<option value="14">Á½ÐÇÆÚÒÔÀ´</option>
-			<option value="30">Ò»¸öÔÂÒÔÀ´</option>
-			<option value="60">Á½¸öÔÂÒÔÀ´</option>
-			<option value="90">Èý¸öÔÂÒÔÀ´</option>
-			<option value="180">°ëÄêÒÔÀ´</option>
+			ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½<select name="order">
+			<option value="">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½</option>
+			<option value="id">ï¿½ï¿½ï¿½â·¢ï¿½ï¿½Ê±ï¿½ï¿½</option>
+			<option value="IsGood">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
+			<option value="IsVote">Í¶Æ±ï¿½ï¿½ï¿½ï¿½</option>
+			<option value="Topic">ï¿½ï¿½ï¿½ï¿½</option>
+			<option value="UserName">ï¿½ï¿½ï¿½ï¿½</option>
+			<option value="Views">ï¿½ï¿½ï¿½ï¿½ï¿½</option>
+			<option value="Replies">ï¿½Ø¸ï¿½ï¿½ï¿½</option>
+			</select> ï¿½ï¿½ï¿½ï¿½ <select name="SortOrder">
+			<option value="0" selected>ï¿½ï¿½ï¿½ï¿½</option>
+			<option value="1">ï¿½ï¿½ï¿½ï¿½</option>
+			</select> ï¿½ï¿½ï¿½ï¿½<br>
+			ï¿½ï¿½ï¿½Ú¹ï¿½ï¿½Ë£ï¿½<select name="TimeLimit">
+			<option value="">ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½</option>
+			<option value="1">Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
+			<option value="2">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
+			<option value="3">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
+			<option value="7">Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
+			<option value="14">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
+			<option value="30">Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
+			<option value="60">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
+			<option value="90">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
+			<option value="180">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
 			</select><br>
-			<input type="submit" value=" Ó¦ÓÃ "></form></td>
+			<input type="submit" value=" Ó¦ï¿½ï¿½ "></form></td>
 	</tr>
 </table>
 <%
