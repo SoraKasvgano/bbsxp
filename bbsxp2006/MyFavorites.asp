@@ -2,7 +2,7 @@
 
 if CookieUserName=empty then error("<li>����δ<a href=Login.asp>��¼</a>��̳")
 
-id=int(Request("id"))
+id=RequestInt("id")
 url=HTMLEncode(Request("url"))
 name=HTMLEncode(Request("name"))
 
