@@ -108,7 +108,7 @@ Rs.Close
           <b>-=&gt; 
   �������������</TH></b></TR>
     <%
-sql="select top 5 * from [BBSXP_Threads] where IsDel=0 and UserName='"&CookieUserName&"' order by id Desc"
+sql="select top 5 * from [BBSXP_Threads] where IsDel=0 and UserName='"&SqlString(CookieUserName)&"' order by id Desc"
 Set Rs=Conn.Execute(sql)
 
 Do While Not Rs.EOF 

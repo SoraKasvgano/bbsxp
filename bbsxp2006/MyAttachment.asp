@@ -5,8 +5,8 @@ if CookieUserName=empty then error("<li>����δ<a href=Login.asp>��¼
 
 if Request("menu")="DelPostAttachment" then
 for each ho in Request.form("ID")
-ho=int(ho)
-Conn.execute("Delete from [BBSXP_PostAttachments] where id="&ho&" and UserName='"&CookieUserName&"'")
+ho=RequestInt(ho)
+Conn.execute("Delete from [BBSXP_PostAttachments] where id="&ho&" and UserName='"&SqlString(CookieUserName)&"'")
 next
 error2("ɾ���ɹ�")
 end if
