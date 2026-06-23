@@ -52,10 +52,10 @@ Rs.Close
 %>
 <!-- #include file="inc/Validate.asp" -->
 <!-- Markdown Support -->
-<script src="../bbsxp2008/js/marked.min.js"></script>
-<script src="../bbsxp2008/js/dompurify.min.js"></script>
-<script src="../bbsxp2008/js/markdown-handler.js"></script>
-<link rel="stylesheet" href="../bbsxp2008/css/markdown-content.css">
+<script src="js/marked.min.js"></script>
+<script src="js/dompurify.min.js"></script>
+<script src="js/markdown-handler.js"></script>
+<link rel="stylesheet" href="css/markdown-content.css">
 
 <script src="inc/birth.js"></script>
 <title><%=Topic%> - Powered By BBSXP</title>
