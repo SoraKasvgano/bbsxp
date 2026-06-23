@@ -108,7 +108,7 @@ Sub APICheckUser()
 	End If
 	
 	
-	Sql="Select * From ["&TablePrefix&"Users] Where UserName='"&UserName&"'"
+	Sql="Select * From ["&TablePrefix&"Users] Where UserName='"&SqlString(UserName)&"'"
 	Set Rs = Execute(Sql)
 	If Not Rs.Eof And Not Rs.Bof Then
 		Message = "您填写的用户名已经被注册。"
@@ -159,7 +159,7 @@ End Sub
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 Sub APIDelUser()
-	Rs.open "Select UserName from ["&TablePrefix&"Users] where UserName='"&UserName&"'",Conn,1,3
+	Rs.open "Select UserName from ["&TablePrefix&"Users] where UserName='"&SqlString(UserName)&"'",Conn,1,3
 	if Rs.eof then
 		CheckStatus = 1
 		Message="操作不成功，用户资料不存在！"
@@ -195,7 +195,7 @@ End Sub
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 Sub APILoginOut()
-		Execute("Delete from ["&TablePrefix&"UserOnline] where sessionid='"&session.sessionid&"'")
+		Execute("Delete from ["&TablePrefix&"UserOnline] where sessionid='"&SqlString(session.sessionid)&"'")
 		CleanCookies()
 		Message="已经成功退出!"
 End Sub

@@ -25,13 +25,13 @@ select case Request("menu")
 		Alert("已经将"&TimeLimit&"天以前的短讯息删除了！")
 	case "DelMessageUser"
 		if UserName="" then Alert("您没有输入用户名！")
-		Execute("Delete from ["&TablePrefix&"PrivateMessages] where RecipientUserName='"&UserName&"'")
-		Execute("update ["&TablePrefix&"PrivateMessages] Set IsSenderDelete=1 where SenderUserName='"&UserName&"'")
+		Execute("Delete from ["&TablePrefix&"PrivateMessages] where RecipientUserName='"&SqlString(UserName)&"'")
+		Execute("update ["&TablePrefix&"PrivateMessages] Set IsSenderDelete=1 where SenderUserName='"&SqlString(UserName)&"'")
 		Alert("已经将"&UserName&"的短讯息全部删除了！")
 	case "DelMessagekey"
 		key=HTMLEncode(Request("key"))
 		if key="" then Alert("您没有输入关键词！")
-		Execute("Delete from ["&TablePrefix&"PrivateMessages] where Body like '%"&key&"%'")
+		Execute("Delete from ["&TablePrefix&"PrivateMessages] where Body like '%"&SqlLikeString(key)&"%'")
 		Alert("已经将内容中包含 "&key&" 的短讯息删除了！")
 		
 	case "UpStatic"

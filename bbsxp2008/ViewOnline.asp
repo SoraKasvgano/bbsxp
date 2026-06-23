@@ -41,9 +41,10 @@ Sub default
 	if Request_Method = "POST" and BestRole<>1 then error("只有超级版主与管理员才能使用查询功能")
 	Key=HTMLEncode(Request.Form("Key"))
 	Find=HTMLEncode(Request.Form("Find"))
+	if Find<>"UserName" and Find<>"IPAddress" then Find="UserName"
 
 	if Len(Find)>10 then error("非法操作")
-	if Key<>empty then SqlFind=" where "&Find&"='"&Key&"'"
+	if Key<>empty then SqlFind=" where "&Find&"='"&SqlString(Key)&"'"
 	sql="Select * from ["&TablePrefix&"UserOnline] "&SqlFind&" order by LastTime Desc"
 	Rs.Open sql,Conn,1
 		PageSetup=20 '设定每页的显示数量
@@ -67,7 +68,7 @@ Sub default
 			if ""&Rs("UserName")&""="" then
 				UserName="<FONT COLOR=#C0C0C0>"&Rs("SessionID")&"</FONT>"
 			else
-				if Rs("IsInvisible")=0 or BestRole=1 then UserName="<a href=Profile.asp?UserName="&Rs("UserName")&">"&Rs("UserName")&"</a>"
+				if Rs("IsInvisible")=0 or BestRole=1 then UserName="<a href=Profile.asp?UserName="&Server.URLEncode(Rs("UserName"))&">"&Server.HTMLEncode(Rs("UserName"))&"</a>"
 				if Rs("IsInvisible")=1 then UserName=UserName&"(隐身)"
 			end if
 
@@ -103,7 +104,7 @@ Sub default
 			<select name=Find>
 				<option value="UserName">查询用户</option>
 				<option value="IPAddress">查询ＩＰ</option>
-			</select>	<input size="15" value="<%=Key%>" name="Key"> <input type="submit" value=" 确定 ">
+			</select>	<input size="15" value="<%=Server.HTMLEncode(Key)%>" name="Key"> <input type="submit" value=" 确定 ">
 		</form>
 		</td>
 	</tr>

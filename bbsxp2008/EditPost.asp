@@ -27,7 +27,7 @@ Rs.close
 sql="Select * from ["&TablePrefix&"Posts] where PostID="&PostID&""
 Set Rs=Execute(sql)
 	if Rs.eof or Rs.bof then error"<li>系统不存在该帖子的资料"
-	if Rs("PostAuthor")<>CookieUserName and PermissionManage=0 then error("对不起，您的权限不够！")	
+	if Rs("PostAuthor")<>CookieUserName and PermissionManage=0 then error("对不起，您的权限不够！")
 	if SiteConfig("PostEditBodyAgeInMinutes")>0 and DateDiff("n", Rs("PostDate"), now())> SiteConfig("PostEditBodyAgeInMinutes") then error"<li>帖子发出 "&SiteConfig("PostEditBodyAgeInMinutes")&" 分钟之后不允许再次被编辑"
 	Subject=ReplaceText(""&Rs("Subject")&"","<[^>]*>","")
 	Body=replace(Rs("Body"),"<br />",vbcrlf)
@@ -46,13 +46,13 @@ if Request_Method = "POST" then
 	Tags=Request.Form("Tags")
 	EditNotes=HTMLEncode(Request("EditNotes"))
 	ThreadEmoticonID=RequestInt("ThreadEmoticonID")
-	if PermissionManage=1 then ThreadStyle=HTMLEncode(Request.Form("ThreadStyle"))
+	if PermissionManage=1 then ThreadStyle=SafeCssStyle(Request.Form("ThreadStyle"))
 
 
 	if Request.Form("DisableBBCode")=1 then Body=Replace(Body,CHR(91),"&#91")
 	if PostParentID=0 then
 		if Len(Subject)<2 then Message=Message&"<li>文章主题不能小于 2 字符"
-		
+
 		'vote submit start
 		if PermissionCreatePoll=1 and RequestInt("IsVote")=1 then
 			j=0
@@ -73,34 +73,34 @@ if Request_Method = "POST" then
 		VoteItems=HTMLEncode(allpollTopic)
 		VoteExpiry=now()+RequestInt("VoteExpiry")
 		'vote submit end
-		
+
 		if Not Isdate(VoteExpiry) then Message=Message&"<li>投票过期时间错误"
-		
+
 	end if
 
 
 	if Len(Body)<2 then Message=Message&"<li>文章内容不能小于 2 字符"
 	if SiteConfig("RequireEditNotes")=1 and ""&EditNotes&""="" then Message=Message&"<li>请输入帖子编辑原因"
-	
+
 	TagArray=split(Tags,",")
 	if Ubound(TagArray)>5 then Message=Message&"<li>标签不能超过5个"
 
 	if Message<>"" then error(""&Message&"")
-	
+
 	sql="Select * from ["&TablePrefix&"Posts] where PostID="&PostID&""
 	Rs.Open sql,Conn,1,3
-		if Rs("ParentID")=0 then 
-			Execute("update ["&TablePrefix&"Threads] Set ThreadStyle='"&ThreadStyle&"',Topic='"&Subject&"',Description='"&Description&"',Category='"&Category&"',ThreadEmoticonID="&ThreadEmoticonID&" where ThreadID="&Rs("ThreadID")&"")
+		if Rs("ParentID")=0 then
+			Execute("update ["&TablePrefix&"Threads] Set ThreadStyle='"&SqlString(ThreadStyle)&"',Topic='"&SqlString(Subject)&"',Description='"&SqlString(Description)&"',Category='"&SqlString(Category)&"',ThreadEmoticonID="&ThreadEmoticonID&" where ThreadID="&Rs("ThreadID")&"")
 			if PermissionCreatePoll=1 and RequestInt("IsVote")=1 then
-				Execute("Update ["&TablePrefix&"Votes] set IsMultiplePoll="&IsMultiplePoll&",Items='"&VoteItems&"',Result='"&allpollResult&"',Expiry='"&VoteExpiry&"' where ThreadID="&Rs("ThreadID")&"")
+				Execute("Update ["&TablePrefix&"Votes] set IsMultiplePoll="&IsMultiplePoll&",Items='"&SqlString(VoteItems)&"',Result='"&SqlString(allpollResult)&"',Expiry='"&SqlString(VoteExpiry)&"' where ThreadID="&Rs("ThreadID")&"")
 			end if
 		end if
 		Rs("Subject")=Subject
 		Rs("Body")=Body
 	Rs.update
 	Rs.close
-	
-	
+
+
 	SQL="Select * from ["&TablePrefix&"PostEditNotes] where PostID="&PostID&""
 	Rs.Open sql,Conn,1,3
 	if Rs.eof then Rs.addNew
@@ -108,17 +108,18 @@ if Request_Method = "POST" then
 	Rs("EditNotes")="［"&CookieUserName&" 于 "&now()&" 编辑过］"&vbCrlf&""&EditNotes&""
 	Rs.update
 	Rs.close
-	
-	
-	
+
+
+
 	if SiteConfig("DisplayPostTags")=1 then AddTags()
-	
-	
-	
+
+
+
 	if Request.Form("UpFileID")<>"" then
 		UpFileID=split(Request.Form("UpFileID"),",")
 		for i = 0 to ubound(UpFileID)-1
-			Execute("update ["&TablePrefix&"PostAttachments] Set Description='"&Subject&"',PostID='"&PostID&"' where UpFileID="&int(UpFileID(i))&" and UserName='"&CookieUserName&"'")
+			UpFileItem=SafeLongValue(UpFileID(i),0)
+			if UpFileItem>0 then Execute("update ["&TablePrefix&"PostAttachments] Set Description='"&SqlString(Subject)&"',PostID="&PostID&" where UpFileID="&UpFileItem&" and UserName='"&SqlString(CookieUserName)&"'")
 		next
 	end if
 	Message="<li>修改帖子成功<li><a href=ShowPost.asp?ThreadID="&ThreadID&">返回主题</a><li><a href=ShowForum.asp?ForumID="&	ForumID&">返回论坛</a>"
@@ -134,17 +135,17 @@ end if
 <%if SiteConfig("RequireEditNotes")=1 then%>
 <input name="RequireEditNotes" type="hidden" value='<%=SiteConfig("RequireEditNotes")%>' />
 <%end if%>
-<input name="Body" type="hidden" value='<%=server.htmlencode(Body)%>' />
+<input name="Body" type="hidden" value="<%=Server.HTMLEncode(Body)%>" />
 <%	if PostParentID=0 then%><input name="Description" type="hidden" /><%end if%>
 <input name="UpFileID" type="hidden" />
-<input name="ThreadStyle" id="ThreadStyle" type="hidden" value='<%=ThreadStyle%>' />
+<input name="ThreadStyle" id="ThreadStyle" type="hidden" value="<%=Server.HTMLEncode(ThreadStyle)%>" />
 
 	<tr class=CommonListTitle>
 		<td colspan=2>编辑帖子</td>
 	</tr>
 	<tr class="CommonListCell">
 		<td width="180"><b>标题</b><%if PermissionManage=1 and PostParentID=0 then%>（<a href="javascript:BBSXP_Modal.Open('Utility/SelectStyle.htm',500,420);">字体</a>）<%end if%></td>
-		<td><input type="text" size="60" name="PostSubject" value='<%=Subject%>' <%if PostParentID=0 then%>id="Subject" style="<%=ThreadStyle%>"<%end if%> /></td>
+		<td><input type="text" size="60" name="PostSubject" value="<%=Server.HTMLEncode(Subject)%>" <%if PostParentID=0 then%>id="Subject" style="<%=Server.HTMLEncode(ThreadStyle)%>"<%end if%> /></td>
 	</tr>
 
 <%	if PostParentID=0 then%>
@@ -187,7 +188,7 @@ end if
 			Expiry=Rs("Expiry")
 			Items=Rs("Items")
 			Result=Rs("Result")
-			
+
 			ExpiryDay=DateDiff("d",now(),Expiry)
 			ItemsArray=split(Items,"|")
 			ResultArray=split(Result,"|")
@@ -233,8 +234,8 @@ if SiteConfig("UpFileOption")<>empty and PermissionAttachment=1 then%>
 	<tr class="CommonListCell">
 		<td valign=top>
 			<br /><b>内容</b><br />（<a href="javascript:CheckLength();">查看内容长度</a>）<br /><br /><input id=DisableBBCode name=DisableBBCode type=checkbox value=1 /><label for=DisableBBCode> 禁用 BB 代码</label>
-            
-            
+
+
 		<%if PostParentID=0 and PermissionManage=1 then%><br /><br />
 		<select name=StickyDate size=1>
 			<option value="0"<%if StickyDay=0 then response.write("selected")%>>置顶选项</option>
@@ -249,7 +250,7 @@ if SiteConfig("UpFileOption")<>empty and PermissionAttachment=1 then%>
 			<%if BestRole=1 then%><option value="999"<%if StickyDay>366 then response.write("selected")%>>公告</option><%end if%>
 		</select>
 		<%end if%>
-            
+
 			<%if SiteConfig("UpFileOption")<>empty and PermissionAttachment=1 then%>
 						<br /><br /><span id=UpFile></span>
 			<%end if%>

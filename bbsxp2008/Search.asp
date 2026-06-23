@@ -17,13 +17,14 @@ end if
 if Request("menu")="Result" then
 	Keywords=HTMLEncode(Request("Keywords"))
 
-	SortBy=HTMLEncode(Request("SortBy"))
+	SortBy=SafeSqlOrder(Request("SortBy"),"")
 	Item=HTMLEncode(Request("Item"))
+	if Item<>"Topic" and Item<>"Category" and Item<>"PostAuthor" and Item<>"LastName" then Item="Topic"
 
 	if Keywords="" then error("您没有输入任何查询条件！")
 	if Request("VerifyCode")<>Session("VerifyCode") or Session("VerifyCode")="" then error("验证码错误！")
 
-	SQLSearch="Visible=1 and "&Item&" like '%"&Keywords&"%' "
+	SQLSearch="Visible=1 and "&Item&" like '%"&SqlLikeString(Keywords)&"%' "
 	
 	if DateComparer > 0 then SQLSearch=SQLSearch&" and DateDiff("&SqlChar&"d"&SqlChar&",PostTime,"&SqlNowString&") < "&DateComparer&" "
 

@@ -9,16 +9,16 @@ if Lcase(CommentFor)=Lcase(CookieUserName) then AlertForModal("²»ÄÜ¶Ô×Ô¼º×÷³öÆÀÂ
 if CookieTotalPosts < SiteConfig("MinReputationPost") then AlertForModal("·¢ÌûÊıÉÙÓÚ "&SiteConfig("MinReputationPost")&" £¬ÎŞ·¨¶ÔËûÈË½øĞĞÆÀÂÛ")
 if CookieReputation < SiteConfig("MinReputationCount") then AlertForModal("ÉùÍûÉÙÓÚ "&SiteConfig("MinReputationCount")&"£¬ÎŞ·¨¶ÔËûÈË½øĞĞÆÀÂÛ")
 
-if not Execute("select * from ["&TablePrefix&"Reputation] where CommentFor='"&CommentFor&"' and IPAddress='"&REMOTE_ADDR&"' and DateDiff("&SqlChar&"d"&SqlChar&",DateCreated,"&SqlNowString&")=0").eof then AlertForModal("´ËIP½ñÌìÒÑ¶Ô "&CommentFor&" ÆÀ¼Û¹ı£¡")
+if not Execute("select * from ["&TablePrefix&"Reputation] where CommentFor='"&SqlString(CommentFor)&"' and IPAddress='"&SqlString(REMOTE_ADDR)&"' and DateDiff("&SqlChar&"d"&SqlChar&",DateCreated,"&SqlNowString&")=0").eof then AlertForModal("´ËIP½ñÌìÒÑ¶Ô "&CommentFor&" ÆÀ¼Û¹ı£¡")
 
 
 if BestRole<>1 then
 
-	ReputationToday=Execute("Select count(ReputationID) from ["&TablePrefix&"Reputation] where DateDiff("&SqlChar&"d"&SqlChar&",DateCreated,"&SqlNowString&")=0 and CommentBy='"&CookieUserName&"'")(0)
+	ReputationToday=Execute("Select count(ReputationID) from ["&TablePrefix&"Reputation] where DateDiff("&SqlChar&"d"&SqlChar&",DateCreated,"&SqlNowString&")=0 and CommentBy='"&SqlString(CookieUserName)&"'")(0)
 	if ReputationToday>SiteConfig("MaxReputationPerDay") then AlertForModal("Ã¿¸öÓÃ»§Ã¿Ìì¶ÔËûÈËµÄÆÀ¼Û²»ÄÜ³¬¹ı "&SiteConfig("MaxReputationPerDay")&" Ìõ")
 
 	if SiteConfig("ReputationRepeat")>0 then
-	CommentByGetRows=FetchEmploymentStatusList("Select top "&SiteConfig("ReputationRepeat")&" CommentFor from ["&TablePrefix&"Reputation] where CommentBy='"&CookieUserName&"' order by DateCreated DESC")
+	CommentByGetRows=FetchEmploymentStatusList("Select top "&SiteConfig("ReputationRepeat")&" CommentFor from ["&TablePrefix&"Reputation] where CommentBy='"&SqlString(CookieUserName)&"' order by DateCreated DESC")
 	if IsArray(CommentByGetRows) then
 		For i=0 To Ubound(CommentByGetRows,2)
 			if CommentByGetRows(0,i)=CommentFor then  AlertForModal("ÔÙ´Î¶Ô "&CommentFor&" ½øĞĞÉùÍûÆÀ¼ÛÖ®Ç°£¬Äú±ØĞë¶ÔÆäËû"&SiteConfig("ReputationRepeat")&"¸öÓÃ»§½øĞĞÉùÍûÆÀ¼Û£¡")
@@ -48,9 +48,9 @@ if Request_Method = "POST" then
 	Rs.update
 	Rs.close
 	
-	Execute("Update ["&TablePrefix&"Users] set Reputation=Reputation+"&Reputation&" where UserName='"&CommentFor&"'")
+	Execute("Update ["&TablePrefix&"Users] set Reputation=Reputation+"&Reputation&" where UserName='"&SqlString(CommentFor)&"'")
 	
-	AddApplication "Message_"&CommentFor,"¡¾ÏµÍ³Ñ¶Ï¢¡¿<a target=_blank href=Profile.asp?UserName="&CommentFor&">"&CookieUserName&" ¶ÔÄú½øĞĞÁËÉùÍûÆÀ¼Û</a>"
+	AddApplication "Message_"&CommentFor,"¡¾ÏµÍ³Ñ¶Ï¢¡¿<a target=_blank href=Profile.asp?UserName="&Server.URLEncode(CommentFor)&">"&Server.HTMLEncode(CookieUserName)&" ¶ÔÄú½øĞĞÁËÉùÍûÆÀ¼Û</a>"
 
 	
 %>
@@ -61,7 +61,7 @@ if Request_Method = "POST" then
 else
 	Response.clear
 %>
-<title>¶Ô <%=CommentFor%> ½øĞĞÆÀÂÛ</title>
+<title>¶Ô <%=Server.HTMLEncode(CommentFor)%> ½øĞĞÆÀÂÛ</title>
 <style type="text/css">body,table{FONT-SIZE:9pt;}</style>
 <script language="JavaScript" type="text/javascript">
 	function CheckComment(){
@@ -83,7 +83,7 @@ else
 </script>
 <table width="100%" border=0 align="center">
 <form name=form method=Post action=? onsubmit="return CheckComment()">
-<input name="CommentFor" type="hidden" value="<%=CommentFor%>" />
+<input name="CommentFor" type="hidden" value="<%=Server.HTMLEncode(CommentFor)%>" />
   <tr>
     <td height=30>ÆÀ ¼Û£º</td>
     <td>

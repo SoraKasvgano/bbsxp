@@ -28,28 +28,28 @@ select case Request("menu")
 		FavoriteAreaStr="<table cellspacing=0 cellpadding=0 width='100%' class='PannelBody' style='table-layout: fixed'>"
 		select case Request("Item")
 		case "FavoriteUsers"
-			TotalCount=Execute("Select count(FavoriteID) from ["&TablePrefix&"FavoriteUsers] where OwnerUserName='"&CookieUserName&"'")(0)
+			TotalCount=Execute("Select count(FavoriteID) from ["&TablePrefix&"FavoriteUsers] where OwnerUserName='"&SqlString(CookieUserName)&"'")(0)
 			TotalPage=Abs(Int(TotalCount/PageSetup*(-1))) '总页数
 			if PageCount > TotalPage then PageCount = TotalPage
 			colspan=7
-			FavoriteUsers("Select FriendUserName from ["&TablePrefix&"FavoriteUsers] where OwnerUserName='"&CookieUserName&"' order by FavoriteID desc")
+			FavoriteUsers("Select FriendUserName from ["&TablePrefix&"FavoriteUsers] where OwnerUserName='"&SqlString(CookieUserName)&"' order by FavoriteID desc")
 
 		case "WatchingYou"
-			TotalCount=Execute("Select count(FavoriteID) from ["&TablePrefix&"FavoriteUsers] where FriendUserName='"&CookieUserName&"'")(0)
+			TotalCount=Execute("Select count(FavoriteID) from ["&TablePrefix&"FavoriteUsers] where FriendUserName='"&SqlString(CookieUserName)&"'")(0)
 			TotalPage=Abs(Int(TotalCount/PageSetup*(-1))) '总页数
 			if PageCount > TotalPage then PageCount = TotalPage
 			colspan=7
-			FavoriteUsers("Select OwnerUserName from ["&TablePrefix&"FavoriteUsers] where FriendUserName='"&CookieUserName&"' order by FavoriteID desc")
+			FavoriteUsers("Select OwnerUserName from ["&TablePrefix&"FavoriteUsers] where FriendUserName='"&SqlString(CookieUserName)&"' order by FavoriteID desc")
 
 		case "FavoritePosts"
-			TotalCount=Execute("Select count(FavoriteID) from ["&TablePrefix&"FavoritePosts] where OwnerUserName='"&CookieUserName&"'")(0)
+			TotalCount=Execute("Select count(FavoriteID) from ["&TablePrefix&"FavoritePosts] where OwnerUserName='"&SqlString(CookieUserName)&"'")(0)
 			TotalPage=Abs(Int(TotalCount/PageSetup*(-1))) '总页数
 			if PageCount > TotalPage then PageCount = TotalPage
 			colspan=4
 			FavoritePosts
 
 		case "FavoriteForums"
-			TotalCount=Execute("Select count(FavoriteID) from ["&TablePrefix&"FavoriteForums] where OwnerUserName='"&CookieUserName&"'")(0)
+			TotalCount=Execute("Select count(FavoriteID) from ["&TablePrefix&"FavoriteForums] where OwnerUserName='"&SqlString(CookieUserName)&"'")(0)
 			TotalPage=Abs(Int(TotalCount/PageSetup*(-1))) '总页数
 			if PageCount > TotalPage then PageCount = TotalPage
 			colspan=3
@@ -63,9 +63,9 @@ select case Request("menu")
 
 	case "FavoriteFriend"
 		if Ucase(FriendUserName)=Ucase(CookieUserName) then ResponseWrite("不能添加自己！")
-		if Execute("Select UserName from ["&TablePrefix&"Users] where UserName='"&FriendUserName&"'").eof then ResponseWrite("系统中没有 "&FriendUserName&" 的资料！")
+		if Execute("Select UserName from ["&TablePrefix&"Users] where UserName='"&SqlString(FriendUserName)&"'").eof then ResponseWrite("系统中没有 "&FriendUserName&" 的资料！")
 
-		Rs.Open "Select * from ["&TablePrefix&"FavoriteUsers] where OwnerUserName='"&CookieUserName&"' and FriendUserName='"&FriendUserName&"'",Conn,1,3
+		Rs.Open "Select * from ["&TablePrefix&"FavoriteUsers] where OwnerUserName='"&SqlString(CookieUserName)&"' and FriendUserName='"&SqlString(FriendUserName)&"'",Conn,1,3
 		if Rs.eof then Rs.addNew
 			Rs("OwnerUserName")=CookieUserName
 			Rs("FriendUserName")=FriendUserName
@@ -75,7 +75,7 @@ select case Request("menu")
 	case "FavoritePost"
 		if Execute("Select PostID from ["&TablePrefix&"Posts] where PostID="&PostID&"").eof then ResponseWrite("系统中没有ID为 "&PostID&" 的帖子！")
 
-		Rs.Open "Select * from ["&TablePrefix&"FavoritePosts] where OwnerUserName='"&CookieUserName&"' and PostID="&PostID&"",Conn,1,3
+		Rs.Open "Select * from ["&TablePrefix&"FavoritePosts] where OwnerUserName='"&SqlString(CookieUserName)&"' and PostID="&PostID&"",Conn,1,3
 		if Rs.eof then Rs.addNew
 			Rs("OwnerUserName")=CookieUserName
 			Rs("PostID")=PostID
@@ -85,7 +85,7 @@ select case Request("menu")
 	case "FavoriteForums"
 		if Execute("Select ForumID from ["&TablePrefix&"Forums] where ForumID="&ForumID&"").eof then ResponseWrite("系统中没有ID为 "&ForumID&" 的论坛！")
 
-		Rs.Open "Select * from ["&TablePrefix&"FavoriteForums] where OwnerUserName='"&CookieUserName&"' and ForumID="&ForumID&"",Conn,1,3
+		Rs.Open "Select * from ["&TablePrefix&"FavoriteForums] where OwnerUserName='"&SqlString(CookieUserName)&"' and ForumID="&ForumID&"",Conn,1,3
 		if Rs.eof then Rs.addNew
 			Rs("OwnerUserName")=CookieUserName
 			Rs("ForumID")=ForumID
@@ -94,15 +94,15 @@ select case Request("menu")
 
 
 	case "DelFavoriteForums"
-		Execute("delete from ["&TablePrefix&"FavoriteForums] where OwnerUserName='"&CookieUserName&"' and ForumID="&ForumID&"")
+		Execute("delete from ["&TablePrefix&"FavoriteForums] where OwnerUserName='"&SqlString(CookieUserName)&"' and ForumID="&ForumID&"")
 		succeed "删除成功",""
 				
 	case "DelFavoritePosts"
-		Execute("delete from ["&TablePrefix&"FavoritePosts] where OwnerUserName='"&CookieUserName&"' and PostID="&PostID&"")
+		Execute("delete from ["&TablePrefix&"FavoritePosts] where OwnerUserName='"&SqlString(CookieUserName)&"' and PostID="&PostID&"")
 		succeed "删除成功",""
 		
 	case "DelFavoriteFriend"
-		Execute("delete from ["&TablePrefix&"FavoriteUsers] where OwnerUserName='"&CookieUserName&"' and FriendUserName='"&FriendUserName&"'")
+		Execute("delete from ["&TablePrefix&"FavoriteUsers] where OwnerUserName='"&SqlString(CookieUserName)&"' and FriendUserName='"&SqlString(FriendUserName)&"'")
 		succeed "删除成功",""
 	case else
 		default
@@ -155,16 +155,16 @@ Sub FavoriteUsers(Sql)
 		
 	if IsArray(UserNameArray) then
 		For i=0 To Ubound(UserNameArray,2)
-			Set Rs=Execute("["&TablePrefix&"Users] where UserName='"&UserNameArray(0,i)&"'")
-			if Rs.eof then Execute("delete from ["&TablePrefix&"FavoriteUsers] where FriendUserName="&UserNameArray(0,i)&"")
+			Set Rs=Execute("["&TablePrefix&"Users] where UserName='"&SqlString(UserNameArray(0,i))&"'")
+			if Rs.eof then Execute("delete from ["&TablePrefix&"FavoriteUsers] where FriendUserName='"&SqlString(UserNameArray(0,i))&"'")
 			FavoriteAreaStr=FavoriteAreaStr&"<tr align=center>"
-			FavoriteAreaStr=FavoriteAreaStr&"<td valign=center><a target='_blank' href='Profile.asp?UID="&Rs("UserID")&"'>"&Rs("UserName")&"</a>"
-			FavoriteAreaStr=FavoriteAreaStr&"<td><a onclick=""javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&RecipientUserName="&Rs("UserName")&"', 600, 350);""><img border='0' src='Images/message.gif' /></a></td>"
+			FavoriteAreaStr=FavoriteAreaStr&"<td valign=center><a target='_blank' href='Profile.asp?UID="&Rs("UserID")&"'>"&Server.HTMLEncode(Rs("UserName"))&"</a>"
+			FavoriteAreaStr=FavoriteAreaStr&"<td><a onclick=""javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&RecipientUserName="&Server.URLEncode(Rs("UserName"))&"', 600, 350);""><img border='0' src='Images/message.gif' /></a></td>"
 			FavoriteAreaStr=FavoriteAreaStr&"<td>"&Rs("TotalPosts")&"</td>"
 			FavoriteAreaStr=FavoriteAreaStr&"<td>"&Rs("Experience")&"</td>"
 			FavoriteAreaStr=FavoriteAreaStr&"<td>"&Rs("UserMoney")&"</td>"
 			FavoriteAreaStr=FavoriteAreaStr&"<td>"&Rs("UserActivityTime")&"</td>"
-			FavoriteAreaStr=FavoriteAreaStr&"<td><a onclick=""return window.confirm('确实要将 "&Rs("UserName")&" 从好友列表中删除?')"" href=""javascript:UrlPost('?menu=DelFavoriteFriend&FriendUserName="&Rs("UserName")&"')""><img src=images/delete.gif border=0 /></a></td>"
+			FavoriteAreaStr=FavoriteAreaStr&"<td><a onclick=""return window.confirm('确实要将 "&SafeJsString(Rs("UserName"))&" 从好友列表中删除?')"" href=""javascript:UrlPost('?menu=DelFavoriteFriend&FriendUserName="&Server.URLEncode(Rs("UserName"))&"')""><img src=images/delete.gif border=0 /></a></td>"
 			FavoriteAreaStr=FavoriteAreaStr&"</tr>"
 			Set Rs = Nothing
 		Next
@@ -175,7 +175,7 @@ end Sub
 Sub FavoriteForums
 	FavoriteAreaStr=FavoriteAreaStr&"<tr align=center><td width='30%'>版块名称</td><td>描述</td><td width='10%'>动作</td></tr>"
 
-	Set Rs=Execute("Select ForumID from ["&TablePrefix&"FavoriteForums] where OwnerUserName='"&CookieUserName&"' order by FavoriteID desc")
+	Set Rs=Execute("Select ForumID from ["&TablePrefix&"FavoriteForums] where OwnerUserName='"&SqlString(CookieUserName)&"' order by FavoriteID desc")
 	If TotalPage>1 then Rs.Move (PageCount-1) * PageSetup
 	IF Not Rs.Eof then SQL=Rs.GetRows(PageSetup)
 	Rs.close
@@ -186,7 +186,7 @@ Sub FavoriteForums
 				if Rs.eof then Execute("delete from ["&TablePrefix&"FavoriteForums] where ForumID="&SQL(0,i)&"")
 				
 				FavoriteAreaStr=FavoriteAreaStr&"<tr>"
-				FavoriteAreaStr=FavoriteAreaStr&"<td><a href='ShowForum.asp?ForumID="&Rs("ForumID")&"' target=_blank>"&Rs("ForumName")&"</a></td>"
+				FavoriteAreaStr=FavoriteAreaStr&"<td><a href='ShowForum.asp?ForumID="&Rs("ForumID")&"' target=_blank>"&Server.HTMLEncode(Rs("ForumName"))&"</a></td>"
 				FavoriteAreaStr=FavoriteAreaStr&"<td>"&BBCode(Rs("ForumDescription"))&"</td>"
 				FavoriteAreaStr=FavoriteAreaStr&"<td align=center><a onclick=""return window.confirm('您确定要删除该链接?')"" href=""javascript:UrlPost('?menu=DelFavoriteForums&ForumID="&Rs("ForumID")&"')""><img src=images/delete.gif border=0 /></a></td>"
 				FavoriteAreaStr=FavoriteAreaStr&"</tr>"
@@ -200,7 +200,7 @@ End Sub
 Sub FavoritePosts
 	FavoriteAreaStr=FavoriteAreaStr&"<tr align=center><td width='40%'>标题</td><td width='10%'>作者</td><td width='10%'>回复时间</td><td width='10%'>动作</td></tr>"
 
-	Set Rs=Execute("Select PostID from ["&TablePrefix&"FavoritePosts] where OwnerUserName='"&CookieUserName&"' order by FavoriteID desc")
+	Set Rs=Execute("Select PostID from ["&TablePrefix&"FavoritePosts] where OwnerUserName='"&SqlString(CookieUserName)&"' order by FavoriteID desc")
 	If TotalPage>1 then Rs.Move (PageCount-1) * PageSetup
 	IF Not Rs.Eof then SQL=Rs.GetRows(PageSetup)
 	Rs.close
@@ -212,8 +212,8 @@ Sub FavoritePosts
 			Subject=Rs("Subject")
 			if ""&Subject&""="" then Subject=Left(ReplaceText(""&Rs("Body")&"","<[^>]*>",""),10)
 			FavoriteAreaStr=FavoriteAreaStr&"<tr>"
-			FavoriteAreaStr=FavoriteAreaStr&"<td><a href='ShowPost.asp?PostID="&Rs("PostID")&"' target=_blank>"&Subject&"</a></td>"
-			FavoriteAreaStr=FavoriteAreaStr&"<td align=center><a href='Profile.asp?UserName="&Rs("PostAuthor")&"' target='_blank'>"&Rs("PostAuthor")&"</a></td>"
+			FavoriteAreaStr=FavoriteAreaStr&"<td><a href='ShowPost.asp?PostID="&Rs("PostID")&"' target=_blank>"&Server.HTMLEncode(Subject)&"</a></td>"
+			FavoriteAreaStr=FavoriteAreaStr&"<td align=center><a href='Profile.asp?UserName="&Server.URLEncode(Rs("PostAuthor"))&"' target='_blank'>"&Server.HTMLEncode(Rs("PostAuthor"))&"</a></td>"
 			FavoriteAreaStr=FavoriteAreaStr&"<td align=center>"&FormatDateTime(Rs("PostDate"),2)&"</td>"
 			FavoriteAreaStr=FavoriteAreaStr&"<td align=center><a onclick=""return window.confirm('您确定要删除该链接?')"" href=""javascript:UrlPost('?menu=DelFavoritePosts&PostID="&Rs("PostID")&"')""><img src=images/delete.gif border=0 /></a></td>"
 			FavoriteAreaStr=FavoriteAreaStr&"</tr>"

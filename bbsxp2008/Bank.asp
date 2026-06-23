@@ -127,7 +127,7 @@ end sub
 sub virement
 	dxname=HTMLEncode(Request.form("dxname"))
 	if dxname=CookieUserName then error("<li>您输入的是自己的帐号？")
-	If Execute("Select UserID From ["&TablePrefix&"Users] where UserName='"&dxname&"'" ).eof Then error("<li>系统不存在"&dxname&"的帐号")
+	If Execute("Select UserID From ["&TablePrefix&"Users] where UserName='"&SqlString(dxname)&"'" ).eof Then error("<li>系统不存在"&dxname&"的帐号")
 
 	qmoney=RequestInt("qmoney")
 	if qmoney<10 then error"<li>转帐不能低于10！"
@@ -139,7 +139,7 @@ sub virement
 	Rs.update
 	Rs.close
 
-	Execute("update ["&TablePrefix&"Users] Set UserMoney=UserMoney+"&qmoney&" where UserName='"&dxname&"'")
+	Execute("update ["&TablePrefix&"Users] Set UserMoney=UserMoney+"&qmoney&" where UserName='"&SqlString(dxname)&"'")
 
 	AddApplication "Message_"&dxname,"【系统讯息】"&CookieUserName&" 已经通过银行转帐 ￥"&qmoney&" 到您的现金帐户中！"
 

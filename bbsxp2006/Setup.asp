@@ -169,6 +169,17 @@ Function SqlString(Value)
 SqlString=Replace(""&Value&"","'","''")
 End Function
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function SqlLikeString(Value)
+Value=SqlString(Value)
+Value=Replace(Value,"[","[[]")
+Value=Replace(Value,"]","[]]")
+Value=Replace(Value,"%","[%]")
+Value=Replace(Value,"_","[_]")
+Value=Replace(Value,"*","[*]")
+Value=Replace(Value,"?","[?]")
+SqlLikeString=Value
+End Function
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 Function RequestInt(Name)
 If IsNumeric(Request(Name)) Then
 RequestInt=CLng(Request(Name))
@@ -360,7 +371,7 @@ end sub
 sub htmlend
 %><title><%=SiteSettings("SiteName")%> - Powered By BBSXP</title><p>
 <table cellspacing=0 cellpadding=0 width=100% align=center><tr><td align=middle>
-<%=SiteSettings("BottomAD")%><br>Powered by <a target=_blank href=http://www.bbsxp.com><font color=000000>BBSXP <%=ForumsVersion%></font></a>&nbsp;&copy; 
+<%=SiteSettings("BottomAD")%><br>Powered by <a target=_blank href=http://www.bbsxp.com><font color=000000>BBSXP <%=ForumsVersion%></font></a>&nbsp;&copy;
 1998-2006<br>
 Script Execution Time:<%=fix((timer()-startime)*1000)%>ms
 </td></tr></table>
@@ -466,7 +477,7 @@ sub menu(selec)
 sql="Select * From [BBSXP_Menu] where followid="&selec&" order by SortNum"
 Set Rs1=Conn.Execute(sql)
 do while not rs1.eof
-if rs1("followid")=0 then 
+if rs1("followid")=0 then
 %> | <a onmouseover="showmenu(event,'<%menu(rs1("id"))%>')" style=cursor:default><%=rs1("name")%></a><%
 else
 response.write "<div class=menuitems><a href="&rs1("url")&">"&rs1("name")&"</a></div>"
@@ -484,7 +495,7 @@ ClubTreeList=ClubTreeList&"<div class=menuitems><a href=ShowForum.asp?ForumID="&
 ClubTreeRs.Movenext
 loop
 Set ClubTreeRs = Nothing
-response.write "<a onmouseover="&Chr(34)&"showmenu(event,'"&ClubTreeList&"')"&Chr(34)&" href=Default.asp>"&SiteSettings("SiteName")&"</a>" 
+response.write "<a onmouseover="&Chr(34)&"showmenu(event,'"&ClubTreeList&"')"&Chr(34)&" href=Default.asp>"&SiteSettings("SiteName")&"</a>"
 end sub
 
 sub BBSList(selec)
@@ -526,7 +537,7 @@ end if
 		<td valign="top">『 <a href="ShowForum.asp?ForumID=<%=Rs1("id")%>"><%=Rs1("ForumName")%></a> 』</td>
 		<td align="right" rowspan="2"><%if Rs1("ForumIcon")<>"" then%><img src="<%=Rs1("ForumIcon")%>" onload="javascript:if(this.width&gt;100)this.width=100;if(this.height&gt;60)this.height=60;"><%end if%></td>
 		<td width="30%" rowspan="2">
-<%if ShowForumIcon=3 then%> 
+<%if ShowForumIcon=3 then%>
 特殊论坛
 <%else%>
 主题:<%=Rs1("lastTopic")%><br>

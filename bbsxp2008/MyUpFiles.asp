@@ -7,7 +7,7 @@ if Request("menu")="DelPostAttachment" then
 	if Request.Form("UpFileID")="" then error("您没有选择要删除的文件！")
 	for each ho in Request.Form("UpFileID")
 		ho=int(ho)
-		sql="Select * from ["&TablePrefix&"PostAttachments] where UpFileID="&ho&" and UserName='"&CookieUserName&"'"
+		sql="Select * from ["&TablePrefix&"PostAttachments] where UpFileID="&ho&" and UserName='"&SqlString(CookieUserName)&"'"
 		Rs.Open sql,Conn,1
 		if Not Rs.Eof then
 			if ""&Rs("FilePath")&""<>"" then IsDelFile=DelFile(""&Rs("FilePath")&"")
@@ -28,7 +28,7 @@ UpMaxPostAttachmentsSize=SiteConfig("MaxPostAttachmentsSize")*1024		'附件总容量
 if RoleMaxPostAttachmentsSize>0 then UpMaxPostAttachmentsSize = RoleMaxPostAttachmentsSize*1024
 
 
-sql="["&TablePrefix&"PostAttachments] where UserName='"&CookieUserName&"'"
+sql="["&TablePrefix&"PostAttachments] where UserName='"&SqlString(CookieUserName)&"'"
 rs.Open ""&sql&" order by UpFileID Desc",Conn,1
 	TotalCount=Execute("Select count(UpFileID) From "&sql&"")(0) '获取数据数量
 	PageSetup=20 '设定每页的显示数量

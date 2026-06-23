@@ -4,9 +4,9 @@ if SiteSettings("AdminPassword")<>session("pass") then response.redirect "Admin.
 Log(""&Request.ServerVariables("script_name")&"<br>"&Request.ServerVariables("Query_String")&"<br>"&Request.form&"")
 
 
-id=HTMLEncode(Request("id"))
-bbsid=HTMLEncode(Request("bbsid"))
-TimeLimit=HTMLEncode(Request("TimeLimit"))
+id=RequestInt("id")
+bbsid=RequestInt("bbsid")
+TimeLimit=RequestInt("TimeLimit")
 UserName=HTMLEncode(Request("UserName"))
 
 
@@ -58,23 +58,23 @@ error2("已经将该论坛的所有数据删除了！")
 
 
 case "Delforumok"
-if bbsid<>"" then BbsIdList="and ForumID="&bbsid&""
+if bbsid>0 then BbsIdList="and ForumID="&bbsid&""
 Conn.execute("Delete from [BBSXP_Threads] where lasttime<"&SqlNowString&"-"&TimeLimit&" "&BbsIdList&"")
 error2("已经将"&TimeLimit&"天没有更新过的主题删除了！")
 
 
 case "DelUserTopicok"
 if UserName="" then error2("您没有输入用户名！")
-if bbsid<>"" then BbsIdList="and ForumID="&bbsid&""
-Conn.execute("Delete from [BBSXP_Threads] where UserName='"&UserName&"' "&BbsIdList&"")
+if bbsid>0 then BbsIdList="and ForumID="&bbsid&""
+Conn.execute("Delete from [BBSXP_Threads] where UserName='"&SqlString(UserName)&"' "&BbsIdList&"")
 error2("已经将"&UserName&"发表的主题删除了！")
 
 
 case "DellikeTopicok"
 Topic=HTMLEncode(Request("Topic"))
 if Topic="" then error2("您没有输入字符！")
-if bbsid<>"" then BbsIdList="and ForumID="&bbsid&""
-Conn.execute("Delete from [BBSXP_Threads] where Topic like '%"&Topic&"%' "&BbsIdList&" ")
+if bbsid>0 then BbsIdList="and ForumID="&bbsid&""
+Conn.execute("Delete from [BBSXP_Threads] where Topic like '%"&SqlLikeString(Topic)&"%' "&BbsIdList&" ")
 error2("已经将标题里包含有 "&Topic&" 的帖子全部删除了！")
 
 
@@ -87,10 +87,10 @@ Conn.execute("Delete from [BBSXP_Threads] where IsDel=1 and lasttime<"&SqlNowStr
 error2("已经清空 "&TimeLimit&" 天以前的主题！")
 
 case "uniteok"
-hbbs=Request("hbbs")
-YBBs=Request("YBBs")
+hbbs=RequestInt("hbbs")
+YBBs=RequestInt("YBBs")
 if hbbs = YBBs then error2("不能选择相同论坛！")
-if UserName<>"" then UserNamelist="and UserName='"&UserName&"'"
+if UserName<>"" then UserNamelist="and UserName='"&SqlString(UserName)&"'"
 Conn.execute("update [BBSXP_Threads] set ForumID="&int(hbbs)&" where ForumID="&int(YBBs)&" and lasttime<"&SqlNowString&"-"&TimeLimit&" "&UserNamelist&"")
 error2("移动论坛资料成功！")
 
@@ -242,7 +242,7 @@ sub bbsadd
 <tr class=a3>
 <td height="2" align="center" width="20%">帖子专题</td>
 <td height="2" align="Left" valign="middle" width="77%">
-<input size="30" name="TolSpecialTopic"> 
+<input size="30" name="TolSpecialTopic">
 添加请用“|”隔开，如：原创|转贴</td></tr>
 
    <tr height=25>
@@ -315,10 +315,10 @@ sub bbsadd
    <tr height=25>
     <td class=a3 align=middle>
 
-是否显示在论坛列表　　　　　　　　　　　
+是否显示在论坛列表
     <td class=a3>
 
-<input type="radio" CHECKED value="0" name="ForumHide">显示 
+<input type="radio" CHECKED value="0" name="ForumHide">显示
 <input type="radio" value="1" name="ForumHide">隐藏
 </tr>
    <tr height=25>
@@ -336,9 +336,10 @@ if Request("ForumName")="" then error2("请输入论坛名称")
 
 
 
-master=split(Request("moderated"),"|")
+Moderated=HTMLEncode(Request("moderated"))
+master=split(Moderated,"|")
 for i = 0 to ubound(master)
-If Conn.Execute("Select id From [BBSXP_Users] where UserName='"&HTMLEncode(master(i))&"'" ).eof and master(i)<>"" Then error2(""&master(i)&"的用户资料还未注册")
+If Conn.Execute("Select id From [BBSXP_Users] where UserName='"&SqlString(master(i))&"'" ).eof and master(i)<>"" Then error2(""&master(i)&"的用户资料还未注册")
 next
 
 
@@ -346,18 +347,18 @@ ForumUserList=replace(Request("ForumUserList"),vbCrlf,"")
 
 Rs.Open "[BBSXP_Forums]",Conn,1,3
 Rs.addNew
-Rs("followid")=Request("classid")
+Rs("followid")=RequestInt("classid")
 Rs("ForumName")=HTMLEncode(Request("ForumName"))
-Rs("moderated")=Request("moderated")
+Rs("moderated")=Moderated
 Rs("TolSpecialTopic")=Request("TolSpecialTopic")
-Rs("ForumPass")=Request("ForumPass")
+Rs("ForumPass")=RequestInt("ForumPass")
 Rs("ForumPassword")=Request("ForumPassword")
 Rs("ForumUserList")=ForumUserList
 Rs("ForumIntro")=HTMLEncode(Request.Form("ForumIntro"))
 Rs("ForumRules")=HTMLEncode(Request.Form("ForumRules"))
-Rs("ForumIcon")=Request("ForumIcon")
-Rs("ForumLogo")=Request("ForumLogo")
-Rs("ForumHide")=Request("ForumHide")
+Rs("ForumIcon")=SafeUrl(Request("ForumIcon"))
+Rs("ForumLogo")=SafeUrl(Request("ForumLogo"))
+Rs("ForumHide")=RequestInt("ForumHide")
 Rs.update
 id=Rs("id")
 
@@ -376,9 +377,10 @@ if Request("ForumName")="" then error2("请输入论坛名称")
 
 
 
-master=split(Request("moderated"),"|")
+Moderated=HTMLEncode(Request("moderated"))
+master=split(Moderated,"|")
 for i = 0 to ubound(master)
-If Conn.Execute("Select id From [BBSXP_Users] where UserName='"&HTMLEncode(master(i))&"'" ).eof and master(i)<>"" Then error2(""&master(i)&"的用户资料还未注册")
+If Conn.Execute("Select id From [BBSXP_Users] where UserName='"&SqlString(master(i))&"'" ).eof and master(i)<>"" Then error2(""&master(i)&"的用户资料还未注册")
 next
 
 ForumUserList=replace(Request("ForumUserList"),vbCrlf,"")
@@ -387,19 +389,19 @@ sql="select * from [BBSXP_Forums] where id="&id&""
 Rs.Open sql,Conn,1,3
 
 
-Rs("followid")=Request("classid")
-Rs("SortNum")=int(Request("SortNum"))
+Rs("followid")=RequestInt("classid")
+Rs("SortNum")=RequestInt("SortNum")
 Rs("ForumName")=HTMLEncode(Request("ForumName"))
-Rs("moderated")=Request("moderated")
+Rs("moderated")=Moderated
 Rs("TolSpecialTopic")=Request("TolSpecialTopic")
-Rs("ForumPass")=Request("ForumPass")
+Rs("ForumPass")=RequestInt("ForumPass")
 Rs("ForumPassword")=Request("ForumPassword")
 Rs("ForumUserList")=ForumUserList
 Rs("ForumIntro")=HTMLEncode(Request.Form("ForumIntro"))
 Rs("ForumRules")=HTMLEncode(Request.Form("ForumRules"))
-Rs("Forumicon")=Request("Forumicon")
-Rs("ForumLogo")=Request("ForumLogo")
-Rs("ForumHide")=Request("ForumHide")
+Rs("Forumicon")=SafeUrl(Request("Forumicon"))
+Rs("ForumLogo")=SafeUrl(Request("ForumLogo"))
+Rs("ForumHide")=RequestInt("ForumHide")
 Rs.update
 
 Rs.close
@@ -431,7 +433,7 @@ ForumRules=replace(""&Rs("ForumRules")&"","<br>",vbCrlf)
     <td class=a3>
 
 
-<input size="15" name="ForumName" value="<%=Rs("ForumName")%>"> &nbsp; 排序 <input size="2" name="SortNum" value="<%=Rs("SortNum")%>">
+<input size="15" name="ForumName" value="<%=Server.HTMLEncode(Rs("ForumName"))%>"> &nbsp; 排序 <input size="2" name="SortNum" value="<%=Rs("SortNum")%>">
 从小到大排序</td></tr>
    <tr height=25>
     <td class=a3 align=middle>
@@ -453,13 +455,13 @@ ForumRules=replace(""&Rs("ForumRules")&"","<br>",vbCrlf)
     <td class=a3>
 
 
-<input size="30" name=moderated value="<%=Rs("moderated")%>"> 多版主添加请用“|”隔开，如：yuzi|裕裕
+<input size="30" name=moderated value="<%=Server.HTMLEncode(Rs("moderated"))%>"> 多版主添加请用“|”隔开，如：yuzi|裕裕
 </td></tr>
 
 <tr class=a3>
 <td height="2" align="center" width="20%">帖子专题</td>
 <td height="2" align="Left" valign="middle" width="77%">
-<input size="30" name="TolSpecialTopic" value="<%=Rs("TolSpecialTopic")%>"> 
+<input size="30" name="TolSpecialTopic" value="<%=Server.HTMLEncode(Rs("TolSpecialTopic"))%>">
 添加请用“|”隔开，如：原创|转贴</td></tr>
    <tr height=25>
     <td class=a3 align=middle>
@@ -503,7 +505,7 @@ ForumRules=replace(""&Rs("ForumRules")&"","<br>",vbCrlf)
 
 授权用户名单</td>
     <td class=a3>
-<input size="30" name="ForumUserList" value="<%=Rs("ForumUserList")%>"> 添加请用“|”隔开，如：yuzi|裕裕
+<input size="30" name="ForumUserList" value="<%=Server.HTMLEncode(Rs("ForumUserList"))%>"> 添加请用“|”隔开，如：yuzi|裕裕
 </td></tr>
 
    <tr height=25>
@@ -514,7 +516,7 @@ ForumRules=replace(""&Rs("ForumRules")&"","<br>",vbCrlf)
     <td class=a3>
 
 
-<input size="30" name="ForumIcon" value="<%=Rs("ForumIcon")%>"> 显示在社区首页论坛介绍右边
+<input size="30" name="ForumIcon" value="<%=Server.HTMLEncode(Rs("ForumIcon"))%>"> 显示在社区首页论坛介绍右边
 </td></tr>
    <tr height=25>
     <td class=a3 align=middle>
@@ -524,7 +526,7 @@ ForumRules=replace(""&Rs("ForumRules")&"","<br>",vbCrlf)
     <td class=a3>
 
 
-<input size="30" name="ForumLogo" value="<%=Rs("ForumLogo")%>"> 显示在论坛左上角</td></tr>
+<input size="30" name="ForumLogo" value="<%=Server.HTMLEncode(Rs("ForumLogo"))%>"> 显示在论坛左上角</td></tr>
 
 
 
@@ -534,7 +536,7 @@ ForumRules=replace(""&Rs("ForumRules")&"","<br>",vbCrlf)
 通行密码</td>
     <td class=a3>
 
-<input size="30" name="ForumPassword" value="<%=Rs("ForumPassword")%>"> 如果是公开论坛，此处请留空</td></tr>
+<input size="30" name="ForumPassword" value="<%=Server.HTMLEncode(Rs("ForumPassword"))%>"> 如果是公开论坛，此处请留空</td></tr>
 
    <tr height=25>
     <td class=a3 align=middle>
@@ -544,7 +546,7 @@ ForumRules=replace(""&Rs("ForumRules")&"","<br>",vbCrlf)
     <td class=a3>
 
 
-<input type="radio" <%if Rs("ForumHide")=0 then%>CHECKED <%end if%>value="0" name="ForumHide" value="0">显示 
+<input type="radio" <%if Rs("ForumHide")=0 then%>CHECKED <%end if%>value="0" name="ForumHide" value="0">显示
 <input type="radio" <%if Rs("ForumHide")=1 then%>CHECKED <%end if%>value="1" name="ForumHide" value="1">隐藏 </td></tr>
    <tr height=25>
     <td class=a3 align=middle colspan="2">
@@ -591,7 +593,7 @@ BBSList(0)
 删除 <input size="10" name="UserName"> 发表的所有主题
 </tr>
     <td class=a4 align=middle>
-    
+
 <select name="bbsid">
 <option value="">所有论坛</option>
 <%=ForumsList%>
@@ -606,7 +608,7 @@ BBSList(0)
 删除标题里包含有 <input size="10" name="Topic"> 的所有主题
 </tr>
     <td class=a4 align=middle>
-    
+
 <select name="bbsid">
 <option value="">所有论坛</option>
 <%=ForumsList%>
@@ -691,7 +693,7 @@ sub upSiteSettings
   </tr>
    <tr height=25>
     <td class=a3 align=middle colspan=2>
-    
+
 此操作将更新论坛资料，修复论坛统计的信息<br>
 <a href="?menu=upSiteSettingsok">点击这里更新论坛统计数据</a><br>
 
@@ -775,7 +777,7 @@ Rs.Close
 
 
 %>
-    
+
 
 
 </table>
@@ -788,7 +790,7 @@ elseif Request("type")="Censorship" then
 %><input type="radio" value="BatchCensorship" name=menu>通过审查<%
 end if
 %>
- <input type="radio" value="BatchDel" name=menu>彻底删除	
+ <input type="radio" value="BatchDel" name=menu>彻底删除
 <input onclick="checkclick('您确定执行本次操作?');" type="submit" value=" 执 行 ">
 
 </td></form>
@@ -815,7 +817,7 @@ if selec=0 then
   <tr class=a1 id=TableTitleLink height=25>
 <td>　<a target=_blank href=ShowForum.asp?ForumID=<%=rs1("id")%>><%=rs1("ForumName")%></a></td>
 <td align="right" width="190">
-<a href=?menu=bbsadd&id=<%=rs1("id")%>>建立论坛</a> | <a href=?menu=bbsManagexiu&id=<%=rs1("id")%>>编辑论坛</a> | 
+<a href=?menu=bbsadd&id=<%=rs1("id")%>>建立论坛</a> | <a href=?menu=bbsManagexiu&id=<%=rs1("id")%>>编辑论坛</a> |
 <a onclick=checkclick('您确定要删除该论坛的所有资料?') href=?menu=bbsManageDel&id=<%=rs1("id")%>>删除论坛</a>
 </tr>
 
@@ -825,7 +827,7 @@ else
 <tr class=a3 height=25>
 <td>　<%=string(ii*2,"　")%><a target=_blank href=ShowForum.asp?ForumID=<%=rs1("id")%>><%=rs1("ForumName")%></a></td>
 <td align="right">
-<a href=?menu=bbsadd&id=<%=rs1("id")%>>建立论坛</a> | <a href=?menu=bbsManagexiu&id=<%=rs1("id")%>>编辑论坛</a> | 
+<a href=?menu=bbsadd&id=<%=rs1("id")%>>建立论坛</a> | <a href=?menu=bbsManagexiu&id=<%=rs1("id")%>>编辑论坛</a> |
 <a onclick=checkclick('您确定要删除该论坛的所有资料?') href=?menu=bbsManageDel&id=<%=rs1("id")%>>删除论坛</a>
 </tr>
 <%

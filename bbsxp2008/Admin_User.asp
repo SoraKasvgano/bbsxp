@@ -59,7 +59,7 @@ select case Request("menu")
 		AllRoles
 	case "CreateRole"
 		if RoleName=empty then Alert("您没有输入角色名称")
-		Execute("insert into ["&TablePrefix&"Roles] (Name) values ('"&RoleName&"')")
+		Execute("insert into ["&TablePrefix&"Roles] (Name) values ('"&SqlString(RoleName)&"')")
 		AllRoles
 	case "ViewRole"
 		ViewRole
@@ -67,30 +67,33 @@ select case Request("menu")
 		if RoleName=empty then Alert("您没有输入角色名称")
 		RoleMaxFileSize=RequestInt("RoleMaxFileSize")
 		RoleMaxPostAttachmentsSize=RequestInt("RoleMaxPostAttachmentsSize")
-		Execute("update ["&TablePrefix&"Roles] Set Name='"&RoleName&"',Description='"&Description&"',RoleMaxFileSize="&RoleMaxFileSize&",RoleMaxPostAttachmentsSize="&RoleMaxPostAttachmentsSize&" where RoleID="&RoleID&"")
+		Execute("update ["&TablePrefix&"Roles] Set Name='"&SqlString(RoleName)&"',Description='"&SqlString(Description)&"',RoleMaxFileSize="&RoleMaxFileSize&",RoleMaxPostAttachmentsSize="&RoleMaxPostAttachmentsSize&" where RoleID="&RoleID&"")
 		Response.Write("编辑成功")
 	case "RolePermissions"
 		RolePermissions
 	case "RolePermissionsUP"
 		for each ho in Request.Form("ForumID")
-			Rs.Open "Select * from ["&TablePrefix&"ForumPermissions] where ForumID="&ho&" and RoleID="&RoleID&"",Conn,1,3
-			if Rs.eof then
-				Rs.Addnew()
-				Rs("RoleID")=RoleID
-				Rs("ForumID")=ho
-			end if
-			Rs("PermissionView")=RequestInt("PermissionView"&ho)
-			Rs("PermissionRead")=RequestInt("PermissionRead"&ho)
-			Rs("PermissionPost")=RequestInt("PermissionPost"&ho)
-			Rs("PermissionReply")=RequestInt("PermissionReply"&ho)
-			Rs("PermissionEdit")=RequestInt("PermissionEdit"&ho)
-			Rs("PermissionDelete")=RequestInt("PermissionDelete"&ho)
-			Rs("PermissionCreatePoll")=RequestInt("PermissionCreatePoll"&ho)
-			Rs("PermissionVote")=RequestInt("PermissionVote"&ho)
-			Rs("PermissionAttachment")=RequestInt("PermissionAttachment"&ho)
-			Rs("PermissionManage")=RequestInt("PermissionManage"&ho)
-			Rs.update
-			Rs.close
+			ho=SafeLongValue(ho,0)
+			If ho>0 Then
+				Rs.Open "Select * from ["&TablePrefix&"ForumPermissions] where ForumID="&ho&" and RoleID="&RoleID&"",Conn,1,3
+				if Rs.eof then
+					Rs.Addnew()
+					Rs("RoleID")=RoleID
+					Rs("ForumID")=ho
+				end if
+				Rs("PermissionView")=RequestInt("PermissionView"&ho)
+				Rs("PermissionRead")=RequestInt("PermissionRead"&ho)
+				Rs("PermissionPost")=RequestInt("PermissionPost"&ho)
+				Rs("PermissionReply")=RequestInt("PermissionReply"&ho)
+				Rs("PermissionEdit")=RequestInt("PermissionEdit"&ho)
+				Rs("PermissionDelete")=RequestInt("PermissionDelete"&ho)
+				Rs("PermissionCreatePoll")=RequestInt("PermissionCreatePoll"&ho)
+				Rs("PermissionVote")=RequestInt("PermissionVote"&ho)
+				Rs("PermissionAttachment")=RequestInt("PermissionAttachment"&ho)
+				Rs("PermissionManage")=RequestInt("PermissionManage"&ho)
+				Rs.update
+				Rs.close
+			End If
 		next
 		Response.Write("批量权限设置成功")
 	case "DelRole"
@@ -129,8 +132,8 @@ end if
 <title>修改密码</title>
 <style>body,table{FONT-SIZE:9pt;}</style>
 <form name=form action="Admin_User.asp?menu=ChangePassword" method="POST">
-<input type=hidden name="UserName" value="<%=UserName%>">
-修改密码 - (<%=UserName%>) <br /><br />
+<input type=hidden name="UserName" value="<%=Server.HTMLEncode(UserName)%>">
+修改密码 - (<%=Server.HTMLEncode(UserName)%>) <br /><br />
 <table border="0" width="100%">
 	<tr>
 		<td>新密码：　</td>
@@ -196,7 +199,7 @@ Sub SearchUser
 	sql="Select * from ["&TablePrefix&"Roles] where RoleID > 0 order by RoleID"
 	Set Rs=Execute(sql)
 		Do While Not Rs.EOF
-				Response.Write("<option value='"&Rs("RoleID")&"'>"&Rs("Name")&"</option>")
+				Response.Write("<option value='"&Rs("RoleID")&"'>"&Server.HTMLEncode(Rs("Name"))&"</option>")
 			Rs.MoveNext
 		loop
 	Rs.Close
@@ -247,6 +250,7 @@ Sub SearchUserok
 <%
 	SearchType=HTMLEncode(Request("SearchType"))
 	SearchText=HTMLEncode(Request("SearchText"))
+	SearchSqlText=SqlLikeString(SearchText)
 	Select Case SearchType
 		Case "UserName","UserEmail","all"
 		Case Else SearchType="UserName"
@@ -255,13 +259,28 @@ Sub SearchUserok
 	CurrentAccountStatus=RequestInt("CurrentAccountStatus")
 	JoinedDateComparer=Left(Request("JoinedDateComparer"),1)
 	LastPostDateComparer=Left(Request("LastPostDateComparer"),1)
+	Select Case JoinedDateComparer
+		Case "<","=",">"
+		Case Else JoinedDateComparer=""
+	End Select
+	Select Case LastPostDateComparer
+		Case "<","=",">"
+		Case Else LastPostDateComparer=""
+	End Select
 	JoinedDate_picker=HTMLEncode(Request("JoinedDate_picker"))
 	LastPostDate_picker=HTMLEncode(Request("LastPostDate_picker"))
+	if JoinedDate_picker<>"" and Not IsDate(JoinedDate_picker) then JoinedDate_picker=""
+	if LastPostDate_picker<>"" and Not IsDate(LastPostDate_picker) then LastPostDate_picker=""
 	
-	if SearchType="all" then SearchType="UserEmail like '%"&SearchText&"%' or UserName"
-	if SearchText<>"" then item=item&" and ("&SearchType&" like '%"&SearchText&"%')"
-	if JoinedDate_picker<>"" and JoinedDateComparer<>"" then item=item&" and DateDiff("&SqlChar&"d"&SqlChar&",'"&JoinedDate_picker&"',UserRegisterTime) "&JoinedDateComparer&" 0"
-	if LastPostDate_picker<>"" and LastPostDateComparer<>"" then item=item&" and DateDiff("&SqlChar&"d"&SqlChar&",'"&LastPostDate_picker&"',UserActivityTime) "&LastPostDateComparer&" 0"
+	if SearchText<>"" then
+		if SearchType="all" then
+			item=item&" and (UserEmail like '%"&SearchSqlText&"%' or UserName like '%"&SearchSqlText&"%')"
+		else
+			item=item&" and ("&SearchType&" like '%"&SearchSqlText&"%')"
+		end if
+	end if
+	if JoinedDate_picker<>"" and JoinedDateComparer<>"" then item=item&" and DateDiff("&SqlChar&"d"&SqlChar&",'"&SqlString(JoinedDate_picker)&"',UserRegisterTime) "&JoinedDateComparer&" 0"
+	if LastPostDate_picker<>"" and LastPostDateComparer<>"" then item=item&" and DateDiff("&SqlChar&"d"&SqlChar&",'"&SqlString(LastPostDate_picker)&"',UserActivityTime) "&LastPostDateComparer&" 0"
 	if SearchRole > 0 then item=item&" and UserRoleID="&SearchRole&""
 	if Request("CurrentAccountStatus") <> "" and CurrentAccountStatus>=0 and CurrentAccountStatus<=3 then item=item&" and UserAccountStatus="&CurrentAccountStatus&""
 
@@ -295,12 +314,12 @@ Sub SearchUserok
 		i=i+1
 %>
 	<TR align=center class="CommonListCell">
-		<TD><a href="Admin_User.asp?menu=UserEdit&UserName=<%=Rs("UserName")%>"><%=Rs("UserName")%></a></TD>
-		<TD><a href="mailto:<%=Rs("UserEmail")%>"><%=Rs("UserEmail")%></a></TD>
+		<TD><a href="Admin_User.asp?menu=UserEdit&UserName=<%=Server.URLEncode(Rs("UserName"))%>"><%=Server.HTMLEncode(Rs("UserName"))%></a></TD>
+		<TD><a href="mailto:<%=Server.HTMLEncode(Rs("UserEmail"))%>"><%=Server.HTMLEncode(Rs("UserEmail"))%></a></TD>
 		<TD><%=Rs("TotalPosts")%></TD>
 		<TD><%=Rs("UserRegisterTime")%></TD>
 		<TD><%=Rs("UserActivityTime")%></TD>
-		<TD><a href="Admin_User.asp?menu=UserEdit&UserName=<%=Rs("UserName")%>">编辑</a> | <a onclick="return window.confirm('您确定要删除您所选用户的全部资料?');" href="Admin_User.asp?menu=UserDel&UserID=<%=Rs("UserID")%>">删除</a></TD>
+		<TD><a href="Admin_User.asp?menu=UserEdit&UserName=<%=Server.URLEncode(Rs("UserName"))%>">编辑</a> | <a onclick="return window.confirm('您确定要删除您所选用户的全部资料?');" href="Admin_User.asp?menu=UserDel&UserID=<%=Rs("UserID")%>">删除</a></TD>
 	</TR>
 <%
 		Rs.MoveNext
@@ -314,7 +333,7 @@ End Sub
 
 
 Sub UserEdit
-	sql="Select * from ["&TablePrefix&"Users] where UserName='"&HTMLEncode(UserName)&"'"
+	sql="Select * from ["&TablePrefix&"Users] where UserName='"&SqlString(UserName)&"'"
 	Set Rs=Execute(sql)
 	if Rs.eof then Alert(""&UserName&" 的用户资料不存在")
 		
@@ -323,21 +342,21 @@ Sub UserEdit
 		UserNote=replace(""&Rs("UserNote")&"","<br>",vbCrlf)
 %>
 <form method="POST" name=form action="?menu=Userok">
-<input type=hidden name=UserName value="<%=Rs("UserName")%>">
+<input type=hidden name=UserName value="<%=Server.HTMLEncode(Rs("UserName"))%>">
 <table cellSpacing="1" cellpadding="5" border="0" width="70%" class=CommonListArea align=center>
 	<tr class=CommonListTitle>
-		<td width="600" colspan="4" align="center"><font color="000000"><a target="_blank" href="Profile.asp?UID=<%=Rs("UserID")%>">查看“<%=Rs("UserName")%>”的详细资料</a></font></td>
+		<td width="600" colspan="4" align="center"><font color="000000"><a target="_blank" href="Profile.asp?UID=<%=Rs("UserID")%>">查看“<%=Server.HTMLEncode(Rs("UserName"))%>”的详细资料</a></font></td>
 	</tr>
 	<tr class="CommonListCell">
-		<td colspan="2">用户名称：<%=Rs("UserName")%></td>
-		<td width="600" colspan="2">用户密码：<a href="javascript:BBSXP_Modal.Open('?menu=ChangePassword&UserName=<%=Rs("UserName")%>',500,160);">修改密码</a></td>
+		<td colspan="2">用户名称：<%=Server.HTMLEncode(Rs("UserName"))%></td>
+		<td width="600" colspan="2">用户密码：<a href="javascript:BBSXP_Modal.Open('?menu=ChangePassword&UserName=<%=SafeJsString(Server.URLEncode(Rs("UserName")))%>',500,160);">修改密码</a></td>
 	</tr>
 	<tr class="CommonListCell">
 		<td colspan="2">用户角色：<select name="UserRoleID">
 <%
 	RoleGetRow = FetchEmploymentStatusList("Select RoleID,Name from ["&TablePrefix&"Roles] where RoleID > 0 order by RoleID")
 	For i=0 To Ubound(RoleGetRow,2)
-	%><option value="<%=RoleGetRow(0,i)%>" <%if Rs("UserRoleID")=RoleGetRow(0,i) then%>selected<%end if%>><%=RoleGetRow(1,i)%></option><%
+	%><option value="<%=RoleGetRow(0,i)%>" <%if Rs("UserRoleID")=RoleGetRow(0,i) then%>selected<%end if%>><%=Server.HTMLEncode(RoleGetRow(1,i))%></option><%
 	Next
 %>
 			</select>		</td>
@@ -349,29 +368,29 @@ Sub UserEdit
 			</select>		</td>
 	</tr>
 	<tr class="CommonListCell">
-		<td colspan="2">用户头衔：<input size="10" name="UserTitle" value="<%=Rs("UserTitle")%>"></td>
+		<td colspan="2">用户头衔：<input size="10" name="UserTitle" value="<%=Server.HTMLEncode(Rs("UserTitle"))%>"></td>
 		<td width="600" colspan="2">信任等级：<select name="ModerationLevel" size="1">
 			<option value="1" <%if Rs("ModerationLevel")=True then%>selected<%end if%>>信任用户</option>
 			<option value="0" <%if Rs("ModerationLevel")=False then%>selected<%end if%>>非信任用户</option>
 		</select></td>
 	</tr>
 	<tr class="CommonListCell">
-		<td width="600" colspan="2">发 帖 数：<input size="10" name="TotalPosts" value="<%=Rs("TotalPosts")%>"></td>
-		<td colspan="2">用户声望：<input size="10" name="Reputation" value="<%=Rs("Reputation")%>"></td>
+		<td width="600" colspan="2">发 帖 数：<input size="10" name="TotalPosts" value="<%=Server.HTMLEncode(Rs("TotalPosts"))%>"></td>
+		<td colspan="2">用户声望：<input size="10" name="Reputation" value="<%=Server.HTMLEncode(Rs("Reputation"))%>"></td>
 	</tr>
 	
 	<tr class="CommonListCell">
-		<td width="600" colspan="2">活跃天数：<input size="10" name="UserActivityDay" value="<%=Rs("UserActivityDay")%>"></td>
+		<td width="600" colspan="2">活跃天数：<input size="10" name="UserActivityDay" value="<%=Server.HTMLEncode(Rs("UserActivityDay"))%>"></td>
 		<td colspan="2">用户等级：<%=Rs("UserRank")%></td>
 	</tr>
 	
 	<tr class="CommonListCell">
-		<td colspan="2">金　　钱：<input size="10" name="UserMoney" value="<%=Rs("UserMoney")%>" /></td>
-		<td width="600" colspan="2">邀 请 人：<input size="20" name="ReferrerName" value="<%=Rs("ReferrerName")%>" /></td>
+		<td colspan="2">金　　钱：<input size="10" name="UserMoney" value="<%=Server.HTMLEncode(Rs("UserMoney"))%>" /></td>
+		<td width="600" colspan="2">邀 请 人：<input size="20" name="ReferrerName" value="<%=Server.HTMLEncode(Rs("ReferrerName"))%>" /></td>
 	</tr>
 	<tr class="CommonListCell">
-		<td colspan="2">经 验 值：<input size="10" name="experience" value="<%=Rs("experience")%>" /></td>
-		<td colspan="2">用户头像：<input size="20" name="UserFaceUrl" value="<%=Rs("UserFaceUrl")%>"></td>
+		<td colspan="2">经 验 值：<input size="10" name="experience" value="<%=Server.HTMLEncode(Rs("experience"))%>" /></td>
+		<td colspan="2">用户头像：<input size="20" name="UserFaceUrl" value="<%=Server.HTMLEncode(Rs("UserFaceUrl"))%>"></td>
 	</tr>
 	<tr class="CommonListCell">
 		<td width="1200" colspan="4">注册日期：<%=Rs("UserRegisterTime")%> （ＩＰ：<%=Rs("UserRegisterIP")%>）</td>
@@ -383,7 +402,7 @@ Sub UserEdit
 		<td colspan="4" align="center">基本资料</td>
 	</tr>
 	<tr class="CommonListCell">
-	  <td width="600" colspan="2">名字： <input type="text" name="RealName" size="20" value="<%=Rs("RealName")%>" /></td>
+	  <td width="600" colspan="2">名字： <input type="text" name="RealName" size="20" value="<%=Server.HTMLEncode(Rs("RealName"))%>" /></td>
 		<td width="600" height="3" colspan="2">性别： <select size=1 name=UserSex>
 				<option value=0 selected>[请选择]</option>
 				<option value=1 <%if Rs("UserSex")=1 then%>selected<%end if%>>男</option>
@@ -391,20 +410,20 @@ Sub UserEdit
 	  </select></td>
 	</tr>
 	<tr class="CommonListCell">
-		<td width="600" colspan="2">生日： <input type="text" name="birthday" size="20" value="<%=Rs("birthday")%>"></td>
-		<td width="600" colspan="2">地址： <input type="text" name="Address" size="20" value="<%=Rs("Address")%>"></td>
+		<td width="600" colspan="2">生日： <input type="text" name="birthday" size="20" value="<%=Server.HTMLEncode(Rs("birthday"))%>"></td>
+		<td width="600" colspan="2">地址： <input type="text" name="Address" size="20" value="<%=Server.HTMLEncode(Rs("Address"))%>"></td>
 	</tr>
 	<tr class="CommonListCell">
-	  <td colspan="2">职业： <input type="text" name="Occupation" size="20" value="<%=Rs("Occupation")%>"></td>
-	  <td colspan="2">兴趣： <input type="text" name="Interests" size="20" value="<%=Rs("Interests")%>"></td>
+	  <td colspan="2">职业： <input type="text" name="Occupation" size="20" value="<%=Server.HTMLEncode(Rs("Occupation"))%>"></td>
+	  <td colspan="2">兴趣： <input type="text" name="Interests" size="20" value="<%=Server.HTMLEncode(Rs("Interests"))%>"></td>
     </tr>
 	<tr class="CommonListCell">
-	  <td colspan="2">邮箱： <input type="text" name="UserEmail" size="20" value="<%=Rs("UserEmail")%>"></td>
-	  <td colspan="2">主页： <input type="text" name="WebAddress" size="20" value="<%=Rs("WebAddress")%>"></td>
+	  <td colspan="2">邮箱： <input type="text" name="UserEmail" size="20" value="<%=Server.HTMLEncode(Rs("UserEmail"))%>"></td>
+	  <td colspan="2">主页： <input type="text" name="WebAddress" size="20" value="<%=Server.HTMLEncode(Rs("WebAddress"))%>"></td>
     </tr>
 	<tr class="CommonListCell">
-	  <td colspan="2">博客： <input type="text" name="WebLog" size="20" value="<%=Rs("WebLog")%>"></td>
-	  <td colspan="2">相册： <input type="text" name="WebGallery" size="20" value="<%=Rs("WebGallery")%>"></td>
+	  <td colspan="2">博客： <input type="text" name="WebLog" size="20" value="<%=Server.HTMLEncode(Rs("WebLog"))%>"></td>
+	  <td colspan="2">相册： <input type="text" name="WebGallery" size="20" value="<%=Server.HTMLEncode(Rs("WebGallery"))%>"></td>
     </tr>
     
 	<tr class=CommonListTitle>
@@ -412,16 +431,16 @@ Sub UserEdit
 	</tr>
     
 	<tr class="CommonListCell">
-	  <td colspan="2">QQ ：　<input type="text" name="QQ" size="20" value="<%=Rs("QQ")%>"></td>
-	  <td colspan="2">ICQ：　<input type="text" name="ICQ" size="20" onkeyup=if(isNaN(this.value))this.value='' value="<%=Rs("ICQ")%>"></td>
+	  <td colspan="2">QQ ：　<input type="text" name="QQ" size="20" value="<%=Server.HTMLEncode(Rs("QQ"))%>"></td>
+	  <td colspan="2">ICQ：　<input type="text" name="ICQ" size="20" onkeyup=if(isNaN(this.value))this.value='' value="<%=Server.HTMLEncode(Rs("ICQ"))%>"></td>
     </tr>
 	<tr class="CommonListCell">
-	  <td colspan="2">AIM：　<input type="text" name="AIM" size="20" value="<%=Rs("AIM")%>"></td>
-	  <td colspan="2">MSN：　<input type="text" name="MSN" size="20" value="<%=Rs("MSN")%>"></b></td>
+	  <td colspan="2">AIM：　<input type="text" name="AIM" size="20" value="<%=Server.HTMLEncode(Rs("AIM"))%>"></td>
+	  <td colspan="2">MSN：　<input type="text" name="MSN" size="20" value="<%=Server.HTMLEncode(Rs("MSN"))%>"></b></td>
     </tr>
 	<tr class="CommonListCell">
-	  <td colspan="2">Yahoo：<input type="text" name="Yahoo" size="20" value="<%=Rs("Yahoo")%>"></td>
-	  <td colspan="2">Skype：<input type="text" name="Skype" size="20" value="<%=Rs("Skype")%>"></b></td>
+	  <td colspan="2">Yahoo：<input type="text" name="Yahoo" size="20" value="<%=Server.HTMLEncode(Rs("Yahoo"))%>"></td>
+	  <td colspan="2">Skype：<input type="text" name="Skype" size="20" value="<%=Server.HTMLEncode(Rs("Skype"))%>"></b></td>
     </tr>
     
 	<tr class=CommonListTitle>
@@ -430,19 +449,19 @@ Sub UserEdit
     
     
 	<tr class="CommonListCell">
-		<td width="600" colspan="4">签名：<textarea name="UserSign" rows="4" cols="60"><%=UserSign%></textarea></td>
+		<td width="600" colspan="4">签名：<textarea name="UserSign" rows="4" cols="60"><%=Server.HTMLEncode(UserSign)%></textarea></td>
 	</tr>
 	<tr class="CommonListCell">
-		<td width="600" colspan="4">简介：<textarea name="UserBio" rows="4" cols="60"><%=UserBio%></textarea></td>
+		<td width="600" colspan="4">简介：<textarea name="UserBio" rows="4" cols="60"><%=Server.HTMLEncode(UserBio)%></textarea></td>
 	</tr>
 	
 	<tr class="CommonListCell">
-		<td width="600" colspan="4">备注：<textarea name="UserNote" rows="4" cols="60"><%=UserNote%></textarea></td>
+		<td width="600" colspan="4">备注：<textarea name="UserNote" rows="4" cols="60"><%=Server.HTMLEncode(UserNote)%></textarea></td>
 	</tr>
 	
 	
 	<tr class=CommonListTitle>
-		<td width="600" align="center" ><a onclick="return window.confirm('您确定要删除该用户所有发表过的帖子?');" href="?menu=UserDelTopic&UserName=<%=Rs("UserName")%>">删除该用户的所有主题</a></td>
+		<td width="600" align="center" ><a onclick="return window.confirm('您确定要删除该用户所有发表过的帖子?');" href="?menu=UserDelTopic&UserName=<%=Server.URLEncode(Rs("UserName"))%>">删除该用户的所有主题</a></td>
 		<td width="600" colspan="2" align="center" ><input type="submit" value=" 更 新 "></td>
 		<td width="600" align="center" ><a onclick="return window.confirm('您确定要删除该用户的所有资料?');" href="?menu=UserDel&UserID=<%=Rs("UserID")%>">删除该用户的所有资料</a></td>
 	</tr>
@@ -452,7 +471,7 @@ Sub UserEdit
 End Sub
 
 Sub UserDelTopic
-	ThreadGetRow=FetchEmploymentStatusList("select ThreadID from ["&TablePrefix&"Threads] where PostAuthor='"&UserName&"'")
+	ThreadGetRow=FetchEmploymentStatusList("select ThreadID from ["&TablePrefix&"Threads] where PostAuthor='"&SqlString(UserName)&"'")
 	if IsArray(ThreadGetRow) then
 		for i=0 to ubound(ThreadGetRow,2)
 			sql="select PostID from ["&TablePrefix&"Posts] where ThreadID="&ThreadGetRow(0,i)&""
@@ -466,13 +485,14 @@ Sub UserDelTopic
 	end if
 	ThreadGetRow=null
 			
-	Execute("Delete from ["&TablePrefix&"Threads] where PostAuthor='"&UserName&"'")
-	Response.Write("已经将 "&UserName&" 所有发表过的主题全部删除")
+	Execute("Delete from ["&TablePrefix&"Threads] where PostAuthor='"&SqlString(UserName)&"'")
+	Response.Write("已经将 "&Server.HTMLEncode(UserName)&" 所有发表过的主题全部删除")
 End Sub
 
 Sub UserDel
 	for each ho in Request("UserID")
-		ho=int(ho)
+		ho=SafeLongValue(ho,0)
+		If ho>0 Then
 		if ho=CookieUserID then Alert("不能自己删除自己")
 		Rs.open "select UserName from ["&TablePrefix&"Users] where UserID="&ho&"",Conn,1,3
 		if not Rs.Eof Then
@@ -483,12 +503,13 @@ Sub UserDel
 			if Message<>"" then Alert(""&Message&"")
 			'--------------------  API End  ----------------------
 		
-			DelAttachments"Select * from ["&TablePrefix&"PostAttachments] where UserName='"&UserName&"'"
+			DelAttachments"Select * from ["&TablePrefix&"PostAttachments] where UserName='"&SqlString(UserName)&"'"
 			
 			Rs.Delete
 			Rs.Update
 		end if
 		Rs.Close
+		End If
 	next
 	Response.Write("已经成功删除用户ID为（"&Request("UserID")&"）的所有资料")
 End Sub
@@ -498,7 +519,7 @@ Sub Userok
 	if Not IsDate(birthday) then birthday=null
 	
 	
-	sql="Select * from ["&TablePrefix&"Users] where UserName='"&UserName&"'"
+	sql="Select * from ["&TablePrefix&"Users] where UserName='"&SqlString(UserName)&"'"
 	Rs.Open sql,Conn,1,3
 		Rs("UserFaceUrl")=HTMLEncode(SafeUrl(Request("UserFaceUrl")))
 		Rs("UserRoleID")=RequestInt("UserRoleID")
@@ -565,7 +586,7 @@ Sub UserRank
 %>
 <table border="0" cellpadding="5" cellspacing="1" class=CommonListArea width=90% align="center">
 	<tr class=CommonListTitle>
-		<td colspan="4" align="center"><%=RoleGetRow(1,i)%></td>
+		<td colspan="4" align="center"><%=Server.HTMLEncode(RoleGetRow(1,i))%></td>
 	</tr>
 	<tr class=CommonListHeader>
 		<td width="100" align="center">ID</td>
@@ -622,7 +643,7 @@ Sub UserRankAdd
 <%
 	RoleGetRow = FetchEmploymentStatusList("Select RoleID,Name from ["&TablePrefix&"Roles] where RoleID > 0 order by RoleID")
 	For i=0 To Ubound(RoleGetRow,2)
-	%><option value="<%=RoleGetRow(0,i)%>" <%if RoleID=RoleGetRow(0,i) then%>selected<%end if%>><%=RoleGetRow(1,i)%></option><%
+	%><option value="<%=RoleGetRow(0,i)%>" <%if RoleID=RoleGetRow(0,i) then%>selected<%end if%>><%=Server.HTMLEncode(RoleGetRow(1,i))%></option><%
 	Next
 %>
 		</select>
@@ -656,7 +677,7 @@ Sub AllRoles
 		Do While Not Rs.EOF 
 %>
 	<tr class="CommonListCell">
-		<td><a href="?menu=ViewRole&RoleID=<%=Rs("RoleID")%>"><b><%=Rs("Name")%></b></a><br /><%=Rs("Description")%></td>
+		<td><a href="?menu=ViewRole&RoleID=<%=Rs("RoleID")%>"><b><%=Server.HTMLEncode(Rs("Name"))%></b></a><br /><%=Server.HTMLEncode(Rs("Description"))%></td>
 		<td align="center" width="200"><a class="CommonTextButton" href="?menu=ViewRole&RoleID=<%=Rs("RoleID")%>">编辑角色属性</a> <a class="CommonTextButton" href="?menu=RolePermissions&RoleID=<%=Rs("RoleID")%>">编辑版块权限</a></td>
 	</tr>
 <%
@@ -686,22 +707,22 @@ Sub ViewRole
 		</tr>
 		<tr class="CommonListCell">
 			<td>名称</td>
-			<td width="60%"><input name="RoleName" size="50" value="<%=Rs("Name")%>"></td>
+			<td width="60%"><input name="RoleName" size="50" value="<%=Server.HTMLEncode(Rs("Name"))%>"></td>
 		</tr>
 		<tr class="CommonListCell">
 			<td>描述</td>
-			<td width="60%"><input name="Description" size="50" value="<%=Rs("Description")%>"></td>
+			<td width="60%"><input name="Description" size="50" value="<%=Server.HTMLEncode(Rs("Description"))%>"></td>
 		</tr>
 		<tr class="CommonListTitle">
 			<td colspan="2">设置该角色上传附件的相关选项：</td>
 		</tr>
 		<tr class="CommonListCell">
 			<td><b>允许单个帖子附件的大小（KB）</b><br />启用系统默认设置，则输入0</td>
-			<td><input size="20" name="RoleMaxFileSize" value="<%=Rs("RoleMaxFileSize")%>" /></td>
+			<td><input size="20" name="RoleMaxFileSize" value="<%=Server.HTMLEncode(Rs("RoleMaxFileSize"))%>" /></td>
 		</tr>
 		<tr class="CommonListCell">
 			<td><b>设置用户上传文件夹的最大容量（KB）</b><br />启用系统默认设置，则输入0</td>
-			<td><input size="20" name="RoleMaxPostAttachmentsSize" value="<%=Rs("RoleMaxPostAttachmentsSize")%>" /></td>
+			<td><input size="20" name="RoleMaxPostAttachmentsSize" value="<%=Server.HTMLEncode(Rs("RoleMaxPostAttachmentsSize"))%>" /></td>
 		</tr>
 		<tr class="CommonListCell">
 			<td colspan="2" align="center"><input <%=PostDisabled%> type="button" value="删除" onclick="document.location.href='?menu=DelRole&amp;RoleID=<%=RoleID%>'"> <input type="submit" value="保存"> </td>
@@ -721,7 +742,7 @@ Sub RolePermissions
 <form name="form" method="POST" action="?menu=RolePermissionsUP&RoleID=<%=RoleID%>" style="margin:0px;padding:0px;">
 	<table cellspacing="1" cellpadding="5" width="100%" border="0" class=CommonListArea align="center">
 	<tr class="CommonListTitle">
-		<td colspan="11" align="center">编辑角色“<%=Execute("select Name from ["&TablePrefix&"Roles] where RoleID="&RoleId&"")(0)%>”在各版块的权限</td>
+		<td colspan="11" align="center">编辑角色“<%=Server.HTMLEncode(Execute("select Name from ["&TablePrefix&"Roles] where RoleID="&RoleId&"")(0))%>”在各版块的权限</td>
 	</tr>
 	<tr class="CommonListHeader" align="center">
 		<td>版块权限</td>
@@ -755,9 +776,9 @@ Sub RolePermissions
 			end if
 		Set Rs1=nothing
 %>
-	<input type="hidden" name="ForumID" value="<%=Rs("ForumID")%>" />
+	<input type="hidden" name="ForumID" value="<%=Server.HTMLEncode(Rs("ForumID"))%>" />
 	<tr align="center" class="CommonListCell">
-		<td><%=Rs("ForumName")%></td>
+		<td><%=Server.HTMLEncode(Rs("ForumName"))%></td>
 		<td><input type="checkbox" value="1" name="PermissionView<%=Rs("ForumID")%>"<%if PermissionView=1 then%> checked<%end if%> /></td>
 		<td><input type="checkbox" value="1" name="PermissionRead<%=Rs("ForumID")%>"<%if PermissionRead=1 then%> checked /><%end if%></td>
 		<td><input type="checkbox" value="1" name="PermissionPost<%=Rs("ForumID")%>"<%if PermissionPost=1 then%> checked /><%end if%></td>

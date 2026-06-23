@@ -31,7 +31,7 @@ select case Request("menu")
 		if Len(ForumDescription)>255 then  error("论坛简介不能大于 255 个字符")
 		master=split(""&Moderated&"","|")
 		for i = 0 to ubound(master)
-			If Execute("Select UserID From ["&TablePrefix&"Users] where UserName='"&master(i)&"'" ).eof and master(i)<>"" Then error(""&master(i)&"的用户资料不存在")
+			If Execute("Select UserID From ["&TablePrefix&"Users] where UserName='"&SqlString(master(i))&"'" ).eof and master(i)<>"" Then error(""&master(i)&"的用户资料不存在")
 		next
 		sql="Select * from ["&TablePrefix&"Forums] where ForumID="&ForumID&""
 		Rs.Open sql,Conn,1,3

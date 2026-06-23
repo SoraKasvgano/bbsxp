@@ -16,9 +16,9 @@ Class AutoTerminate_Class
 			If Err.Number<>995 and Err.Number<>-2147217864 then
 				set fso = server.CreateObject("Scripting.FileSystemObject")
 				set f = fso.OpenTextFile(Server.MapPath("Log/"&FormatDateTime(now(),2)&"_500.log"),8,1)
-				f.WriteLine(now()&"	"&Request.ServerVariables("REMOTE_ADDR")&"	"&Request.ServerVariables("Request_method")&"	"&Request.ServerVariables("server_name")&"	"&Request.ServerVariables("script_name")&"	"&Request.ServerVariables("Query_String")&"	"&Err.Number&"	"&Err.Source&"	"&Err.Description&"	"&Request.ServerVariables("All_Http")) 
-				f.Close() 
-				set f = nothing 
+				f.WriteLine(now()&"	"&Request.ServerVariables("REMOTE_ADDR")&"	"&Request.ServerVariables("Request_method")&"	"&Request.ServerVariables("server_name")&"	"&Request.ServerVariables("script_name")&"	"&Request.ServerVariables("Query_String")&"	"&Err.Number&"	"&Err.Source&"	"&Err.Description&"	"&Request.ServerVariables("All_Http"))
+				f.Close()
+				set f = nothing
 				set fso = nothing
 			end if
 		end if
@@ -65,6 +65,25 @@ Function SafeUrl(Value)
 	End If
 	If Left(LowerUrl,11)="javascript:" Or Left(LowerUrl,9)="vbscript:" Or Left(LowerUrl,5)="data:" Then TempUrl=""
 	SafeUrl=TempUrl
+End Function
+
+Function SafeCssStyle(Value)
+	Dim TempStyle, LowerStyle
+	TempStyle=Trim(""&Value&"")
+	TempStyle=Replace(TempStyle,Chr(0),"")
+	TempStyle=Replace(TempStyle,Chr(9)," ")
+	TempStyle=Replace(TempStyle,Chr(10),"")
+	TempStyle=Replace(TempStyle,Chr(13),"")
+	TempStyle=Replace(TempStyle,Chr(34),"")
+	TempStyle=Replace(TempStyle,"'","")
+	TempStyle=Replace(TempStyle,"<","")
+	TempStyle=Replace(TempStyle,">","")
+	TempStyle=Replace(TempStyle,"&","")
+	TempStyle=Replace(TempStyle,"\","")
+	LowerStyle=LCase(TempStyle)
+	If InStr(LowerStyle,"expression")>0 Or InStr(LowerStyle,"javascript:")>0 Or InStr(LowerStyle,"vbscript:")>0 Or InStr(LowerStyle,"data:")>0 Or InStr(LowerStyle,"url(")>0 Or InStr(LowerStyle,"behavior")>0 Or InStr(LowerStyle,"binding")>0 Then TempStyle=""
+	If Len(TempStyle)>300 Then TempStyle=Left(TempStyle,300)
+	SafeCssStyle=TempStyle
 End Function
 
 Function SafeRedirectUrl(Value)
@@ -129,6 +148,17 @@ Function SafeDateSuffix()
 End Function
 Function SqlString(Value)
 	SqlString=Replace(""&Value&"","'","''")
+End Function
+
+Function SqlLikeString(Value)
+	Value=SqlString(Value)
+	Value=Replace(Value,"[","[[]")
+	Value=Replace(Value,"]","[]]")
+	Value=Replace(Value,"%","[%]")
+	Value=Replace(Value,"_","[_]")
+	Value=Replace(Value,"*","[*]")
+	Value=Replace(Value,"?","[?]")
+	SqlLikeString=Value
 End Function
 
 Function SafeSqlOrder(Value,DefaultValue)
@@ -216,7 +246,7 @@ Function BBCode(str)
 	str=ReplaceText(str,"\[\/list\]","</ul>")
 	str=ReplaceText(str,"\[\*\]","<li>")
 	str=ReplaceText(str,"\[media=([\d]*),([\d]*),(true|false),(true|false)\]((?:(?!\[\/media\])[\s\S])*)\[\/media\]","<embed style=""width: $1px; HEIGHT: $2px"" src=""$5"" type=""audio/x-ms-wma"" autostart=""$3"" ShowStatusBar=""$4"" quality=""high"" />")
-	
+
     '表格
 	if RegExpTest("\[table(=.[^\[]*)?\]((?:(?!\[\/table\])[\s\S])*)\[\/table\]",""&str&"") then
 		str=ReplaceText(str,"\[td=([0-9]*),([0-9]*),(.*?)\]","<td colspan=""$1"" rowspan=""$2"" width=""$3"">")
@@ -288,7 +318,7 @@ Function ReplaceText(fString,patrn,replStr)
 	Set regEx = New RegExp   	' 建立正则表达式。
 		regEx.Pattern = patrn   ' 设置模式。
 		regEx.IgnoreCase = True ' 设置是否区分大小写。
-		regEx.Global = True     ' 设置全局可用性。 
+		regEx.Global = True     ' 设置全局可用性。
 		ReplaceText = regEx.Replace(""&fString&"",""&replStr&"") ' 作替换。
 	Set regEx=nothing
 End Function
@@ -297,7 +327,7 @@ Function RegExpTest(patrn, strng)
 	Set regEx = New RegExp   		' 建立正则表达式。
 		regEx.Pattern = patrn   	' 设置模式。
 		regEx.IgnoreCase = True 	' 设置是否区分大小写。
-		regEx.Global = True     	' 设置全局可用性。 
+		regEx.Global = True     	' 设置全局可用性。
 		RegExpTest = regEx.Test(strng) ' 执行搜索。
 	Set regEx=nothing
 End Function
@@ -586,14 +616,14 @@ Function AddTags()
 	for i=0 to Ubound(TagArray)
 		TempTagstr=HTMLEncode(TagArray(i))
 		if ""&TagArray(i)&""<>"" and instr(TempTags,","&TempTagstr&",")<=0 then
-			Rs.open "select top 1 * from ["&TablePrefix&"PostTags] where TagName='"&TempTagstr&"'",Conn,1,3
+			Rs.open "select top 1 * from ["&TablePrefix&"PostTags] where TagName='"&SqlString(TempTagstr)&"'",Conn,1,3
 				if Rs.eof then Rs.Addnew
 				Rs("TagName")=TempTagstr
 				Rs("MostRecentPostDate")=""&now()&""
 				Rs.update
 				TagID=Rs("TagID")
 			Rs.Close
-			
+
 			Execute("insert into ["&TablePrefix&"PostInTags] (TagID,PostID) values ('"&TagID&"','"&PostID&"')")
 
 			TagsStatic(TagID)
@@ -613,7 +643,7 @@ End Function
 '''''''''''''''''''''''''''''''''''''''''''
 Function GroupList(ParentID)
 	GroupListGetRow=FetchEmploymentStatusList("Select GroupID,GroupName from ["&TablePrefix&"Groups] where SortOrder>0 order by SortOrder")
-	if IsArray(GroupListGetRow) then 
+	if IsArray(GroupListGetRow) then
 	for i=0 to Ubound(GroupListGetRow,2)
 		ForumsList=ForumsList&"<optgroup label='"&GroupListGetRow(1,i)&"'>"
 		ii=ii+1
@@ -678,7 +708,7 @@ End Function
 
 ''''''''''''''''''''''''''''''''
 Sub ConciseMsg(Message)
-	Response.write(Message)	
+	Response.write(Message)
 	Response.End
 End Sub
 ''''''''''''''''''''''''
@@ -692,7 +722,7 @@ Sub Log(Message)
 	MessageXML=MessageXML&"<Request_Form>"&Escape(Request.Form)&"</Request_Form>"&vbCrlf
 	MessageXML=MessageXML&"<All_Http>"&Escape(Request.ServerVariables("All_Http"))&"</All_Http>"&vbCrlf
 
-	Execute("insert into ["&TablePrefix&"EventLog] (UserName,ErrNumber,MessageXML) values ('"&CookieUserName&"','"&Err.Number&"','"&MessageXML&"')")
+	Execute("insert into ["&TablePrefix&"EventLog] (UserName,ErrNumber,MessageXML) values ('"&SqlString(CookieUserName)&"','"&Err.Number&"','"&SqlString(MessageXML)&"')")
 End Sub
 ''''''''''''''''''''''''''''''''
 
@@ -706,7 +736,7 @@ Function AjaxShowPage(TotalPage,PageIndex,url)
 	else
 		PageLong=5
 	end if
-	
+
 	for i=1 to TotalPage
 		if i < PageIndex+PageLong and i > PageIndex-PageLong or i=1 or i=TotalPage then
 			if PageIndex=i then
@@ -730,12 +760,12 @@ Sub UpdateStatistics(DaysUsers,DaysTopics,DaysPosts)
 	Rs.open sql,conn,1,3
 	if Rs.eof then
 		Rs.Addnew
-		
+
 		TotalUsers=Execute("Select count(UserID) from ["&TablePrefix&"Users]")(0)
 		TotalTopics=Execute("Select count(ThreadID) from ["&TablePrefix&"Threads] where Visible=1")(0)
 		TotalPosts=Execute("Select sum(TotalReplies) as TotalPosts from ["&TablePrefix&"Threads] where Visible=1")(0)
-		
-		
+
+
 		if IsNull(TotalPosts) then
 		TotalPosts=0
 		else
@@ -746,7 +776,7 @@ Sub UpdateStatistics(DaysUsers,DaysTopics,DaysPosts)
 		Rs("TotalTopics")=TotalTopics
 		Rs("TotalPosts")=TotalPosts
 		Rs("NewestUserName")=NewestUserName
-		
+
 		Execute("update ["&TablePrefix&"Forums] Set TodayPosts=0")
 		Rs("DaysUsers")=Rs("DaysUsers")+int(DaysUsers)
 		Rs("DaysTopics")=Rs("DaysTopics")+int(DaysTopics)
@@ -767,6 +797,8 @@ End Sub
 
 
 Sub UpForumMostRecent(ForumID)
+		ForumID=SafeLongValue(ForumID,0)
+		If ForumID=0 Then Exit Sub
 		sql="Select top 1 * from ["&TablePrefix&"Threads] where ForumID="&ForumID&" and Visible=1 order by LastTime DESC"
 		Set Rs2=Execute(sql)
 		if Rs2.Eof then Exit sub
@@ -776,7 +808,7 @@ Sub UpForumMostRecent(ForumID)
 		MostRecentPostDate=Rs2("LastTime")
 		Rs2.close
 		Set Rs2 = Nothing
-		Execute("update ["&TablePrefix&"Forums] Set MostRecentThreadID="&MostRecentThreadID&",MostRecentPostSubject='"&MostRecentPostSubject&"',MostRecentPostAuthor='"&MostRecentPostAuthor&"',MostRecentPostDate='"&FormatTime(MostRecentPostDate)&"' where ForumID="&ForumID&"")
+		Execute("update ["&TablePrefix&"Forums] Set MostRecentThreadID="&MostRecentThreadID&",MostRecentPostSubject='"&SqlString(MostRecentPostSubject)&"',MostRecentPostAuthor='"&SqlString(MostRecentPostAuthor)&"',MostRecentPostDate='"&SqlString(FormatTime(MostRecentPostDate))&"' where ForumID="&ForumID&"")
 End Sub
 
 
@@ -866,8 +898,8 @@ Function CheckUser(UserName)
 	if Len(UserName) < SiteConfig("UserNameMinLength") then CheckUser=CheckUser&"<li>您的用户名长度不能少于 "&SiteConfig("UserNameMinLength")&" 个字节</li>"
 	if Len(UserName) > SiteConfig("UserNameMaxLength") then CheckUser=CheckUser&"<li>您的用户名长度不能超过 "&SiteConfig("UserNameMaxLength")&" 个字节</li>"
 
-	
-	
+
+
 	ErrorChar=array("　","","","","","`","","+","-","#","@",".","%","&","\","/",":","*","?","<",">","|")
 	for i=0 to ubound(ErrorChar)
 		if instr(username,ErrorChar(i))>0 then CheckUser=CheckUser&"<li>用户名中不能含有“"&ErrorChar(i)&"”特殊符号</li>":Exit For
@@ -893,14 +925,14 @@ Function AddUser
 	Message=Message&CheckUser(UserName)
 
 	if Message<>"" then Exit Function
-	
-	if not Execute("Select UserID From ["&TablePrefix&"Users] where UserName='"&UserName&"'" ).eof Then Message=Message&"<li>"&UserName&" 已经被别人注册了</li>"
-	If not Execute("Select UserID From ["&TablePrefix&"Users] where UserEmail='"&UserEmail&"'" ).eof Then Message=Message&"<li>"&UserEmail&" 已经被别人注册了</li>"
+
+	if not Execute("Select UserID From ["&TablePrefix&"Users] where UserName='"&SqlString(UserName)&"'" ).eof Then Message=Message&"<li>"&UserName&" 已经被别人注册了</li>"
+	If not Execute("Select UserID From ["&TablePrefix&"Users] where UserEmail='"&SqlString(UserEmail)&"'" ).eof Then Message=Message&"<li>"&UserEmail&" 已经被别人注册了</li>"
 
 	if Message<>"" then Exit Function
 
-	
-	Sql="Select * From ["&TablePrefix&"Users] Where UserName='"&UserName&"' or UserEmail='"&UserEmail&"'"
+
+	Sql="Select * From ["&TablePrefix&"Users] Where UserName='"&SqlString(UserName)&"' or UserEmail='"&SqlString(UserEmail)&"'"
 	Rs.Open Sql,Conn,1,3
 		CheckStatus = 0
 		Rs.addNew
@@ -928,21 +960,21 @@ Function AddUser
 
 	UpdateStatistics 1,0,0
 	NowDate=date()
-	Execute("update ["&TablePrefix&"Statistics] Set NewestUserName='"&UserName&"' where DateDiff("&SqlChar&"d"&SqlChar&",DateCreated,"&SqlNowString&")=0")
+	Execute("update ["&TablePrefix&"Statistics] Set NewestUserName='"&SqlString(UserName)&"' where DateDiff("&SqlChar&"d"&SqlChar&",DateCreated,"&SqlNowString&")=0")
 	AddUser=True
 End Function
 
 Function ModifyUserPassword(UserName,UserPassword,UserEmail,PasswordQuestion,PasswordAnswer)
 	ModifyUserPassword=False
-	
+
 	if ""&UserEmail&""<>"" then
 		if instr(UserEmail,"@")=0 then Message=Message&"<li>您的电子邮箱地址填写错误</li>" : Exit Function
-		if CookieUserEmail<>empty and UserEmail<>CookieUserEmail then 
-			If not Execute("Select UserID From ["&TablePrefix&"Users] where UserEmail='"&UserEmail&"'" ).eof Then Message=Message&"<li>"&UserEmail&" 已经被别人注册了" : Exit Function
+		if CookieUserEmail<>empty and UserEmail<>CookieUserEmail then
+			If not Execute("Select UserID From ["&TablePrefix&"Users] where UserEmail='"&SqlString(UserEmail)&"'" ).eof Then Message=Message&"<li>"&UserEmail&" 已经被别人注册了" : Exit Function
 		end if
 	end if
-	
-	sql="Select * from ["&TablePrefix&"Users] where UserName='"&UserName&"'"
+
+	sql="Select * from ["&TablePrefix&"Users] where UserName='"&SqlString(UserName)&"'"
 	Rs.Open sql,Conn,1,3
 		if Rs.eof then Message=Message&"<li>该用户不存在</li>" : Exit Function
 		if UserPassword<>empty then Rs("UserPassword")=DefaultPasswordFormat(""&UserPassword&"")
@@ -959,16 +991,16 @@ End Function
 Function UserLogin
 	UserLogin=False
 	if instr(UserName,"@")>0 and instr(UserName,".")>0 then
-		SqlItem="UserEmail='"&UserName&"'"
+		SqlItem="UserEmail='"&SqlString(UserName)&"'"
 	else
-		SqlItem="UserName='"&UserName&"'"
+		SqlItem="UserName='"&SqlString(UserName)&"'"
 	end if
 	Rs.open "select * from ["&TablePrefix&"Users] where "&SqlItem,Conn,1,3
 	if not Rs.eof and not Rs.bof Then
 		if Rs("UserAccountStatus")=0 then Message=Message & "您的帐号正在等待审核"
 		if Rs("UserAccountStatus")=2 then Message=Message & "您的帐号已被禁用！"
 		if Rs("UserAccountStatus")=3 then Message=Message & "您的帐号尚未通过审核"
-		
+
 		if SiteConfig("AllowLogin")=0 and Rs("UserRoleID")<>1 then Message=Message & "除管理员外任何人都不允许登录！"
 		if IsMD5=False then
 			if Len(Rs("UserPassword"))=16 then
@@ -990,13 +1022,13 @@ Function UserLogin
 			end if
 		End If
 		If Message<>"" Then Exit Function
-		
+
 		if Request("Invisible")="1" then
 			Invisible="1"
 		else
 			Invisible="0"
 		end if
-		
+
 		ResponseCookies "UserID",Rs("UserID"),Expired
 		ResponseCookies "UserPassword",Rs("UserPassword"),Expired
 		ResponseCookies "Invisible",Invisible,Expired
@@ -1022,7 +1054,7 @@ Function JpegPersits
 		Jpeg.Canvas.Font.Bold = CBool(SiteConfig("WatermarkFontIsBold"))	'是否加粗
 		'Jpeg.Canvas.Font.ShadowXoffset = 10		'水印文字阴影向右偏移的像素值，输入负值则向左偏移
 		'Jpeg.Canvas.Font.ShadowYoffset = 10		'水印文字阴影向下偏移的像素值，输入负值则向右偏移
-		Title = SiteConfig("WatermarkText") 
+		Title = SiteConfig("WatermarkText")
 		TitleWidth = Jpeg.Canvas.GetTextExtent(Title)
 		if Jpeg.Width<TitleWidth then exit function	'图片比水印文字小，则不加水印
 		select case SiteConfig("WatermarkWidthPosition")

@@ -66,30 +66,30 @@ select case Request("menu")
 	case "DelUserTopicok"
 		if UserName="" then Alert("您没有输入用户名！")
 		if ForumID>0 then ForumIDList=" and ForumID="&ForumID&""
-		Execute("Delete from ["&TablePrefix&"Threads] where PostAuthor='"&UserName&"'"&ForumIDList&"")
+		Execute("Delete from ["&TablePrefix&"Threads] where PostAuthor='"&SqlString(UserName)&"'"&ForumIDList&"")
 		Alert("已经将"&UserName&"发表的主题删除了！")
 	case "DelUserPost"
 		if UserName="" then Alert("您没有输入用户名！")
-		Execute("Delete from ["&TablePrefix&"Posts] where PostAuthor='"&UserName&"' and ParentID>0")
+		Execute("Delete from ["&TablePrefix&"Posts] where PostAuthor='"&SqlString(UserName)&"' and ParentID>0")
 		Alert("已经将 "&UserName&" 发表的回帖删除了！")
-		
+
 	case "ClearRecyclePost"
 		TimeLimit=RequestInt("TimeLimit")
 		if TimeLimit < 1 then error("只能清空24小时之前的回帖")
 		Execute("Delete from ["&TablePrefix&"Posts] where Visible=2 and DateDiff("&SqlChar&"d"&SqlChar&",PostDate,"&SqlNowString&") > "&TimeLimit&"")
 		Alert("已经将 "&TimeLimit&" 天以前删除的回帖清空了！")
-		
+
 	case "DellikeTopicok"
 		Topic=HTMLEncode(Request("Topic"))
 		if Topic="" then Alert("您没有输入字符！")
 		if ForumID>0 then ForumIDList="and ForumID="&ForumID&""
-		Execute("Delete from ["&TablePrefix&"Threads] where Topic like '%"&Topic&"%' "&ForumIDList&" ")
+		Execute("Delete from ["&TablePrefix&"Threads] where Topic like '%"&SqlLikeString(Topic)&"%' "&ForumIDList&" ")
 		Alert("已经将标题里包含有 "&Topic&" 的帖子全部删除了！")
-		
+
 	case "DellikeTopicPost"
 		Topic=HTMLEncode(Request("Topic"))
 		if Topic="" then Alert("您没有输入字符！")
-		Execute("Delete from ["&TablePrefix&"Posts] where Subject like '%"&Topic&"%' and ParentID>0")
+		Execute("Delete from ["&TablePrefix&"Posts] where Subject like '%"&SqlLikeString(Topic)&"%' and ParentID>0")
 		Alert("已经将标题里包含有 "&Topic&" 的回帖删除了！")
 
 	case "uniteok"
@@ -165,10 +165,10 @@ Sub ApplyManage
 <%
 	fashion=HTMLEncode(Request("fashion"))
 	if fashion="" then fashion="TotalPosts"
-	
+
 	if GroupID>0 then GroupSql=" where GroupID="&GroupID&""
 	sql="Select * from ["&TablePrefix&"Forums] "&GroupSql&" order by "&fashion&" Desc"
-	
+
 	Rs.Open sql,Conn,1
 	PageSetup=20 '设定每页的显示数量
 	Rs.Pagesize=PageSetup
@@ -271,8 +271,8 @@ do while not rs.eof
 <tr class="CommonListCell">
 	<td><a href="?menu=AddGroup&GroupID=<%=rs("GroupID")%>"><%=Rs("GroupName")%></a></td>
 	<td><%=Rs("GroupDescription")%></td>
-	<td align=center><a href="?menu=AddGroup&GroupID=<%=rs("GroupID")%>" class="CommonTextButton">编辑</a> 
-	<a href="?menu=ApplyManage&GroupID=<%=Rs("GroupID")%>" class="CommonTextButton">管理</a> 
+	<td align=center><a href="?menu=AddGroup&GroupID=<%=rs("GroupID")%>" class="CommonTextButton">编辑</a>
+	<a href="?menu=ApplyManage&GroupID=<%=Rs("GroupID")%>" class="CommonTextButton">管理</a>
 	<a onclick="return window.confirm('您确定要删除该论坛组内的所有论坛?')" href="?menu=GroupManageDel&GroupID=<%=rs("GroupID")%>" class="CommonTextButton">删除</a></td>
 
 </tr>
@@ -300,9 +300,9 @@ Sub AddGroupUp
 
 	master=split(Moderated,"|")
 	for i = 0 to ubound(master)
-		If Execute("Select UserID From ["&TablePrefix&"Users] where UserName='"&master(i)&"'" ).eof and master(i)<>"" Then Alert(""&master(i)&"的用户资料不存在")
+		If Execute("Select UserID From ["&TablePrefix&"Users] where UserName='"&SqlString(master(i))&"'" ).eof and master(i)<>"" Then Alert(""&master(i)&"的用户资料不存在")
 	next
-	
+
 	sql="Select * from ["&TablePrefix&"Groups] where GroupID="&GroupID&""
 	Rs.open sql,conn,1,3
 		if Rs.eof then Rs.addnew
@@ -317,7 +317,7 @@ Sub AddGroupUp
 End Sub
 
 Sub ForumAddUp
-	
+
 	ParentID=RequestInt("ParentID")
 	SortOrder=RequestInt("SortOrder")
 	ModerateNewPost=RequestInt("ModerateNewPost")
@@ -337,7 +337,7 @@ Sub ForumAddUp
 
 	master=split(Moderated,"|")
 	for i = 0 to ubound(master)
-		If Execute("Select UserID From ["&TablePrefix&"Users] where UserName='"&master(i)&"'" ).eof and master(i)<>"" Then Alert(""&master(i)&"的用户资料不存在")
+		If Execute("Select UserID From ["&TablePrefix&"Users] where UserName='"&SqlString(master(i))&"'" ).eof and master(i)<>"" Then Alert(""&master(i)&"的用户资料不存在")
 	next
 	sql="Select * from ["&TablePrefix&"Forums] where ForumID="&ForumID&""
 	Response.Write("")
@@ -427,7 +427,7 @@ Sub ForumAdd
 		<tr class="CommonListCell">
 			<td width="40%"> <b>排序</b><br />
 			从小到大排序设置，为“0”则隐藏此论坛</td>
-			<td> 
+			<td>
 			<input name="SortOrder" value="<%=SortOrder%>"></td>
 		</tr>
 		<tr class="CommonListCell">
@@ -524,11 +524,11 @@ Sub ForumAdd
 		sql="Select * from ["&TablePrefix&"Roles] order by RoleID"
 		Set Rs=Execute(sql)
 			Do While Not Rs.EOF
-				Response.write("<option value='"&Rs("RoleID")&"'>"&Rs("Name")&"</option>")	
+				Response.write("<option value='"&Rs("RoleID")&"'>"&Rs("Name")&"</option>")
 				Rs.MoveNext
 			loop
 		Rs.Close
-%>	
+%>
 			</select>
 		</td>
 		<td colspan="10">操作提示：您可以点击“角色名称”链接来设置该角色在该版块的权限</td>
@@ -538,7 +538,7 @@ Sub ForumAdd
 <%
 		sql="Select * from ["&TablePrefix&"ForumPermissions] where ForumID="&ForumID&" order by RoleID"
 		Set Rs=Execute(sql)
-			Do While Not Rs.EOF		
+			Do While Not Rs.EOF
 %>
 	<tr class="CommonListCell">
 		<td><a href="?menu=ViewForumPermissions&ForumID=<%=ForumID%>&RoleID=<%=Rs("RoleID")%>"><%=Execute("Select Name From ["&TablePrefix&"Roles] where RoleID="&Rs("RoleID")&"")(0)%></a></td>
@@ -568,7 +568,7 @@ Sub ViewForumPermissions
 	sql="Select * from ["&TablePrefix&"ForumPermissions] where ForumID="&ForumID&" and RoleID="&RoleID&""
 	Set Rs=Execute(sql)
 %>
-<b>版块权限管理</b><br />为一个给定的角色设置个人论坛权限。  
+<b>版块权限管理</b><br />为一个给定的角色设置个人论坛权限。
 <form method="POST" action="?menu=ForumPermissionsUP&ForumID=<%=ForumID%>&RoleId=<%=RoleId%>" name="form">
 <table cellspacing="1" cellpadding="5" width="100%" border="0" class=CommonListArea>
 	<tr class=CommonListTitle>
@@ -639,7 +639,7 @@ Sub bbsManage
 	</tr>
 	<form method="POST" action="?menu=DelThreads">
 		<tr class="CommonListCell">
-			<td align="center" width="50%">删除 
+			<td align="center" width="50%">删除
 			<select name="TimeLimit" size="1">
 				<option value="30">30</option>
 				<option value="60">60</option>
@@ -654,7 +654,7 @@ Sub bbsManage
 	</form>
 	<form method="POST" action="?menu=DelUserTopicok">
 	<tr class="CommonListCell">
-		<td align="center">删除 <input size="10" name="UserName" /> 发表的所有主题 
+		<td align="center">删除 <input size="10" name="UserName" /> 发表的所有主题
 		</td>
 		<td align="center"><select name="ForumID"><option value="">所有论坛</option><%=ForumsList%></select></td>
 		<td align="center"><input type="submit" value=" 确 定 " /></td>
@@ -662,7 +662,7 @@ Sub bbsManage
 	</form>
 	<form method="POST" action="?menu=DellikeTopicok">
 	<tr class="CommonListCell">
-		<td align="center">删除标题里包含有 <input size="10" name="Topic" /> 的所有主题 
+		<td align="center">删除标题里包含有 <input size="10" name="Topic" /> 的所有主题
 		</td>
 		<td align="center"><select name="ForumID"><option value="">所有论坛</option><%=ForumsList%></select></td>
 		<td align="center"><input type="submit" value=" 确 定 " /></td>
@@ -747,14 +747,14 @@ Sub SelectGroup()
 	Next
 	end if
 	%>
-	
-	
+
+
 	<table cellspacing="1" cellpadding="1" width="90%" border="0" align="center"><tr><td align=right><a href="?menu=ManageGroups" class="CommonTextButton">切换到网格模式</a></td></tr></table>
 
-	
+
 	<%
-	
-	
+
+
 End Sub
 
 Sub sort(selec,ParentID)
@@ -796,15 +796,15 @@ Sub ShowTags
 	</tr>
 <%
 	sql="["&TablePrefix&"PostTags]"
-	
+
 	TotalCount=Execute("Select count(TagID) From "&sql&"")(0) '获取数据数量
 	PageSetup=20 '设定每页的显示数量
 	TotalPage=Abs(Int(TotalCount/PageSetup*(-1))) '总页数
 	PageCount = RequestInt("PageIndex") '获取当前页
 	if PageCount <1 then PageCount = 1
 	if PageCount > TotalPage then PageCount = TotalPage
-	
-	
+
+
 	Rs.open sql,conn,1
 	if TotalPage>1 then RS.Move (PageCount-1) * pagesetup
 	i=0

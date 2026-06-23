@@ -26,6 +26,6 @@ Rs.Open sql,Conn,1,3
 	Rs("BallotIPList")=""&Rs("BallotIPList")&""&REMOTE_ADDR&"|"
 Rs.update
 Rs.close
-Execute("update ["&TablePrefix&"Threads] Set lasttime="&SqlNowString&",lastname='"&CookieUserName&"' where ThreadID="&ThreadID&"")
+Execute("update ["&TablePrefix&"Threads] Set lasttime="&SqlNowString&",lastname='"&SqlString(CookieUserName)&"' where ThreadID="&ThreadID&"")
 response.redirect Http_Referer
 %>

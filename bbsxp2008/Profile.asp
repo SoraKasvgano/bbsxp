@@ -7,7 +7,7 @@ UserID=RequestInt("UID")
 if UserID>0 then
 	sql="Select * from ["&TablePrefix&"Users] where UserID="&UserID&""
 else
-	sql="Select * from ["&TablePrefix&"Users] where UserName='"&UserName&"'"
+	sql="Select * from ["&TablePrefix&"Users] where UserName='"&SqlString(UserName)&"'"
 end if
 Set Rs=Execute(sql)
 	if Rs.eof then Alert("对不起，不存在你要查看的用户资料")
@@ -17,7 +17,7 @@ WebLog=SafeUrl(Rs("WebLog"))
 WebGallery=SafeUrl(Rs("WebGallery"))
 
 
-HtmlHeadTitle="查看"&Rs("UserName")&"的资料"
+HtmlHeadTitle="查看"&Server.HTMLEncode(Rs("UserName"))&"的资料"
 HtmlTop
 if SiteConfig("RequireAuthenticationForProfileViewing")=1 and CookieUserName=empty then error("您必须<a href=""javascript:BBSXP_Modal.Open('Login.asp',380,170);"">登录</a>后才能浏览个人资料")
 
@@ -86,12 +86,12 @@ if SiteConfig("RequireAuthenticationForProfileViewing")=1 and CookieUserName=emp
 							<%end if%>
 							<tr>
 								<td><img src=images/favorite.gif /></td>
-								<td><a href="javascript:Ajax_CallBack(false,false,'MyFavorites.asp?menu=FavoriteFriend&FriendUserName=<%=Rs("UserName")%>',true);">将 <%=Rs("UserName")%> 加为好友</a></td>
+								<td><a href="javascript:Ajax_CallBack(false,false,'MyFavorites.asp?menu=FavoriteFriend&FriendUserName=<%=Server.URLEncode(Rs("UserName"))%>',true);">将 <%=Server.HTMLEncode(Rs("UserName"))%> 加为好友</a></td>
 							</tr>
 							<%if CookieUserName<>empty then%>
 							<tr>
 								<td><img src=images/privatemessage.gif /></td>
-								<td><a href="javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&RecipientUserName=<%=Rs("UserName")%>',600,350);">给 <%=Rs("UserName")%> 发送讯息</a></td>
+								<td><a href="javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&RecipientUserName=<%=Server.URLEncode(Rs("UserName"))%>',600,350);">给 <%=Server.HTMLEncode(Rs("UserName"))%> 发送讯息</a></td>
 							</tr>
 							<%	if SiteConfig("EnableReputation")=1 then%>
 							<tr>
@@ -133,7 +133,7 @@ if SiteConfig("RequireAuthenticationForProfileViewing")=1 and CookieUserName=emp
 							<%end if%>
 							<tr>
 								<td><img src=images/search.gif /></td>
-								<td><a href="ShowBBS.asp?menu=MyTopic&UserName=<%=Rs("UserName")%>">搜索 <%=Rs("UserName")%> 的主题</a></td>
+								<td><a href="ShowBBS.asp?menu=MyTopic&UserName=<%=Server.URLEncode(Rs("UserName"))%>">搜索 <%=Server.HTMLEncode(Rs("UserName"))%> 的主题</a></td>
 							</tr>
 							
 							
@@ -201,7 +201,7 @@ if SiteConfig("RequireAuthenticationForProfileViewing")=1 and CookieUserName=emp
 	<tr><td>生 日：<%=Rs("birthday")%></td></tr>
 	<tr><td>生 肖：<%=Zodiac(Rs("birthday"))%></td></tr>
 	<tr><td>星 座：<%=Horoscope(Rs("birthday"))%></td></tr>
-	<tr><td>配 偶：<a href="Profile.asp?UserName=<%=Rs("UserMate")%>"><%=Rs("UserMate")%></a></td></tr>
+	<tr><td>配 偶：<a href="Profile.asp?UserName=<%=Server.URLEncode(Rs("UserMate"))%>"><%=Server.HTMLEncode(Rs("UserMate"))%></a></td></tr>
 	<tr><td>职 业：<%=Rs("Occupation")%></td></tr>
 	<tr><td>兴 趣：<%=Rs("Interests")%></td></tr>	
 	<tr><td>地 址：<%=Rs("Address")%></td></tr>	

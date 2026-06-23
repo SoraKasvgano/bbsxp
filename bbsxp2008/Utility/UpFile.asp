@@ -3,7 +3,7 @@
 dim Jpeg,upfile,FileUP,FormName
 dim FileMessage,FileName,FileMIME,FileSize,FileExt,SaveFile,TotalFileSize,Script
 TotalFileSize=0
-TotalUserPostAttachments=Execute("Select sum(ContentSize) from ["&TablePrefix&"PostAttachments] where UserName='"&CookieUserName&"'")(0)
+TotalUserPostAttachments=Execute("Select sum(ContentSize) from ["&TablePrefix&"PostAttachments] where UserName='"&SqlString(CookieUserName)&"'")(0)
 
 UploadFile
 

@@ -7,9 +7,9 @@ if CookieUserAccountStatus<>1 then error("您的帐号未通过审核！")
 
 	if CookieReputation < SiteConfig("InPrisonReputation") then error("您的声望低于"&SiteConfig("InPrisonReputation")&"，无法发表帖子！")
 
-	
-	
-	
+
+
+
 	if SiteConfig("RegUserTimePost") > 0 then
 		StopPostTime=int(DateDiff("n",CookieUserRegisterTime,Now()))
 		if StopPostTime < SiteConfig("RegUserTimePost") then error("<li>新注册用户必须等待 "&SiteConfig("RegUserTimePost")&" 分钟后才能发帖！<li>您必须再等待 "&SiteConfig("RegUserTimePost")-StopPostTime&" 分钟！")
@@ -31,7 +31,7 @@ Rs.Open sql,Conn,1
 	if Rs("Visible")=2 then error("此主题已经删除，不接受新的回复")
 	if Rs("IsLocked")=1 then error("此主题已经关闭，不接受新的回复")
 
-	
+
 	ForumID=Rs("ForumID")
 	Topic=Rs("Topic")
 	PostAuthor=Rs("PostAuthor")
@@ -53,7 +53,7 @@ if Request_Method = "POST" then
 	Tags=Request.Form("Tags")
 	TagArray=split(Tags,",")
 	if Ubound(TagArray)>5 then Message=Message&"<li>标签不能超过5个"
-	
+
 
 	'if Request.Form("DisableBBCode")<>1 then Body=BBCode(Body)
 	if Request.Form("DisableBBCode")=1 then Body=Replace(Body,CHR(91),"&#91")
@@ -71,10 +71,10 @@ if Request_Method = "POST" then
 	Rs.Close
 
 
-	
+
 	UpdateStatistics 0,0,1
-	
-	
+
+
 	Rs.Open "Select top 1 * from ["&TablePrefix&"Posts]",Conn,1,3
 	Rs.addNew
 		Rs("ThreadID")=ThreadID
@@ -92,19 +92,20 @@ if Request_Method = "POST" then
 	Rs.update
 	PostID=Rs("PostID")
 	Rs.close
-	
-	
+
+
 	if Request.Form("UpFileID")<>"" then
 		UpFileID=split(Request.Form("UpFileID"),",")
 		for i = 0 to ubound(UpFileID)-1
-			Execute("update ["&TablePrefix&"PostAttachments] Set Description='"&Subject&"',PostID='"&PostID&"' where UpFileID="&int(UpFileID(i))&" and UserName='"&CookieUserName&"'")
+			UpFileItem=SafeLongValue(UpFileID(i),0)
+			if UpFileItem>0 then Execute("update ["&TablePrefix&"PostAttachments] Set Description='"&SqlString(Subject)&"',PostID="&PostID&" where UpFileID="&UpFileItem&" and UserName='"&SqlString(CookieUserName)&"'")
 		next
 	end if
-	
+
 	if SiteConfig("DisplayPostTags")=1 then AddTags()
-	
-	Execute("update ["&TablePrefix&"Threads] Set LastName='"&CookieUserName&"',TotalReplies=TotalReplies+1,HiddenCount=HiddenCount+"&HiddenCount&",LastTime="&SqlNowString&" where ThreadID="&ThreadID&"")
-	Execute("update ["&TablePrefix&"Forums] Set MostRecentPostSubject='"&Topic&"',MostRecentPostAuthor='"&CookieUserName&"',MostRecentPostDate="&SqlNowString&",TodayPosts=TodayPosts+1,TotalPosts=TotalPosts+1,MostRecentThreadID="&ThreadID&" where ForumID="&ForumID&" or ForumID="&ParentID&"")
+
+	Execute("update ["&TablePrefix&"Threads] Set LastName='"&SqlString(CookieUserName)&"',TotalReplies=TotalReplies+1,HiddenCount=HiddenCount+"&HiddenCount&",LastTime="&SqlNowString&" where ThreadID="&ThreadID&"")
+	Execute("update ["&TablePrefix&"Forums] Set MostRecentPostSubject='"&SqlString(Topic)&"',MostRecentPostAuthor='"&SqlString(CookieUserName)&"',MostRecentPostDate="&SqlNowString&",TodayPosts=TodayPosts+1,TotalPosts=TotalPosts+1,MostRecentThreadID="&ThreadID&" where ForumID="&ForumID&" or ForumID="&ParentID&"")
 
 	ResponseApplication "LastPost",Request.Form
 
@@ -122,7 +123,7 @@ if Request_Method = "POST" then
 				Rs.movenext
 			loop
 			Rs.close
-			
+
 
 			LoadingEmailXml("NewMessagePostedToThread")
 			MailBody=Replace(MailBody,"[Topic]",Topic)
@@ -132,7 +133,7 @@ if Request_Method = "POST" then
 			MailBody=Replace(MailBody,"[Subject]",Subject)
 			MailBody=Replace(MailBody,"[body]",Body)
 			SendMail MailAddRecipient,MailSubject,MailBody
-		end if	
+		end if
 
 		EnableCensorship="<a href=ShowPost.asp?ThreadID="&ThreadID&">返回主题</a>"
 	end if
@@ -169,7 +170,7 @@ function ReplyQuote() { //Edit at 2007-05-26
 <%if Quote<>1 then response.Write(ReBody)%>
 <table cellspacing=1 cellpadding=5 width=100% class=CommonListArea>
 <form name="form" method="post" onsubmit="return CheckForm(this);">
-<input name="Body" type="hidden"<%if Quote=1 then%> value='<%=server.htmlencode(ReBody)%>'<%end if%> />
+<input name="Body" type="hidden"<%if Quote=1 then%> value="<%=Server.HTMLEncode(ReBody)%>"<%end if%> />
 <input type=hidden name=ThreadID value=<%=ThreadID%> />
 <input type=hidden name=PostID value=<%=PostID%> />
 <input name="UpFileID" type="hidden" />

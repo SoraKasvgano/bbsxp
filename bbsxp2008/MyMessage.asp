@@ -5,6 +5,7 @@ UserName=HTMLEncode(Request("UserName"))
 Subject=HTMLEncode(Request("Subject"))
 Body=HTMLEncode(Request("Body"))
 box=HTMLEncode(Request("box"))
+if box<>"Inbox" and box<>"Outbox" then box="Inbox"
 MessageID=RequestInt("MessageID")
 ForumID=RequestInt("ForumID")
 
@@ -14,7 +15,7 @@ if Request("menu")="Post" then
 	if CookieUserName=empty then AlertForModal("您还未登录论坛")
 
 	if MessageID > 0 then
-		Rs.open "Select top 1 * from ["&TablePrefix&"PrivateMessages] where MessageID="&MessageID&"",conn,1
+		Rs.open "Select top 1 * from ["&TablePrefix&"PrivateMessages] where MessageID="&MessageID&" and (RecipientUserName='"&SqlString(CookieUserName)&"' or SenderUserName='"&SqlString(CookieUserName)&"')",conn,1
 		if rs.eof then AlertForModal("引用/回复的短消息不存在")
 		Subject=Rs("Subject")
 		Body=replace(Rs("Body"),"<br>",vbcrlf)
@@ -35,8 +36,8 @@ Response.clear
 <form name="form" action="MyMessage.asp" method="POST" onsubmit="return CheckMessage()">
 <input type="hidden" name="menu" value="addPost" />
 <input type="hidden" name="ForumID" value="<%=ForumID%>" />
-发件人：<input type="text" name="SendUserName" value="<%=CookieUserName%>" readonly="readonly" /><br />
-收件人：<input id="RecipientUserName" name="RecipientUserName" type="text" value="<%=RecipientUserName%>" />
+发件人：<input type="text" name="SendUserName" value="<%=Server.HTMLEncode(CookieUserName)%>" readonly="readonly" /><br />
+收件人：<input id="RecipientUserName" name="RecipientUserName" type="text" value="<%=Server.HTMLEncode(RecipientUserName)%>" />
 
 <%
 if ForumID > 0 then
@@ -53,14 +54,14 @@ if ForumID > 0 then
 		Response.Write("<option value=''>版主列表</option>")
 		Moderated=split(ModeratedList,"|")
 		for i=0 to Ubound(Moderated)
-			Response.Write("<option value="&Moderated(i)&">"&Moderated(i)&"</option>")
+			Response.Write("<option value="""&Server.HTMLEncode(Moderated(i))&""">"&Server.HTMLEncode(Moderated(i))&"</option>")
 		next
 	else
 		Response.Write("<option value=''>管理员列表</option>")
 		ModeratedList=(0)
 		Set Rs=Execute("Select UserName from ["&TablePrefix&"Users] where (UserRoleID=1 or UserRoleID=2) and UserAccountStatus=1")
 		do while not Rs.eof
-			Response.Write("<option value="&Rs("UserName")&">"&Rs("UserName")&"</option>")
+			Response.Write("<option value="""&Server.HTMLEncode(Rs("UserName"))&""">"&Server.HTMLEncode(Rs("UserName"))&"</option>")
 			Rs.movenext
 		loop
 	end if
@@ -69,8 +70,8 @@ if ForumID > 0 then
 <%
 end if
 %><br />
-主　题：<input size="60" name="Subject" value="<%=Subject%>" /><br />
-<textarea name="Body" style="width:100%;height:200px"><%=Body%></textarea><br />
+主　题：<input size="60" name="Subject" value="<%=Server.HTMLEncode(Subject)%>" /><br />
+<textarea name="Body" style="width:100%;height:200px"><%=Server.HTMLEncode(Body)%></textarea><br />
 
 
 <input type="checkbox" name="IsSaveOutbox" id="IsSaveOutbox" value="1" /><label for=IsSaveOutbox>保存到已发送</label>
@@ -120,21 +121,21 @@ elseif Request("menu")="addPost" then
 	if Len(Subject)<2 then Alert("标题不能小于 2 字符")
 	if Len(Body)<2 then Alert("内容不能小于 2 字符")
 	if RecipientUserName="" or Lcase(RecipientUserName)=Lcase(CookieUserName) then Alert("请输入接收的对象且不能是自己")
-	if Execute("Select UserID From ["&TablePrefix&"Users] where UserName='"&RecipientUserName&"'").eof Then Alert("系统不存在"&RecipientUserName&"的资料")
-	
-	if IsSaveOutbox=1 and Execute("Select count(MessageID) From ["&TablePrefix&"PrivateMessages] where RecipientUserName='"&CookieUserName&"' and IsRecipientDelete=0 or SenderUserName='"&CookieUserName&"' and IsSenderDelete=0")(0) > MaxPrivateMessageSize Then
+	if Execute("Select UserID From ["&TablePrefix&"Users] where UserName='"&SqlString(RecipientUserName)&"'").eof Then Alert("系统不存在"&RecipientUserName&"的资料")
+
+	if IsSaveOutbox=1 and Execute("Select count(MessageID) From ["&TablePrefix&"PrivateMessages] where RecipientUserName='"&SqlString(CookieUserName)&"' and IsRecipientDelete=0 or SenderUserName='"&SqlString(CookieUserName)&"' and IsSenderDelete=0")(0) > MaxPrivateMessageSize Then
 		AddApplication "Message_"&CookieUserName,"【系统讯息】您的短讯文件夹空间已满，请整理文件夹，否则您将不能保存任何短讯！"
 		Alert("您的短信箱已满不能保存短讯！本次发送失败！")
 	end if
 
-	if Execute("Select count(MessageID) From ["&TablePrefix&"PrivateMessages] where RecipientUserName='"&RecipientUserName&"' and IsRecipientDelete=0 or SenderUserName='"&RecipientUserName&"' and IsSenderDelete=0")(0)>MaxPrivateMessageSize Then
+	if Execute("Select count(MessageID) From ["&TablePrefix&"PrivateMessages] where RecipientUserName='"&SqlString(RecipientUserName)&"' and IsRecipientDelete=0 or SenderUserName='"&SqlString(RecipientUserName)&"' and IsSenderDelete=0")(0)>MaxPrivateMessageSize Then
 		AddApplication "Message_"&RecipientUserName,"【系统讯息】您的短讯文件夹空间已满，请整理文件夹，否则您将收不到任何短讯！"
 		Alert("用户"&RecipientUserName&"的短信箱已满！本次发送失败！")
 	end if
-	
-	sql="insert into ["&TablePrefix&"PrivateMessages](SenderUserName,RecipientUserName,Subject,Body,IsSenderDelete) values ('"&CookieUserName&"','"&RecipientUserName&"','"&Subject&"','"&Body&"',"&IsSenderDelete&")"
+
+	sql="insert into ["&TablePrefix&"PrivateMessages](SenderUserName,RecipientUserName,Subject,Body,IsSenderDelete) values ('"&SqlString(CookieUserName)&"','"&SqlString(RecipientUserName)&"','"&SqlString(Subject)&"','"&SqlString(Body)&"',"&IsSenderDelete&")"
 	Execute(sql)
-	Execute("update ["&TablePrefix&"Users] Set NewMessage=NewMessage+1 where UserName='"&RecipientUserName&"'")
+	Execute("update ["&TablePrefix&"Users] Set NewMessage=NewMessage+1 where UserName='"&SqlString(RecipientUserName)&"'")
 	if ForumID>0 then ResponseCookies "LastReportTime",""&now()&"","999"
 %>
 <script language="JavaScript" type="text/javascript">parent.BBSXP_Modal.Close();</script>
@@ -144,7 +145,7 @@ elseif Request("menu")="addPost" then
 else
 	if CookieUserName=empty then error("您还未<a href=""javascript:BBSXP_Modal.Open('Login.asp',380,170);"">登录</a>论坛")
 	HtmlTop
-	RecipientCount=Execute("Select count(messageID) from ["&TablePrefix&"PrivateMessages] where RecipientUserName='"&CookieUserName&"' and IsRecipientDelete=0 or SenderUserName='"&CookieUserName&"' and IsSenderDelete=0")(0)
+	RecipientCount=Execute("Select count(messageID) from ["&TablePrefix&"PrivateMessages] where RecipientUserName='"&SqlString(CookieUserName)&"' and IsRecipientDelete=0 or SenderUserName='"&SqlString(CookieUserName)&"' and IsSenderDelete=0")(0)
 
 UsedMessageSize=RecipientCount/MaxPrivateMessageSize*100
 
@@ -169,11 +170,11 @@ UsedMessageSize=RecipientCount/MaxPrivateMessageSize*100
 			</tr>
 			<tr class="CommonListCell">
 				<td><img src="images/i_inbox.gif" align="absmiddle" />
-				<a href="?menu=Inbox">收件箱</a>[<b><%=Execute("Select count(messageID) from ["&TablePrefix&"PrivateMessages] where RecipientUserName='"&CookieUserName&"' and IsRecipientDelete=0")(0)%></b>]</td>
+				<a href="?menu=Inbox">收件箱</a>[<b><%=Execute("Select count(messageID) from ["&TablePrefix&"PrivateMessages] where RecipientUserName='"&SqlString(CookieUserName)&"' and IsRecipientDelete=0")(0)%></b>]</td>
 			</tr>
 			<tr class="CommonListCell">
 				<td><img src="images/i_sent.gif" align="absmiddle" />
-				<a href="?menu=Outbox">已发送</a>[<b><%=Execute("Select count(messageID) from ["&TablePrefix&"PrivateMessages] where SenderUserName='"&CookieUserName&"' and IsSenderDelete=0")(0)%></b>]</td>
+				<a href="?menu=Outbox">已发送</a>[<b><%=Execute("Select count(messageID) from ["&TablePrefix&"PrivateMessages] where SenderUserName='"&SqlString(CookieUserName)&"' and IsSenderDelete=0")(0)%></b>]</td>
 			</tr>
 		</table>
 		<br />
@@ -197,12 +198,16 @@ select case Request("menu")
 
 	case "Delete"
 		for each ho in Request("MessageID")
-			ho=int(ho)
-			rs.open "Select * from ["&TablePrefix&"PrivateMessages] where ( RecipientUserName='"&CookieUserName&"' or SenderUserName='"&CookieUserName&"' ) and MessageID="&ho&"",Conn,1,3
-				if LCASE(rs("RecipientUserName"))=LCASE(CookieUserName) then rs("IsRecipientDelete")=1
-				if LCASE(rs("SenderUserName"))=LCASE(CookieUserName) then rs("IsSenderDelete")=1
-			rs.update
-			rs.close
+			ho=SafeLongValue(ho,0)
+			if ho>0 then
+				rs.open "Select * from ["&TablePrefix&"PrivateMessages] where ( RecipientUserName='"&SqlString(CookieUserName)&"' or SenderUserName='"&SqlString(CookieUserName)&"' ) and MessageID="&ho&"",Conn,1,3
+				if not rs.eof then
+					if LCASE(rs("RecipientUserName"))=LCASE(CookieUserName) then rs("IsRecipientDelete")=1
+					if LCASE(rs("SenderUserName"))=LCASE(CookieUserName) then rs("IsSenderDelete")=1
+					rs.update
+				end if
+				rs.close
+			end if
 		next
 		Execute("Delete from ["&TablePrefix&"PrivateMessages] where IsRecipientDelete=1 and IsSenderDelete=1")
 
@@ -219,13 +224,14 @@ end select
 Sub InOutbox
 MessageMenu=Request("Menu")
 if MessageMenu=empty then MessageMenu="Inbox"
+if MessageMenu<>"Inbox" and MessageMenu<>"Outbox" then MessageMenu="Inbox"
 
 	if MessageMenu="Inbox" then
 		tdstr="<td align=center width='15%'>发件人</td>"
-		sql="Select * from ["&TablePrefix&"PrivateMessages] where RecipientUserName='"&CookieUserName&"' and IsRecipientDelete=0 order by MessageID Desc"
+		sql="Select * from ["&TablePrefix&"PrivateMessages] where RecipientUserName='"&SqlString(CookieUserName)&"' and IsRecipientDelete=0 order by MessageID Desc"
 	else
 		tdstr="<td align=center width='15%'>收件人</td>"
-		sql="Select * from ["&TablePrefix&"PrivateMessages] where SenderUserName='"&CookieUserName&"' and IsSenderDelete=0 order by MessageID Desc"
+		sql="Select * from ["&TablePrefix&"PrivateMessages] where SenderUserName='"&SqlString(CookieUserName)&"' and IsSenderDelete=0 order by MessageID Desc"
 	end if
 %>
 <form name="showMessage" action="?Menu=Delete" method="post">
@@ -245,14 +251,14 @@ if MessageMenu=empty then MessageMenu="Inbox"
 		</tr>
 		<%
 	Rs.Open sql,Conn,1
-	
+
 	PageSetup=20 '设定每页的显示数量
 	Rs.Pagesize=PageSetup
 	TotalPage=Rs.Pagecount  '总页数
 	PageCount = RequestInt("PageIndex")
 	if PageCount <1 then PageCount = 1
 	if PageCount > TotalPage then PageCount = TotalPage
-	if TotalPage>0 then Rs.absolutePage=PageCount '跳转到指定页数 
+	if TotalPage>0 then Rs.absolutePage=PageCount '跳转到指定页数
 	i=0
 	Do While Not Rs.EOF and i<PageSetup
 		i=i+1
@@ -262,16 +268,16 @@ if MessageMenu=empty then MessageMenu="Inbox"
 			<input type="checkbox" value="<%=Rs("MessageID")%>" name="MessageID" onclick="CheckSelected(this.form,this.checked,'PrivateMessage<%=Rs("MessageID")%>')" /></td>
 			<%if MessageMenu="Inbox" then%>
 			<td align="center">
-			<a href="Profile.asp?UserName=<%=Rs("SenderUserName")%>" target="_blank">
-			<%=Rs("SenderUserName")%></a></td>
+			<a href="Profile.asp?UserName=<%=Server.URLEncode(Rs("SenderUserName"))%>" target="_blank">
+			<%=Server.HTMLEncode(Rs("SenderUserName"))%></a></td>
 			<%else%>
 			<td align="center">
-			<a href="Profile.asp?UserName=<%=Rs("RecipientUserName")%>" target="_blank">
-			<%=Rs("RecipientUserName")%></a></td>
+			<a href="Profile.asp?UserName=<%=Server.URLEncode(Rs("RecipientUserName"))%>" target="_blank">
+			<%=Server.HTMLEncode(Rs("RecipientUserName"))%></a></td>
 			<%end if%>
 			<td width="10%">
 			<a href="?Menu=Read&MessageID=<%=Rs("MessageID")%>&box=<%=MessageMenu%>">
-			<%=Rs("Subject")%></a></td>
+			<%=Server.HTMLEncode(Rs("Subject"))%></a></td>
 			<td align="center" width="15%"><%=Rs("CreateTime")%></td>
 			<td align="center" width="10%"><%=CheckSize(Len(""&Rs("Body")&""))%></td>
 		</tr>
@@ -301,13 +307,13 @@ else
 end if
 
 if Request("pageIndex")="previous" then
-	SQL="Select top 1 * from ["&TablePrefix&"PrivateMessages] where "&FieldName&"='"&CookieUserName&"' and "&DeleteFieldName&"=0 and MessageID>"&MessageID&" order by messageID"
+	SQL="Select top 1 * from ["&TablePrefix&"PrivateMessages] where "&FieldName&"='"&SqlString(CookieUserName)&"' and "&DeleteFieldName&"=0 and MessageID>"&MessageID&" order by messageID"
 
 elseif Request("pageIndex")="next" then
-	SQL="Select top 1 * from ["&TablePrefix&"PrivateMessages] where "&FieldName&"='"&CookieUserName&"' and "&DeleteFieldName&"=0 and MessageID<"&MessageID&" order by messageID desc"
+	SQL="Select top 1 * from ["&TablePrefix&"PrivateMessages] where "&FieldName&"='"&SqlString(CookieUserName)&"' and "&DeleteFieldName&"=0 and MessageID<"&MessageID&" order by messageID desc"
 
 else
-	SQL="Select top 1 * from ["&TablePrefix&"PrivateMessages] where (RecipientUserName='"&CookieUserName&"' or SenderUserName='"&CookieUserName&"') and MessageID="&MessageID&""
+	SQL="Select top 1 * from ["&TablePrefix&"PrivateMessages] where (RecipientUserName='"&SqlString(CookieUserName)&"' or SenderUserName='"&SqlString(CookieUserName)&"') and MessageID="&MessageID&""
 end if
 
 
@@ -322,27 +328,27 @@ if Rs.eof then response.redirect Http_Referer
 		<td>
 		<div style="float:left">
 			<a href="javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post', 600, 350);">
-			<img src="images/i_new_msg.gif" border="0" align="absmiddle" />新建</a>　<a href="?menu=Delete&MessageID=<%=Rs("MessageID")%>" onclick="return window.confirm('您确定执行本次操作?');"><img src="images/i_delete.gif" border="0" align="absmiddle" />删除</a><%if Rs("SenderUserName")<>CookieUserName then%>　<img src="images/i_reply.gif" border="0" align="absmiddle" /><a href="javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&MessageID=<%=Rs("MessageID")%>&RecipientUserName=<%=Rs("SenderUserName")%>',600,350);">回复</a><%end if%>　<a href="javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&MessageID=<%=Rs("MessageID")%>',600,350);"><img src="images/i_forward.gif" border="0" align="absmiddle" />转发</a></div>
+			<img src="images/i_new_msg.gif" border="0" align="absmiddle" />新建</a>　<a href="?menu=Delete&MessageID=<%=Rs("MessageID")%>" onclick="return window.confirm('您确定执行本次操作?');"><img src="images/i_delete.gif" border="0" align="absmiddle" />删除</a><%if Rs("SenderUserName")<>CookieUserName then%>　<img src="images/i_reply.gif" border="0" align="absmiddle" /><a href="javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&MessageID=<%=Rs("MessageID")%>&RecipientUserName=<%=Server.URLEncode(Rs("SenderUserName"))%>',600,350);">回复</a><%end if%>　<a href="javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&MessageID=<%=Rs("MessageID")%>',600,350);"><img src="images/i_forward.gif" border="0" align="absmiddle" />转发</a></div>
 		<div style="float:right">
-			<a href="?menu=Read&MessageID=<%=Rs("messageID")%>&pageIndex=previous&box=<%=box%>" title="上一条">
+			<a href="?menu=Read&MessageID=<%=Rs("messageID")%>&pageIndex=previous&box=<%=Server.URLEncode(box)%>" title="上一条">
 			<img src="images/i_previous.gif" border="0" align="absmiddle" /></a>
-			<a href="?menu=Read&MessageID=<%=Rs("messageID")%>&pageIndex=next&box=<%=box%>" title="下一条">
+			<a href="?menu=Read&MessageID=<%=Rs("messageID")%>&pageIndex=next&box=<%=Server.URLEncode(box)%>" title="下一条">
 			<img src="images/i_next.gif" border="0" align="absmiddle" /></a></div>
 		</td>
 	</tr>
 	<tr class="CommonListCell">
 		<td width="10%" style="line-height:150%">
 		<div style="float:left">
-			发件人：<a target="_blank" href="Profile.asp?UserName=<%=Rs("SenderUserName")%>"><%=Rs("SenderUserName")%></a><%if Rs("SenderUserName")<>CookieUserName then%>　<a href="javascript:Ajax_CallBack(false,false,'MyFavorites.asp?menu=FavoriteFriend&FriendUserName=<%=Rs("SenderUserName")%>',true);">+添加好友</a><%end if%></div>
+			发件人：<a target="_blank" href="Profile.asp?UserName=<%=Server.URLEncode(Rs("SenderUserName"))%>"><%=Server.HTMLEncode(Rs("SenderUserName"))%></a><%if Rs("SenderUserName")<>CookieUserName then%>　<a href="javascript:Ajax_CallBack(false,false,'MyFavorites.asp?menu=FavoriteFriend&FriendUserName=<%=Server.URLEncode(Rs("SenderUserName"))%>',true);">+添加好友</a><%end if%></div>
 		<div style="float:right">
 			<%=Rs("CreateTime")%></div>
 		<br />
-		收件人：<a target="_blank" href="Profile.asp?UserName=<%=Rs("RecipientUserName")%>"><%=Rs("RecipientUserName")%></a><%if Rs("RecipientUserName")<>CookieUserName then%>　<a href="javascript:Ajax_CallBack(false,false,'MyFavorites.asp?menu=FavoriteFriend&FriendUserName=<%=Rs("RecipientUserName")%>',true);">+添加好友</a><%end if%>
+		收件人：<a target="_blank" href="Profile.asp?UserName=<%=Server.URLEncode(Rs("RecipientUserName"))%>"><%=Server.HTMLEncode(Rs("RecipientUserName"))%></a><%if Rs("RecipientUserName")<>CookieUserName then%>　<a href="javascript:Ajax_CallBack(false,false,'MyFavorites.asp?menu=FavoriteFriend&FriendUserName=<%=Server.URLEncode(Rs("RecipientUserName"))%>',true);">+添加好友</a><%end if%>
 		<br />
-		主　题：<%=Rs("Subject")%></td>
+		主　题：<%=Server.HTMLEncode(Rs("Subject"))%></td>
 	</tr>
 	<tr class="CommonListCell">
-		<td><%=Rs("Body")%></td>
+		<td><%=Replace(Server.HTMLEncode(Rs("Body")),vbCrLf,"<br />")%></td>
 	</tr>
 </table>
 <%

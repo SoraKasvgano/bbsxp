@@ -17,7 +17,7 @@ if PostID>0 then
 	Rs.Close
 	PostSql=" and PostID="&PostID&""
 elseif PostAuthor>"" then
-	PostSql=" and PostAuthor='"&PostAuthor&"'"
+	PostSql=" and PostAuthor='"&SqlString(PostAuthor)&"'"
 end if
 
 if Request("menu")="Next" then
@@ -52,6 +52,12 @@ Set Rs=Execute(sql)
 	ThreadTop=Rs("ThreadTop")
 	if DateDiff("d", Rs("StickyDate"), now())=0 then ThreadTop=0
 Rs.close
+UserNameHtml=Server.HTMLEncode(UserName)
+UserNameUrl=Server.URLEncode(UserName)
+LastNameHtml=Server.HTMLEncode(lastname)
+LastNameUrl=Server.URLEncode(lastname)
+TopicUrl=Server.URLEncode(Topic)
+SortQueryString=Server.HTMLEncode(SafeJsString(ReplaceText(Request.QueryString,"&SortOrder=([0-9]*)","")))
 
 if TotalRatings>0 then
 	VoteRatings=RatingSum/TotalRatings
@@ -113,8 +119,8 @@ End if
 	</tr>
 	<tr class="CommonListCell">
 		<td align="center" width="5%"><img src="images/totel.gif" /></td>
-		<td>发起人：<a href="Profile.asp?UserName=<%=UserName%>"><%=UserName%></a>　　回复数：<b><%=TotalReplies%></b>　　浏览数：<b><%=TotalViews%></b>　　最后更新：<%=lasttime%>
-		by <a href="Profile.asp?UserName=<%=lastname%>"><%=lastname%></a></td>
+		<td>发起人：<a href="Profile.asp?UserName=<%=UserNameUrl%>"><%=UserNameHtml%></a>　　回复数：<b><%=TotalReplies%></b>　　浏览数：<b><%=TotalViews%></b>　　最后更新：<%=lasttime%>
+		by <a href="Profile.asp?UserName=<%=LastNameUrl%>"><%=LastNameHtml%></a></td>
 	</tr>
 </table>
 <br />
@@ -137,7 +143,7 @@ End if
 			<a class="CommonTextButton"><script type="text/javascript" src="Utility/vote.js"></script><script language="JavaScript" type="text/javascript">ThreadID=<%=ThreadID%>;showData("<%=VoteRatings%>");</script></a>
 			<%
 				if SiteConfig("SelectMailMode")<>"" then
-					if Execute("Select UserName from ["&TablePrefix&"Subscriptions] where UserName='"&CookieUserName&"' and ThreadID="&ThreadID&"").eof then
+					if Execute("Select UserName from ["&TablePrefix&"Subscriptions] where UserName='"&SqlString(CookieUserName)&"' and ThreadID="&ThreadID&"").eof then
 						BgImage="tracktopic.gif"
 						ButtonText="订阅主题"
 					else
@@ -154,7 +160,7 @@ End if
 			<a class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/view.gif)" onmouseover="MouseOverOpen('View',this.id);" id="View1">选择查看</a>
 			<%if PermissionPost=1 then%><a class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/NewPost.gif)" href="AddTopic.asp?ForumID=<%=ForumID%>">发表新帖</a> <%end if%>
 			</td>
-			<td align="right" valign="bottom"><a href="http://www.duoci.com/Search/?Charset=<%=BBSxpCharset%>&word=<%=Topic%>" target="_blank" title="在更多网站中搜索此类问题">搜索更多相关主题</a>
+			<td align="right" valign="bottom"><a href="http://www.duoci.com/Search/?Charset=<%=BBSxpCharset%>&word=<%=TopicUrl%>" target="_blank" title="在更多网站中搜索此类问题">搜索更多相关主题</a>
 			<%if SiteConfig("DisplayThreadStatus")=1 and (PermissionManage=1 or UserName=CookieUserName) then%>
 			　主题状态：<select onchange="javascript:if(this.options[this.selectedIndex].value)Ajax_CallBack(false,false,'loading.asp?menu=ThreadStatus&amp;ThreadID=<%=ThreadID%>&amp;ThreadStatus='+this.options[this.selectedIndex].value)">
 			<option value="0" <%if threadstatus=0 then%>selected<%end if%>>--
@@ -163,7 +169,7 @@ End if
 			</option>
 			<option value="2" <%if threadstatus=2 then%>selected<%end if%>>未解决
 			</option>
-			</select> <%end if%> 　帖子排序：<select onchange="javascript:if(this.options[this.selectedIndex].value)window.location.href='ShowPost.asp?<%=ReplaceText(Request.QueryString,"&SortOrder=([0-9]*)","")%>&amp;SortOrder='+this.options[this.selectedIndex].value">
+			</select> <%end if%> 　帖子排序：<select onchange="javascript:if(this.options[this.selectedIndex].value)window.location.href='ShowPost.asp?<%=SortQueryString%>&amp;SortOrder='+this.options[this.selectedIndex].value">
 			<option value="0" <%if Request("sortorder")="0" then%>selected<%end if%>>
 			从旧到新</option>
 			<option value="1" <%if Request("sortorder")="1" then%>selected<%end if%>>
@@ -453,12 +459,15 @@ HtmlBottom
 
 
 Sub ShowPostSimple()
+	PostAuthorHtml=Server.HTMLEncode(PostAuthor)
+	PostAuthorUrl=Server.URLEncode(PostAuthor)
+	IPAddressHtml=Server.HTMLEncode(IPAddress)
 
 %>
 <table cellspacing="1" cellpadding="5" width="100%" class="CommonListArea" style="TABLE-LAYOUT:fixed;">
 	<tr class="CommonListHeader">
 		<td>
-			<div style=float:left><b><a target="_blank" href="Profile.asp?UserName=<%=PostAuthor%>"><%=PostAuthor%></a></b> 发表于 <%=PostDate%></div>
+			<div style=float:left><b><a target="_blank" href="Profile.asp?UserName=<%=PostAuthorUrl%>"><%=PostAuthorHtml%></a></b> 发表于 <%=PostDate%></div>
 			<div style=float:right>
 						<%if IsLocked=1 then%>
 						<a onclick="window.alert('该帖已锁定不允许回复。');">锁定</a>
@@ -478,7 +487,7 @@ Sub ShowPostSimple()
 		%>
 
 				<div style="float:right">
-				<%if PermissionManage=1 then response.write "IP："&IPAddress&"　"%>
+				<%if PermissionManage=1 then response.write "IP："&IPAddressHtml&"　"%>
 				<%if IsLocked=0 and PermissionReply=1 then response.write "<a onclick=javascript:QuickReply("&PostID&")>快速回复</a>"%>
 				</div>
 
@@ -496,7 +505,7 @@ End Sub
 
 Sub ShowPost()
 
-	Set Rs=Execute("Select top 1 * from ["&TablePrefix&"Users] where UserName='"&PostAuthor&"'")
+	Set Rs=Execute("Select top 1 * from ["&TablePrefix&"Users] where UserName='"&SqlString(PostAuthor)&"'")
 	if Rs.EOF then
 		Rs.close
 		Exit Sub
@@ -505,31 +514,43 @@ Sub ShowPost()
 	WebAddress=SafeUrl(Rs("WebAddress"))
 	WebLog=SafeUrl(Rs("WebLog"))
 	WebGallery=SafeUrl(Rs("WebGallery"))
+	PostAuthorHtml=Server.HTMLEncode(PostAuthor)
+	PostAuthorUrl=Server.URLEncode(PostAuthor)
+	PostUserName=Rs("UserName")
+	PostUserNameHtml=Server.HTMLEncode(PostUserName)
+	PostUserNameUrl=Server.URLEncode(PostUserName)
+	PostUserEmailHtml=Server.HTMLEncode(Rs("UserEmail"))
+	WebAddressHtml=Server.HTMLEncode(WebAddress)
+	WebLogHtml=Server.HTMLEncode(WebLog)
+	WebGalleryHtml=Server.HTMLEncode(WebGallery)
+	IPAddressHtml=Server.HTMLEncode(IPAddress)
+ReportSubject=Server.URLEncode("问题帖子报告")
+ReportBody=Server.URLEncode("【问题帖子】："&SiteConfig("SiteUrl")&"/ShowPost.asp?PostID="&PostID)
 %>
 <div class="PopupMenu" id="ContactMenu<%=PostID%>" style="DISPLAY: none">
 	<table cellspacing="0" cellpadding="1">
 		<tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/profile.gif)" href="Profile.asp?UID=<%=Rs("UserID")%>">查看 <%=Rs("UserName")%> 的资料</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/profile.gif)" href="Profile.asp?UID=<%=Rs("UserID")%>">查看 <%=PostUserNameHtml%> 的资料</a></td>
 		</tr>
 		<%if CookieUserName<>"" then%><tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/privatemessage.gif)" href="javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&RecipientUserName=<%=Rs("UserName")%>', 600, 350);">给 <%=Rs("UserName")%> 发送讯息</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/privatemessage.gif)" href="javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&RecipientUserName=<%=PostUserNameUrl%>', 600, 350);">给 <%=PostUserNameHtml%> 发送讯息</a></td>
 		</tr>
 		<%end if%>
 		<tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/email.gif)" href="Mailto:<%=Rs("UserEmail")%>">给 <%=Rs("UserName")%> 发送邮件</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/email.gif)" href="Mailto:<%=PostUserEmailHtml%>">给 <%=PostUserNameHtml%> 发送邮件</a></td>
 		</tr>
 		<%if WebAddress<>"" then%><tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/homepage.gif)" href="<%=WebAddress%>" target="_blank">浏览 <%=Rs("UserName")%> 的主页</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/homepage.gif)" href="<%=WebAddressHtml%>" target="_blank">浏览 <%=PostUserNameHtml%> 的主页</a></td>
 		</tr>
 		<%end if%> <%if WebLog<>"" then%><tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/weblog.gif)" href="<%=WebLog%>" target="_blank">浏览 <%=Rs("UserName")%> 的博客</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/weblog.gif)" href="<%=WebLogHtml%>" target="_blank">浏览 <%=PostUserNameHtml%> 的博客</a></td>
 		</tr>
 		<%end if%> <%if WebGallery<>"" then%><tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/webgallery.gif)" href="<%=WebGallery%>" target="_blank">浏览 <%=Rs("UserName")%> 的相册</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/webgallery.gif)" href="<%=WebGalleryHtml%>" target="_blank">浏览 <%=PostUserNameHtml%> 的相册</a></td>
 		</tr>
 		<%end if%>
 		<tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/search.gif)" href="ShowBBS.asp?menu=MyTopic&UserName=<%=Rs("UserName")%>">搜索 <%=Rs("UserName")%> 的帖子</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/search.gif)" href="ShowBBS.asp?menu=MyTopic&UserName=<%=PostUserNameUrl%>">搜索 <%=PostUserNameHtml%> 的帖子</a></td>
 		</tr>
 	</table>
 </div>
@@ -537,7 +558,7 @@ Sub ShowPost()
 <div class="PopupMenu" id="FavoriteMenu<%=PostID%>" style="DISPLAY: none">
 	<table cellspacing="0" cellpadding="1">
 		<tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/favorite.gif)" href="javascript:Ajax_CallBack(false,false,'MyFavorites.asp?menu=FavoriteFriend&FriendUserName=<%=Rs("UserName")%>',true);">将 <%=Rs("UserName")%> 加为好友</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/favorite.gif)" href="javascript:Ajax_CallBack(false,false,'MyFavorites.asp?menu=FavoriteFriend&FriendUserName=<%=PostUserNameUrl%>',true);">将 <%=PostUserNameHtml%> 加为好友</a></td>
 		</tr>
 		<tr>
 			<td><a style="BACKGROUND-IMAGE:url(images/favorite.gif)" href="javascript:Ajax_CallBack(false,false,'MyFavorites.asp?menu=FavoritePost&PostID=<%=PostID%>',true);">将该帖子加入收藏夹</a></td>
@@ -554,7 +575,7 @@ Sub ShowPost()
 	<tr class="CommonListTitle">
 		<td>
 			<div style=float:left><img src="images/icon_post_show.gif" /> <%=PostDate%></div>
-			<div style=float:right>[<a href="?ThreadID=<%=ThreadID%>&PostAuthor=<%=PostAuthor%>" title="只看该作者的帖子">只看该作者</a>] <a href="?PostID=<%=PostID%>" title="只看该帖子">#<%=i+(PageCount-1)*PageSetup+1%></a><%if PermissionManage=1 then response.write("<input type=checkbox value="&PostID&" name=PostID onclick="&chr(34)&"CheckSelected(this.form,this.checked,'Post"&PostID&"')"&chr(34)&">")%></div>
+			<div style=float:right>[<a href="?ThreadID=<%=ThreadID%>&PostAuthor=<%=PostAuthorUrl%>" title="只看该作者的帖子">只看该作者</a>] <a href="?PostID=<%=PostID%>" title="只看该帖子">#<%=i+(PageCount-1)*PageSetup+1%></a><%if PermissionManage=1 then response.write("<input type=checkbox value="&PostID&" name=PostID onclick="&chr(34)&"CheckSelected(this.form,this.checked,'Post"&PostID&"')"&chr(34)&">")%></div>
 		</td>
 	</tr>
 	<tr class="CommonListCell" id="Post<%=PostID%>">
@@ -568,13 +589,13 @@ Sub ShowPost()
 				<div style="text-align:left;width:90%;">
 					<div style="float:left">
 						<%if DateDiff("n",Rs("UserActivityTime"),Now()) < SiteConfig("UserOnlineTime") then%>
-						<img title="<%=Rs("UserName")%> 在线. 最后活动时间:<%=Rs("UserActivityTime")%>" src="Images/user_IsOnline.gif" border="0" />
+						<img title="<%=PostUserNameHtml%> 在线. 最后活动时间:<%=Server.HTMLEncode(Rs("UserActivityTime"))%>" src="Images/user_IsOnline.gif" border="0" />
 				    <%end if%>
-						<font style="font-size:10pt"><b><%=Rs("UserName")%></b></font><br /><%=Rs("UserTitle")%>
+						<font style="font-size:10pt"><b><%=PostUserNameHtml%></b></font><br /><%=Server.HTMLEncode(Rs("UserTitle"))%>
 					</div>
 					<%if SiteConfig("EnableReputation")=1 then%>
 					<div style="float:right">
-						<a href="javascript:BBSXP_Modal.Open('Reputation.asp?CommentFor=<%=Rs("UserName")%>',550,200);"><img title="对 <%=Rs("UserName")%> 进行声望评价" src="Images/reputation.gif" border="0" align="absmiddle" /></a>
+						<a href="javascript:BBSXP_Modal.Open('Reputation.asp?CommentFor=<%=PostUserNameUrl%>',550,200);"><img title="对 <%=PostUserNameHtml%> 进行声望评价" src="Images/reputation.gif" border="0" align="absmiddle" /></a>
 					</div>
 				<%
 					end if
@@ -591,7 +612,7 @@ Sub ShowPost()
 					response.write ShowRole(Rs("UserRoleID"))
 				end if
 
-				if Rs("UserMate")<>"" then response.write "<br />配　　偶："&Rs("UserMate")&""
+				if Rs("UserMate")<>"" then response.write "<br />配　　偶："&Server.HTMLEncode(Rs("UserMate"))&""
 				response.write "<br />发 帖 数："&Rs("TotalPosts")&""
 				response.write "<br />经 验 值："&Rs("experience")&""
 				response.write "<br />注册时间："&FormatDateTime(Rs("UserRegisterTime"),2)&"<br />"
@@ -638,7 +659,7 @@ Sub ShowPost()
 					sql="select * from ["&TablePrefix&"PostInTags] where PostID="&PostID&""
 					Set RsTag=Execute(sql)
 					do while not RsTag.eof
-						Tags=Tags&",<a href='Tags.asp?TagID="&RsTag("TagID")&"'>"&Execute("Select TagName from ["&TablePrefix&"PostTags] where TagID="&RsTag("TagID")&"")(0)&"</a>"
+						Tags=Tags&",<a href='Tags.asp?TagID="&RsTag("TagID")&"'>"&Server.HTMLEncode(Execute("Select TagName from ["&TablePrefix&"PostTags] where TagID="&RsTag("TagID")&"")(0))&"</a>"
 						RsTag.movenext
 					Loop
 					RsTag.Close
@@ -651,7 +672,7 @@ Sub ShowPost()
 						If Not EditNotesRs.eof Then EditNotesRecordset=EditNotesRs("EditNotes")
 						EditNotesRs.Close
 						Set EditNotesRs = Nothing
-						Response.Write("<p>"&EditNotesRecordset&"</p>")
+						Response.Write("<p>"&Replace(Server.HTMLEncode(EditNotesRecordset),vbCrLf,"<br />")&"</p>")
 					end if
 
 
@@ -675,12 +696,12 @@ Sub ShowPost()
 					</td>
 					<td align="right" valign="bottom"><%
 					if CookieUserName<>empty then%>
-						<a onclick="javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&ForumID=<%=ForumID%>&subject=问题帖子报告&Body=【问题帖子】：<%=SiteConfig("SiteUrl")%>/ShowPost.asp?PostID=<%=PostID%>', 600, 350);"><img title="报告本帖" src="images/feedback.gif" border="0" /></a>　<%
+						<a onclick="javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&ForumID=<%=ForumID%>&subject=<%=ReportSubject%>&Body=<%=ReportBody%>', 600, 350);"><img title="报告本帖" src="images/feedback.gif" border="0" /></a>　<%
 					end if
 					if PermissionManage=1 then
 						if Visible=0 then response.write("<img src='images/InVisible.gif' border=0 alt='帖子未通过审核' title='帖子未通过审核' />　")
 						if Visible=2 then response.write("<img src='images/recycle.gif' border=0 alt='帖子已删除' title='帖子已删除' />　")
-						response.write("<img src='images/IP.gif' border=0 alt='"&IPAddress&"' title='"&IPAddress&"' />　")
+						response.write("<img src='images/IP.gif' border=0 alt='"&IPAddressHtml&"' title='"&IPAddressHtml&"' />　")
 					end if
 					if IsLocked=0 and PermissionReply=1 and CookieUserName<>empty then response.write "<a href=AddPost.asp?ThreadID="&ThreadID&"&PostID="&PostID&"&Quote=1><img src=images/Quote.gif alt='引用回复' title='引用回复' border=0 /></a>　<a onclick=javascript:QuickReply("&PostID&")><img src=images/QuickReply.gif alt='快速回复' title='快速回复' /></a>"%>
 					</td>

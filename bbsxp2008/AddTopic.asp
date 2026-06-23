@@ -5,7 +5,7 @@ if CookieUserName=empty then error("您还未<a href=""javascript:BBSXP_Modal.Open(
 if CookieUserAccountStatus<>1 then error("您的帐号未通过审核！")
 
 	if CookieReputation < SiteConfig("InPrisonReputation") then error("您的声望低于"&SiteConfig("InPrisonReputation")&"，无法发表帖子！")
-	
+
 	if SiteConfig("RegUserTimePost") > 0 then
 		StopPostTime=int(DateDiff("n",CookieUserRegisterTime,Now()))
 		if StopPostTime < SiteConfig("RegUserTimePost") then error("<li>新注册用户必须等待 "&SiteConfig("RegUserTimePost")&" 分钟后才能发帖！<li>您必须再等待 "&SiteConfig("RegUserTimePost")-StopPostTime&" 分钟！")
@@ -40,10 +40,10 @@ if Request_Method = "POST" then
 	if PermissionManage<>1 then StickyDate=0
 
 	if Request.Form("DisableBBCode")=1 then Body=Replace(Body,CHR(91),"&#91;")
-	
+
 	if Len(Subject)<2 then Message=Message&"<li>文章主题不能小于 2 字符"
 	if Len(Body)<2 then Message=Message&"<li>文章内容不能小于 2 字符"
-	
+
 	if PermissionCreatePoll=1 and RequestInt("IsVote")=1 then
 		j=0
 		for each formElement in request.form
@@ -66,7 +66,7 @@ if Request_Method = "POST" then
 	VoteExpiry=now()+RequestInt("VoteExpiry")
 
 	if Not Isdate(VoteExpiry) then Message=Message&"<li>投票过期时间错误"
-	
+
 	TagArray=split(Tags,",")
 	if Ubound(TagArray)>5 then Message=Message&"<li>标签不能超过5个"
 
@@ -84,7 +84,7 @@ if Request_Method = "POST" then
 
 	Rs.Open "Select top 1 * from ["&TablePrefix&"Threads]",Conn,1,3
 	Rs.addNew
-		if PermissionManage=1 then Rs("ThreadStyle")=HTMLEncode(Request.Form("ThreadStyle"))
+		if PermissionManage=1 then Rs("ThreadStyle")=SafeCssStyle(Request.Form("ThreadStyle"))
 		Rs("PostAuthor")=CookieUserName
 		Rs("PostTime")=now()
 		Rs("lastname")=CookieUserName
@@ -110,11 +110,11 @@ if Request_Method = "POST" then
 	ThreadID=Rs("ThreadID")
 	Rs.close
 
-	
+
 	if PermissionCreatePoll=1 and RequestInt("IsVote")=1 then
-		Execute("insert into ["&TablePrefix&"Votes] (ThreadID,IsMultiplePoll,Items,Result,Expiry) values ('"&ThreadID&"',"&IsMultiplePoll&",'"&VoteItems&"','"&Votenum&"','"&VoteExpiry&"')")
+		Execute("insert into ["&TablePrefix&"Votes] (ThreadID,IsMultiplePoll,Items,Result,Expiry) values ("&ThreadID&","&IsMultiplePoll&",'"&SqlString(VoteItems)&"','"&SqlString(Votenum)&"','"&SqlString(VoteExpiry)&"')")
 	end if
-	
+
 	UpdateStatistics 0,1,1
 
 	Rs.Open "Select top 1 * from ["&TablePrefix&"Posts]",Conn,1,3
@@ -129,19 +129,20 @@ if Request_Method = "POST" then
 	PostID=Rs("PostID")
 	Rs.close
 
-	
+
 	if Request.Form("UpFileID")<>"" then
 		UpFileID=split(Request.Form("UpFileID"),",")
 		for i = 0 to ubound(UpFileID)-1
-			Execute("update ["&TablePrefix&"PostAttachments] Set Description='"&Subject&"',PostID='"&PostID&"' where UpFileID="&int(UpFileID(i))&" and UserName='"&CookieUserName&"'")
+			UpFileItem=SafeLongValue(UpFileID(i),0)
+			if UpFileItem>0 then Execute("update ["&TablePrefix&"PostAttachments] Set Description='"&SqlString(Subject)&"',PostID="&PostID&" where UpFileID="&UpFileItem&" and UserName='"&SqlString(CookieUserName)&"'")
 		next
 	end if
 
 
 	if SiteConfig("DisplayPostTags")=1 then AddTags()
-	
 
-	Execute("update ["&TablePrefix&"Forums] Set MostRecentPostSubject='"&Subject&"',MostRecentPostAuthor='"&CookieUserName&"',MostRecentPostDate="&SqlNowString&",TodayPosts=TodayPosts+1,TotalThreads=TotalThreads+1,TotalPosts=TotalPosts+1,MostRecentThreadID="&ThreadID&" where ForumID="&ForumID&" or ForumID="&ParentID&"")
+
+	Execute("update ["&TablePrefix&"Forums] Set MostRecentPostSubject='"&SqlString(Subject)&"',MostRecentPostAuthor='"&SqlString(CookieUserName)&"',MostRecentPostDate="&SqlNowString&",TodayPosts=TodayPosts+1,TotalThreads=TotalThreads+1,TotalPosts=TotalPosts+1,MostRecentThreadID="&ThreadID&" where ForumID="&ForumID&" or ForumID="&ParentID&"")
 
 
 	Session("VerifyCode")=""
@@ -204,8 +205,8 @@ end if
 	<tr class="CommonListCell">
 		<td valign=top align=Left><b>投票</b><br />每行一个投票项目<br />
 <input type=radio checked="checked" value=0 name=IsMultiplePoll id=IsMultiplePoll /><label for=IsMultiplePoll>单选投票</label><br /><input type=radio value=1 name=IsMultiplePoll id=IsMultiplePoll_1 /><label for=IsMultiplePoll_1>多选投票</label></font> <br />过期时间 <input type="text" size="2" name="VoteExpiry" value="7" onkeyup=if(isNaN(this.value))this.value='7' /> 天后
-			
-			
+
+
 </td>
 		<td valign="top">
 		<div id="VoteOptionList"></div><a class="CommonTextButton" href="javascript:AddLabel('VoteOptionList')">添加项目</a>
@@ -246,8 +247,8 @@ if SiteConfig("UpFileOption")<>empty and PermissionAttachment=1 then%>
 			<%if BestRole=1 then%><option value="999">公告</option><%end if%>
 		</select>
 		<%end if%>
-		
-		
+
+
 		<%if SiteConfig("UpFileOption")<>empty and PermissionAttachment=1 then%>
 			<br /><br /><span id=UpFile></span>
 		<%end if%>

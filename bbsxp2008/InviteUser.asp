@@ -11,7 +11,7 @@ if Request("menu")="InvitingOk" then
 	if UserEmail="" then error("请输入受邀人的Email地址！")
 	if instr(UserEmail,"@")=0 then error("受邀人的Email地址填写错误")
 	
-	If not Execute("Select UserID From ["&TablePrefix&"Users] where UserEmail='"&UserEmail&"'" ).eof Then Error("<li>"&UserEmail&" 已经在本论坛注册了")
+	If not Execute("Select UserID From ["&TablePrefix&"Users] where UserEmail='"&SqlString(UserEmail)&"'" ).eof Then Error("<li>"&UserEmail&" 已经在本论坛注册了")
 
 	
 	Randomize
@@ -20,10 +20,10 @@ if Request("menu")="InvitingOk" then
 	LoadingEmailXml("InviteNewUser")
 	MailBody=Replace(MailBody,"[UserName]",CookieUserName)
 	MailBody=Replace(MailBody,"[SiteName]",SiteConfig("SiteName"))
-	MailBody=Replace(MailBody,"[InviteURL]","<a target=_blank href="&SiteConfig("SiteUrl")&"/CreateUser.asp?menu=WriteProfile&ActivationKey="&ActivationKey&"&ReferrerName="&CookieUserName&"&UserEmail="&UserEmail&">"&SiteConfig("SiteUrl")&"/CreateUser.asp?menu=WriteProfile&ActivationKey="&ActivationKey&"&ReferrerName="&CookieUserName&"&UserEmail="&UserEmail&"</a>")
+	MailBody=Replace(MailBody,"[InviteURL]","<a target=_blank href="&SiteConfig("SiteUrl")&"/CreateUser.asp?menu=WriteProfile&ActivationKey="&Server.URLEncode(ActivationKey)&"&ReferrerName="&Server.URLEncode(CookieUserName)&"&UserEmail="&Server.URLEncode(UserEmail)&">"&SiteConfig("SiteUrl")&"/CreateUser.asp?menu=WriteProfile&ActivationKey="&Server.URLEncode(ActivationKey)&"&ReferrerName="&Server.URLEncode(CookieUserName)&"&UserEmail="&Server.URLEncode(UserEmail)&"</a>")
 	SendMail UserEmail,MailSubject,MailBody
 	
-	Execute("insert into ["&TablePrefix&"UserActivation] (ActivationKey,Email) values ('"&ActivationKey&"','"&UserEmail&"')")
+	Execute("insert into ["&TablePrefix&"UserActivation] (ActivationKey,Email) values ('"&SqlString(ActivationKey)&"','"&SqlString(UserEmail)&"')")
 	Session("VerifyCode")=""
 	succeed "邀请码发送成功！","Default.asp"
 else

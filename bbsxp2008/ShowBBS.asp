@@ -26,13 +26,13 @@ select case Request("menu")
 		sql="Select top 200 * from ["&TablePrefix&"Threads] where Visible=1 and TotalReplies=0 order by ThreadID Desc"
 	case "MyTopic"
 		ForumTitle="我的主题"
-		sql="Select top 200 * from ["&TablePrefix&"Threads] where Visible=1 and PostAuthor='"&UserName&"' order by ThreadID Desc"
+		sql="Select top 200 * from ["&TablePrefix&"Threads] where Visible=1 and PostAuthor='"&SqlString(UserName)&"' order by ThreadID Desc"
 	case "MyPost"
 		ForumTitle="我参与的主题"
-		sql="Select top 200 * from ["&TablePrefix&"Threads] where Visible=1 and ThreadID in (Select distinct ThreadID from ["&TablePrefix&"Posts] where PostAuthor='"&UserName&"' and Visible=1 and ParentID>0) order by ThreadID Desc"
+		sql="Select top 200 * from ["&TablePrefix&"Threads] where Visible=1 and ThreadID in (Select distinct ThreadID from ["&TablePrefix&"Posts] where PostAuthor='"&SqlString(UserName)&"' and Visible=1 and ParentID>0) order by ThreadID Desc"
 	case "MySubscriptions"
 		ForumTitle="我的订阅"
-		sql="Select top 200 * from ["&TablePrefix&"Threads] where Visible=1 and ThreadID in (Select distinct ThreadID from ["&TablePrefix&"Subscriptions] where UserName='"&UserName&"') order by ThreadID Desc"
+		sql="Select top 200 * from ["&TablePrefix&"Threads] where Visible=1 and ThreadID in (Select distinct ThreadID from ["&TablePrefix&"Subscriptions] where UserName='"&SqlString(UserName)&"') order by ThreadID Desc"
 	case else
 		error("错误参数！")
 end select
@@ -50,9 +50,9 @@ Rs.Open sql,Conn,1
       <td align="center"><a href="?menu=NoReplies">未回复帖</a></td>
       <td align="center"><a href="?menu=GoodTopic">精华主题</a></td>
       <td align="center"><a href="?menu=VoteTopic">投票主题</a></td>
-      <td align="center"><a href="?menu=MyTopic&UserName=<%=CookieUserName%>">我的主题</a></td>
-      <td align="center"><a href="?menu=MyPost&UserName=<%=CookieUserName%>">我的回帖</a></td>
-      <td align="center"><a href="?menu=MySubscriptions&UserName=<%=CookieUserName%>">我的订阅</a></td>
+      <td align="center"><a href="?menu=MyTopic&UserName=<%=Server.URLEncode(CookieUserName)%>">我的主题</a></td>
+      <td align="center"><a href="?menu=MyPost&UserName=<%=Server.URLEncode(CookieUserName)%>">我的回帖</a></td>
+      <td align="center"><a href="?menu=MySubscriptions&UserName=<%=Server.URLEncode(CookieUserName)%>">我的订阅</a></td>
 	</tr>
 </table>
 <br />

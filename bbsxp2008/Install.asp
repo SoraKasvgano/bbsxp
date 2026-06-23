@@ -10,6 +10,10 @@ end if
 
 
 Set Rs = Server.CreateObject("ADODB.Recordset")
+
+Function SqlString(Value)
+    SqlString=Replace(""&Value&"","'","''")
+End Function
 %>
 <html>
 <head>
@@ -258,7 +262,7 @@ Sub AddAdminUp
 	
 
 	Message=""
-	if Execute("select UserID from ["&TablePrefix&"Users] where UserName='"&UserName&"'").eof then
+	if Execute("select UserID from ["&TablePrefix&"Users] where UserName='"&SqlString(UserName)&"'").eof then
 		AddUser
 	else
 		ModifyUserPassword UserName,UserPassword,UserEmail,PasswordQuestion,PasswordAnswer
@@ -268,7 +272,7 @@ Sub AddAdminUp
 		Messages=Message
 		Messages=Messages&"<li>请返回重新设置管理员帐号</li>"
 	else
-		Execute("Update ["&TablePrefix&"Users] Set UserRoleID=1 where UserName='"&UserName&"'")
+		Execute("Update ["&TablePrefix&"Users] Set UserRoleID=1 where UserName='"&SqlString(UserName)&"'")
 		HeaderText="第 6 步）安装完成"
 		Messages="您已成功安装了 BBSXP2008（"&IsSqlVer&"）。<br /><br />"
 		Messages=Messages&"<font size=+1><b>您运行此论坛前建议删除如下文件:</b><br>install.asp</font><br /><br />"
@@ -286,7 +290,7 @@ End Sub
 
 Sub DeleteAdmin
 	AdminUserName=HTMLEncode(Request("UserName"))
-	Execute("Update ["&TablePrefix&"Users] Set UserRoleID=3 where UserName='"&AdminUserName&"'")
+	Execute("Update ["&TablePrefix&"Users] Set UserRoleID=3 where UserName='"&SqlString(AdminUserName)&"'")
 %>
 
 <div style="text-align:left;padding:40px;width:auto; background:#FFFFFF">
@@ -366,7 +370,7 @@ Rs.open sql,conn,1
 do while not rs.eof
 %>
     
-    <a target="_blank" href="Profile.asp?UID=<%=Rs("UserID")%>"><%=Rs("UserName")%></a>(<a href="?menu=DeleteAdmin&UserName=<%=Rs("UserName")%>" onClick="return window.confirm('您确定要去掉该管理员的权限?');">删除</a>)
+    <a target="_blank" href="Profile.asp?UID=<%=Rs("UserID")%>"><%=Server.HTMLEncode(Rs("UserName"))%></a>(<a href="?menu=DeleteAdmin&UserName=<%=Server.URLEncode(Rs("UserName"))%>" onClick="return window.confirm('您确定要去掉该管理员的权限?');">删除</a>)
 <%
 	Rs.movenext
 loop

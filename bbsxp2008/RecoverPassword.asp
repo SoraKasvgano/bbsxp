@@ -13,14 +13,14 @@ select case Request("menu")
 	case "SelectMethod"
 		if Request("VerifyCode")<>Session("VerifyCode") or Session("VerifyCode")="" then error("验证码错误！")
 		if ""&UserName&""="" then error("请输入用户名！")
-		if Execute("Select * from ["&TablePrefix&"Users] where UserName='"&UserName&"'").eof then error("请输入您要找回密码的用户名！")
+		if Execute("Select * from ["&TablePrefix&"Users] where UserName='"&SqlString(UserName)&"'").eof then error("请输入您要找回密码的用户名！")
 		SelectMethod
 	case "MailRecover"
 		if SiteConfig("SelectMailMode")="" then error("系统未开启 邮件 功能！")
-		
+
 		if UserEmail="" then error("请输入Email地址！")
-		if UserName<>"" then UserNameSql="and UserName='"&UserName&"'"
-		sql="Select * from ["&TablePrefix&"Users] where UserEmail='"&UserEmail&"' "&UserNameSql&""
+		if UserName<>"" then UserNameSql="and UserName='"&SqlString(UserName)&"'"
+		sql="Select * from ["&TablePrefix&"Users] where UserEmail='"&SqlString(UserEmail)&"' "&UserNameSql&""
 		Rs.Open sql,Conn,1
 		if Rs.eof then error("论坛中找不到相关的资料")
 		UserEmail=Rs("UserEmail")
@@ -29,34 +29,34 @@ select case Request("menu")
 
 		Randomize
 		ActivationKey=int(rnd*9999999999)+1
-		
+
 		LoadingEmailXml("RecoverPassword")
 		MailBody=Replace(MailBody,"[UserName]",UserName)
-		MailBody=Replace(MailBody,"[RecoverPasswordURL]","<a target=_blank href="&SiteConfig("SiteUrl")&"/RecoverPassword.asp?menu=MailRecoverok&username="&UserName&"&ActivationKey="&ActivationKey&">"&SiteConfig("SiteUrl")&"/RecoverPassword.asp?menu=MailRecoverok&username="&UserName&"&ActivationKey="&ActivationKey&"</a>")
+		MailBody=Replace(MailBody,"[RecoverPasswordURL]","<a target=_blank href="&SiteConfig("SiteUrl")&"/RecoverPassword.asp?menu=MailRecoverok&username="&Server.URLEncode(UserName)&"&ActivationKey="&Server.URLEncode(ActivationKey)&">"&SiteConfig("SiteUrl")&"/RecoverPassword.asp?menu=MailRecoverok&username="&Server.URLEncode(UserName)&"&ActivationKey="&Server.URLEncode(ActivationKey)&"</a>")
 		MailBody=Replace(MailBody,"[IPAddress]",REMOTE_ADDR)
 		SendMail UserEmail,MailSubject,MailBody
-		
-		Execute("insert into ["&TablePrefix&"UserActivation] (ActivationKey,UserName) values ('"&ActivationKey&"','"&UserName&"')")
+
+		Execute("insert into ["&TablePrefix&"UserActivation] (ActivationKey,UserName) values ('"&SqlString(ActivationKey)&"','"&SqlString(UserName)&"')")
 		Session("VerifyCode")=""
 		log(""&UserName&"申请找回密码，Email:"&UserEmail&"")
 		succeed "请到邮箱中取回密码","Login.asp"
-		
+
 	case "setNewPassword"
 		UserPassword=Trim(Request("UserPassword"))
 		UserPassword2=Trim(Request("UserPassword2"))
-		
+
 		if UserPassword<>UserPassword2 then error"<li>您的新密码和确认新密码不同"
 		if Len(UserPassword)<6 then error"<li>新密码必须至少包含 6 个字符"
 
-		if Execute("Select UserName from ["&TablePrefix&"UserActivation] where ActivationKey='"&ActivationKey&"' and UserName='"&UserName&"'").eof then error("找回密码的信息已过期！请重新提交找回！")
-		Execute("Delete from ["&TablePrefix&"UserActivation] where UserName='"&UserName&"'")
-		
+		if Execute("Select UserName from ["&TablePrefix&"UserActivation] where ActivationKey='"&SqlString(ActivationKey)&"' and UserName='"&SqlString(UserName)&"'").eof then error("找回密码的信息已过期！请重新提交找回！")
+		Execute("Delete from ["&TablePrefix&"UserActivation] where UserName='"&SqlString(UserName)&"'")
+
 		'--------------------  API Start  --------------------
 		Message=""
 		If SiteConfig("APIEnable")=1 Then APIUpdateUser UserName,UserPassword,"","",""
 		if Message<>"" then error(""&Message&"")
 		'--------------------  API End  ----------------------
-		
+
 		ModifyUserPassword UserName,UserPassword,"","",""
 
 		Message=Message&"<li>新密码设置成功</li><li><a href=""javascript:BBSXP_Modal.Open('Login.asp',380,170);"">请返回登录</a></li>"
@@ -65,26 +65,26 @@ select case Request("menu")
 	case "QuestionRecover"
 		UserPassword=Trim(Request("UserPassword"))
 		UserPassword2=Trim(Request("UserPassword2"))
-		
+
 		if UserName="" then error "没有输入用户名！"
 		if UserPassword<>UserPassword2 then error"<li>您的新密码和确认新密码不同"
 		if Len(UserPassword)<6 then error"<li>新密码必须至少包含 6 个字符"
-		
-		Set Rs=Execute("Select * from ["&TablePrefix&"Users] where UserName='"&UserName&"'")
+
+		Set Rs=Execute("Select * from ["&TablePrefix&"Users] where UserName='"&SqlString(UserName)&"'")
 			if Not Rs.eof then
 				if ""&Rs("PasswordAnswer")&""="" then Alert("您的密码问题答案为空，不能通过此方式取回密码")
 				if md5(""&Request("PasswordAnswer")&"")<>Rs("PasswordAnswer") then Alert("答案错误")
 				Rs.close
-					
+
 				'--------------------  API Start  --------------------
 				Message=""
 				If SiteConfig("APIEnable")=1 Then APIUpdateUser UserName,UserPassword,""
 				if Message<>"" then error(""&Message&"")
 				'--------------------  API End  ----------------------
-		
+
 				ModifyUserPassword UserName,UserPassword,"","",""
-		
-		
+
+
 				Message=Message&"<li>新密码设置成功</li><li><a href=""javascript:BBSXP_Modal.Open('Login.asp',380,170);"">请返回登录</a></li>"
 				succeed Message,"Login.asp"
 
@@ -93,12 +93,12 @@ select case Request("menu")
 				error "您输入的用户不存在"
 			End if
 		Rs.close
-		
-		
+
+
 	case "MailRecoverok"
 		if SiteConfig("SelectMailMode")="" then error("系统未开启 邮件 功能！")
 		if UserName="" then error "URL不完整，没有用户名！"
-		if Execute("Select UserName from ["&TablePrefix&"UserActivation] where ActivationKey='"&ActivationKey&"' and UserName='"&UserName&"'").eof then error("找回密码的信息已过期！请重新提交找回！")
+		if Execute("Select UserName from ["&TablePrefix&"UserActivation] where ActivationKey='"&SqlString(ActivationKey)&"' and UserName='"&SqlString(UserName)&"'").eof then error("找回密码的信息已过期！请重新提交找回！")
 
 		SetNewPassword
 end select
@@ -148,7 +148,7 @@ Sub SelectMethod
 <div class="CommonBreadCrumbArea"><%=ClubTree%> → 找回密码</div>
 <table cellspacing=1 cellpadding=5 width=100% class=CommonListArea align="center">
 <form action="RecoverPassword.asp" method="POST">
-<input type=hidden name=UserName value="<%=UserName%>" />
+<input type=hidden name=UserName value="<%=Server.HTMLEncode(UserName)%>" />
 	<tr class=CommonListTitle>
 		<td align="center">取回密码</td>
 	</tr>
@@ -158,7 +158,7 @@ Sub SelectMethod
 		<tr>
 			<td colspan="2" style="padding-left:50px;">第二步：请选择一项来重新设置您的密码：</td>
 		</tr>
-        
+
 		<tr>
 			<td colspan="2" style="padding-left:100px;">
             	<input type="radio" value="QuestionRecover" name="menu" id="QuestionRecover" onclick="SelectOption('Question')" checked="checked" />&nbsp;<label for="QuestionRecover">使用 密码问题&提示答案 取回密码</label>
@@ -170,7 +170,7 @@ Sub SelectMethod
             <table width="100%" border="0" cellspacing="0" cellpadding="5">
 			<tr>
 				<td width="30%" align="right"><b>密码提示问题：</b></td>
-				<td><%=Execute("Select PasswordQuestion from ["&TablePrefix&"Users] where UserName='"&UserName&"'")(0)%></td>
+				<td><%=Server.HTMLEncode(""&Execute("Select PasswordQuestion from ["&TablePrefix&"Users] where UserName='"&SqlString(UserName)&"'")(0))%></td>
 			</tr>
 			<tr>
 				<td width="30%" align="right"><b>提示问题答案：</b></td>
@@ -253,8 +253,8 @@ Sub SetNewPassword
 <div class="CommonBreadCrumbArea"><%=ClubTree%> → 找回密码</div>
 <script language="javascript" type="text/javascript" src="Utility/pswdplc.js"></script>
 <form method="POST" name="form" action="?Menu=setNewPassword" onsubmit="return VerifyInput();">
-<input type=hidden name=UserName value="<%=UserName%>" />
-<input type=hidden name=ActivationKey value="<%=ActivationKey%>" />
+<input type=hidden name=UserName value="<%=Server.HTMLEncode(UserName)%>" />
+<input type=hidden name=ActivationKey value="<%=Server.HTMLEncode(ActivationKey)%>" />
 <table width="100%" border="0" cellspacing="1" cellpadding="5" align="center" class=CommonListArea>
 	<tr class=CommonListTitle>
 		<td width="100%" align="center" colspan=2>设置 <%=UserName%> 的新密码</td>

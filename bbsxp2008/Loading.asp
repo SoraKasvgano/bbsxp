@@ -15,13 +15,13 @@ select case Request("menu")
 		if ""&CommentFor&""="" and ""&CommentBy&""="" then response.End()
 		
 		if CommentFor<>empty then
-			Sql=" from ["&TablePrefix&"Reputation] where CommentFor='"&CommentFor&"'"
+			Sql=" from ["&TablePrefix&"Reputation] where CommentFor='"&SqlString(CommentFor)&"'"
 			TitleStr="评价人"
-			PageUrl="CommentFor="&CommentFor
+			PageUrl="CommentFor="&Server.URLEncode(CommentFor)
 		elseif CommentBy<>empty then
-			Sql=" from ["&TablePrefix&"Reputation] where CommentBy='"&CommentBy&"'"
+			Sql=" from ["&TablePrefix&"Reputation] where CommentBy='"&SqlString(CommentBy)&"'"
 			TitleStr="被评价人"
-			PageUrl="CommentBy="&CommentBy
+			PageUrl="CommentBy="&Server.URLEncode(CommentBy)
 		end if
 		
 		PageSetup=5 '设定每页的显示数量
@@ -64,9 +64,9 @@ select case Request("menu")
 				CommentAreaStr=CommentAreaStr&"<td align=center width='15%'><img src='images/"&ImgUrl&"'> <font color='"&FontColor&"'>"&ReputationTitle&"</font><br />( "&ReputationValue&" )</td>"
 				CommentAreaStr=CommentAreaStr&"<td width='60%'>"&Rs("Comment")&"　<em><font color=#C0C0C0>"&Rs("DateCreated")&"</em></font></td>"
 			if CommentFor<>empty then
-				CommentAreaStr=CommentAreaStr&"<td width='25%' align=center><a href='?UserName="&Rs("CommentBy")&"'>"&Rs("CommentBy")&"</a></td>"
+				CommentAreaStr=CommentAreaStr&"<td width='25%' align=center><a href='?UserName="&Server.URLEncode(Rs("CommentBy"))&"'>"&Server.HTMLEncode(Rs("CommentBy"))&"</a></td>"
 			else
-				CommentAreaStr=CommentAreaStr&"<td width='25%' align=center><a href='?UserName="&Rs("CommentFor")&"'>"&Rs("CommentFor")&"</a></td>"
+				CommentAreaStr=CommentAreaStr&"<td width='25%' align=center><a href='?UserName="&Server.URLEncode(Rs("CommentFor"))&"'>"&Server.HTMLEncode(Rs("CommentFor"))&"</a></td>"
 			end if
 				CommentAreaStr=CommentAreaStr&"</tr>"
 				Rs.movenext
@@ -118,7 +118,7 @@ select case Request("menu")
 
 		Set Rs=Execute(sql)
 		do while not Rs.eof
-			content=""&content&"<li><a href=Profile.asp?UserName="&Rs("UserName")&">"&Rs("UserName")&"</a></li>"
+			content=""&content&"<li><a href=Profile.asp?UserName="&Server.URLEncode(Rs("UserName"))&">"&Server.HTMLEncode(Rs("UserName"))&"</a></li>"
 			Rs.Movenext
 		loop
 		Rs.close
@@ -137,7 +137,7 @@ select case Request("menu")
 		
 		if ThreadID<=0 or ""&CookieUserName&""="" then Response.End()
 		
-		sql="Select * from ["&TablePrefix&"Subscriptions] where UserName='"&CookieUserName&"' and ThreadID="&ThreadID&""
+		sql="Select * from ["&TablePrefix&"Subscriptions] where UserName='"&SqlString(CookieUserName)&"' and ThreadID="&ThreadID&""
 		Rs.open sql,conn,1,3
 		if Rs.eof then
 			Rs.addnew
@@ -148,7 +148,7 @@ select case Request("menu")
 			BgImage="tracktopic-on.gif"
 			ButtonText="取消订阅"
 		else
-			Execute("Delete from ["&TablePrefix&"Subscriptions] where UserName='"&CookieUserName&"' and ThreadID="&ThreadID&"")
+			Execute("Delete from ["&TablePrefix&"Subscriptions] where UserName='"&SqlString(CookieUserName)&"' and ThreadID="&ThreadID&"")
 			BgImage="tracktopic.gif"
 			ButtonText="订阅主题"
 		end if
@@ -160,7 +160,7 @@ select case Request("menu")
 		
 		if ThreadID<=0 or VoteValue<0 or ""&CookieUserName&""="" then Response.End()
 		
-		sql="Select * From ["&TablePrefix&"ThreadRating] where UserName='"&CookieUserName&"' and ThreadID="&ThreadID&""
+		sql="Select * From ["&TablePrefix&"ThreadRating] where UserName='"&SqlString(CookieUserName)&"' and ThreadID="&ThreadID&""
 		Rs.Open SQL,Conn,1,3
 		if Rs.eof then Rs.addNew
 			Rs("ThreadID")=ThreadID
@@ -200,14 +200,14 @@ select case Request("menu")
 			Response.end
 		end if
 		
-		if Execute("Select UserID From ["&TablePrefix&"Users] where UserName='"&UserName&"'" ).eof Then
+		if Execute("Select UserID From ["&TablePrefix&"Users] where UserName='"&SqlString(UserName)&"'" ).eof Then
 			Response.write("<img src='images/check_right.gif' />")
 		else
 			Response.write("<img src='images/check_error.gif' align=absmiddle />&nbsp;"&UserName&" 已经有人使用，请另选一个!")
 		end if
 	case "CheckMail"
 		UserEmail=HTMLEncode(unescape(Request.QueryString("Mail")))
-		If Execute("Select UserID From ["&TablePrefix&"Users] where UserEmail='"&UserEmail&"'" ).eof Then
+		If Execute("Select UserID From ["&TablePrefix&"Users] where UserEmail='"&SqlString(UserEmail)&"'" ).eof Then
 			Response.write("<img src='images/check_right.gif' />")
 		else
 			Response.write("<img src='images/check_error.gif' />&nbsp;"&UserEmail&" 已经有人使用，请另选一个。")

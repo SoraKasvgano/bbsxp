@@ -99,8 +99,8 @@ Rs.close
 	
 	if ParentID=0 then
 		succtitle="删除主题成功"
-		Execute("update ["&TablePrefix&"Users] Set TotalPosts=TotalPosts-1,UserMoney=UserMoney+"&SiteConfig("IntegralDeleteThread")&",experience=experience+"&SiteConfig("IntegralDeleteThread")&" where UserName='"&PostAuthor&"'")
-		Execute("update ["&TablePrefix&"Threads] Set ThreadTop=0,Visible=2,DeletedCount=DeletedCount+1,LastName='"&CookieUserName&"',LastTime="&SqlNowString&" where ThreadID="&ThreadID&"")
+		Execute("update ["&TablePrefix&"Users] Set TotalPosts=TotalPosts-1,UserMoney=UserMoney+"&SiteConfig("IntegralDeleteThread")&",experience=experience+"&SiteConfig("IntegralDeleteThread")&" where UserName='"&SqlString(PostAuthor)&"'")
+		Execute("update ["&TablePrefix&"Threads] Set ThreadTop=0,Visible=2,DeletedCount=DeletedCount+1,LastName='"&SqlString(CookieUserName)&"',LastTime="&SqlNowString&" where ThreadID="&ThreadID&"")
 		Execute("update ["&TablePrefix&"Posts] Set Visible=2 where PostID="&PostID&" and ParentID=0")
 		Execute("update ["&TablePrefix&"Forums] Set TotalThreads=TotalThreads-1,TotalPosts=TotalPosts-1 where ForumID="&ForumID&"")
 	else
@@ -119,16 +119,16 @@ Rs.close
 			LastTime=Rs("PostDate")
 		Rs.close		
 
-		Execute("update ["&TablePrefix&"Threads] Set TotalReplies=TotalReplies-1,DeletedCount=DeletedCount+1,LastName='"&LastName&"',LastTime='"&LastTime&"' where ThreadID="&ThreadID&"")
+		Execute("update ["&TablePrefix&"Threads] Set TotalReplies=TotalReplies-1,DeletedCount=DeletedCount+1,LastName='"&SqlString(LastName)&"',LastTime='"&SqlString(LastTime)&"' where ThreadID="&ThreadID&"")
 		Execute("update ["&TablePrefix&"Forums] Set TotalPosts=TotalPosts-1 where ForumID="&ForumID&"")
 		
-		Execute("update ["&TablePrefix&"Users] Set TotalPosts=TotalPosts-1,UserMoney=UserMoney+"&SiteConfig("IntegralDeletePost")&",experience=experience+"&SiteConfig("IntegralDeletePost")&" where UserName='"&PostAuthor&"'")
+		Execute("update ["&TablePrefix&"Users] Set TotalPosts=TotalPosts-1,UserMoney=UserMoney+"&SiteConfig("IntegralDeletePost")&",experience=experience+"&SiteConfig("IntegralDeletePost")&" where UserName='"&SqlString(PostAuthor)&"'")
 		
 	end if
 	
 	UpForumMostRecent(ForumID)
 
-		MailAddRecipient=Execute("Select UserEmail from ["&TablePrefix&"Users] where UserName='"&PostAuthor&"'")(0)
+		MailAddRecipient=Execute("Select UserEmail from ["&TablePrefix&"Users] where UserName='"&SqlString(PostAuthor)&"'")(0)
 		LoadingEmailXml("MessageDeleted")
 		MailBody=Replace(MailBody,"[Moderator]",CookieUserName)
 		MailBody=Replace(MailBody,"[Topic]",Topic)
