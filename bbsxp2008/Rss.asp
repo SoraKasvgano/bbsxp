@@ -1,7 +1,7 @@
 <!--#include file="conn.asp"--><%
 
 if SiteConfig("EnableForumsRSS")=0 then
-	response.write "ÏµÍ³¹Ø±ÕÁË RSS ¶©ÔÄÔ´¹¦ÄÜ"
+	response.write "ÏµÍ³ï¿½Ø±ï¿½ï¿½ï¿½ RSS ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½"
 	Response.End
 end if
 
@@ -13,7 +13,7 @@ if ForumID > 0 then
 	Rs.Open "["&TablePrefix&"ForumPermissions] where ForumID="&ForumID&" and RoleID=0",Conn,1
 		
 	if Rs.Eof then
-		response.write "ÕÒ²»µ½Ö¸¶¨µÄ°æ¿éµÄÈ¨ÏÞ±í"
+		response.write "ï¿½Ò²ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½Ä°ï¿½ï¿½ï¿½È¨ï¿½Þ±ï¿½"
 		Response.End
 	end if
 	
@@ -22,7 +22,7 @@ if ForumID > 0 then
 	Rs.Close
 
 	if PermissionView=0 or PermissionRead=0 then
-		response.write "¸Ã°æ¿éÃ»ÓÐ¿ª·ÅÓÎ¿Íä¯ÀÀºÍÔÄ¶ÁÈ¨ÏÞ£¬ÎÞ·¨Ê¹ÓÃ RSS ¶©ÔÄÔ´£¡"
+		response.write "ï¿½Ã°ï¿½ï¿½Ã»ï¿½Ð¿ï¿½ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½È¨ï¿½Þ£ï¿½ï¿½Þ·ï¿½Ê¹ï¿½ï¿½ RSS ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½"
 		Response.End
 	end if
 
@@ -38,14 +38,14 @@ Response.contentType="application/xml"
 <rss version="2.0">
 <channel>
 
-	<title><%=ChannelTitle%></title>
-	<link><%=ChannelLink%></link>
+	<title><%=XmlEncode(ChannelTitle)%></title>
+	<link><%=XmlEncode(ChannelLink)%></link>
 	<description>Latest <%=SiteConfig("RSSDefaultThreadsPerFeed")%> threads of all forums</description>
 
 	<image>
-		<title><%=SiteConfig("SiteName")%></title> 
-		<url><%=SiteConfig("SiteUrl")%>/images/logo.gif</url>
-		<link><%=SiteConfig("SiteUrl")%>/Default.asp</link>
+		<title><%=XmlEncode(SiteConfig("SiteName"))%></title>
+		<url><%=XmlEncode(SiteConfig("SiteUrl"))%>/images/logo.gif</url>
+		<link><%=XmlEncode(SiteConfig("SiteUrl"))%>/Default.asp</link>
 	</image>
 
 <%
@@ -54,8 +54,8 @@ Response.contentType="application/xml"
 		do while Not Rs.Eof
 %>
 	<item>
-		<title><%=Rs("Topic")%></title>
-		<link><%=SiteConfig("SiteUrl")%>/ShowPost.asp?ThreadID=<%=Rs("ThreadID")%></link><category><%=Rs("Category")%></category><author><%=Rs("PostAuthor")%></author><pubDate><%=FormatTime(Rs("PostTime"))%></pubDate><description><![CDATA[<%=Rs("Description")%>]]></description></item><%
+		<title><%=XmlEncode(Rs("Topic"))%></title>
+		<link><%=XmlEncode(SiteConfig("SiteUrl"))%>/ShowPost.asp?ThreadID=<%=Rs("ThreadID")%></link><category><%=XmlEncode(Rs("Category"))%></category><author><%=XmlEncode(Rs("PostAuthor"))%></author><pubDate><%=FormatTime(Rs("PostTime"))%></pubDate><description><![CDATA[<%=XmlEncode(Rs("Description"))%>]]></description></item><%
 		Rs.MoveNext
 		Loop
 	Set Rs = Nothing

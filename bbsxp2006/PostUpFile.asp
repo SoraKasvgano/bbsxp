@@ -1,10 +1,10 @@
 <!-- #include file="Setup.asp" -->
 <!--#include FILE="inc/UpFile_Class.asp"-->
 <%
-if CookieUserName=empty then error2("Äú»¹Î´µÇÂ¼ÂÛÌ³")
+if CookieUserName=empty then error2("æ‚¨è¿˜æœªç™»å½•è®ºå›")
 
 sub check(typ)
-if instr("|"&LCase(SiteSettings("UpFileTypes"))&"|","|"&LCase(typ)&"|") <= 0 then error2("¶Ô²»Æğ£¬¹ÜÀíÔ±Éè¶¨±¾ÂÛÌ³²»ÔÊĞíÉÏ´« "&typ&" ¸ñÊ½µÄÎÄ¼ş")
+if instr("|"&LCase(SiteSettings("UpFileTypes"))&"|","|"&LCase(typ)&"|") <= 0 then error2("å¯¹ä¸èµ·ï¼Œç®¡ç†å‘˜è®¾å®šäº†è®ºå›ä¸å…è®¸ä¸Šä¼  "&typ&" æ ¼å¼çš„æ–‡ä»¶")
 end sub
 
 if Request.ServerVariables("request_method") = "POST" then
@@ -13,30 +13,31 @@ fname=""&year(now)&month(now)&day(now)&hour(now)&minute(now)&second(now)&""
 
 
 if SiteSettings("UpFileOption")="" then
-error2("¶Ô²»Æğ£¬¹ÜÀíÔ±¹Ø±ÕÎÄ¼şÉÏ´«¹¦ÄÜ")
+error2("å¯¹ä¸èµ·ï¼Œç®¡ç†å‘˜å…³é—­äº†æ–‡ä»¶ä¸Šä¼ åŠŸèƒ½")
 
 elseif SiteSettings("UpFileOption")="ADODB.Stream" or SiteSettings("AttachmentsSaveOption")=1 then
 
-set upfile=new upfile_class				'½¨Á¢ÉÏ´«¶ÔÏó
-upfile.NoAllowExt="asp;asa;cdx;cer;"	'ÉèÖÃÉÏ´«ÀàĞÍµÄºÚÃûµ¥
-upfile.GetData ()						'È¡µÃÉÏ´«Êı¾İ
+set upfile=new upfile_class				'å»ºç«‹ä¸Šä¼ å¯¹è±¡
+upfile.NoAllowExt="asp;asa;aspx;cdx;cer;config;ashx;asmx;axd;cs;vb;master;sitemap;ascx;asax;cshtml;vbhtml;svc;php;jsp;exe;dll;bat;cmd;vbs;js;hta;htaccess;htpasswd;"
+upfile.GetData ()						'å–å¾—ä¸Šä¼ æ•°æ®
 
-FileName=upfile.file("file").FileName	'ÎÄ¼şÃû
-FileExt=upfile.file("file").FileExt		'ºó×ºÃû
-FileMIME=upfile.file("file").FileMIME	'ÀàĞÍ
-FileSize=upfile.file("file").FileSize	'´óĞ¡
-FileData=upfile.FileData("file")		'ÎÄ¼şÊı¾İ
+FileName=SafeFileName(upfile.file("file").FileName)	'æ–‡ä»¶å
+FileExt=LCase(upfile.file("file").FileExt)		'åç¼€å
+FileMIME=upfile.file("file").FileMIME	'ç±»å‹
+FileSize=upfile.file("file").FileSize	'å¤§å°
+FileData=upfile.FileData("file")		'æ–‡ä»¶æ•°æ®
 
-if FileSize < 1 then error2("µ±Ç°ÎÄ¼şÎª¿ÕÎÄ¼ş")
-if FileSize > int(SiteSettings("MaxFileSize")) then error2("ÎÄ¼ş´óĞ¡²»µÃ³¬¹ı "&CheckSize(SiteSettings("MaxFileSize"))&"\nµ±Ç°µÄÎÄ¼ş´óĞ¡Îª "&CheckSize(FileSize)&"")
+if FileExt="asp" or FileExt="asa" or FileExt="aspx" or FileExt="cdx" or FileExt="cer" or FileExt="config" or FileExt="php" or FileExt="jsp" or FileExt="exe" or FileExt="bat" or FileExt="cmd" or FileExt="vbs" then error2("ä¸å…è®¸ä¸Šä¼  "&FileExt&" æ ¼å¼çš„æ–‡ä»¶")
+if FileSize < 1 then error2("å½“å‰æ–‡ä»¶ä¸ºç©ºæ–‡ä»¶")
+if FileSize > int(SiteSettings("MaxFileSize")) then error2("æ–‡ä»¶å¤§å°è¶…å‡ºè®¾å®š "&CheckSize(SiteSettings("MaxFileSize"))&"\nå½“å‰çš„æ–‡ä»¶å¤§å°ä¸º "&CheckSize(FileSize)&"")
 check(FileExt)
 
 
 if SiteSettings("AttachmentsSaveOption")=1 then
-TotalUserPostAttachments=conn.execute("Select sum(ContentSize) from [BBSXP_PostAttachments] where UserName='"&CookieUserName&"'")(0)
-if TotalUserPostAttachments>SiteSettings("MaxPostAttachmentsSize") then error2("ÄúµÄ¸½¼ş¿Õ¼äÒÑÂú£¡")
-Rs.Open "[BBSXP_PostAttachments]",conn,1,3 
-Rs.addnew 
+TotalUserPostAttachments=conn.execute("Select sum(ContentSize) from [BBSXP_PostAttachments] where UserName='"&SqlString(CookieUserName)&"'")(0)
+if TotalUserPostAttachments>SiteSettings("MaxPostAttachmentsSize") then error2("æ‚¨çš„ä¸ªäººé™„ä»¶ç©ºé—´å·²æ»¡")
+Rs.Open "[BBSXP_PostAttachments]",conn,1,3
+Rs.addnew
 Rs("UserName")=CookieUserName
 Rs("FileName")=FileName
 Rs("ContentType")=FileMIME
@@ -56,13 +57,14 @@ elseif SiteSettings("UpFileOption")="SoftArtisans.FileUp" then
 
 Set FileUP = Server.CreateObject("SoftArtisans.FileUp")
 
-FileName=FileUP.ShortFilename					'ÎÄ¼şÃû
-FileExt=mid(FileName,InStrRev(FileName, ".")+1)	'ºó×ºÃû
-FileMIME=FileUP.ContentType						'ÀàĞÍ
-FileSize=FileUP.TotalBytes						'´óĞ¡
+FileName=SafeFileName(FileUP.ShortFilename)					'æ–‡ä»¶å
+FileExt=LCase(mid(FileName,InStrRev(FileName, ".")+1))	'åç¼€å
+FileMIME=FileUP.ContentType						'ç±»å‹
+FileSize=FileUP.TotalBytes						'å¤§å°
 
-if FileSize < 1 then error2("µ±Ç°ÎÄ¼şÎª¿ÕÎÄ¼ş")
-if FileSize > int(SiteSettings("MaxFileSize")) then error2("ÎÄ¼ş´óĞ¡²»µÃ³¬¹ı "&CheckSize(SiteSettings("MaxFileSize"))&"\nµ±Ç°µÄÎÄ¼ş´óĞ¡Îª "&CheckSize(FileSize)&"")
+if FileExt="asp" or FileExt="asa" or FileExt="aspx" or FileExt="cdx" or FileExt="cer" or FileExt="config" or FileExt="php" or FileExt="jsp" or FileExt="exe" or FileExt="bat" or FileExt="cmd" or FileExt="vbs" then error2("ä¸å…è®¸ä¸Šä¼  "&FileExt&" æ ¼å¼çš„æ–‡ä»¶")
+if FileSize < 1 then error2("å½“å‰æ–‡ä»¶ä¸ºç©ºæ–‡ä»¶")
+if FileSize > int(SiteSettings("MaxFileSize")) then error2("æ–‡ä»¶å¤§å°è¶…å‡ºè®¾å®š "&CheckSize(SiteSettings("MaxFileSize"))&"\nå½“å‰çš„æ–‡ä»¶å¤§å°ä¸º "&CheckSize(FileSize)&"")
 check(FileExt)
 
 SaveFile="UpFile/UpAttachment/"&fname&"."&FileExt&""
@@ -75,28 +77,28 @@ set FileUP=Nothing
 %>
 <body topmargin=0  rightmargin=0  Leftmargin=0>
 <script>
-if ("<%=FileExt%>"=="gif" || "<%=FileExt%>"=="jpg" || "<%=FileExt%>"=="png" || "<%=FileExt%>"=="bmp"){
-img="[img]<%=SaveFile%>[/img]"
+if ("<%=SafeJsString(FileExt)%>"=="gif" || "<%=SafeJsString(FileExt)%>"=="jpg" || "<%=SafeJsString(FileExt)%>"=="png" || "<%=SafeJsString(FileExt)%>"=="bmp"){
+img="[img]<%=SafeJsString(SaveFile)%>[/img]"
 }else{
-img="[url=<%=SaveFile%>][img]images/affix.gif[/img]<%=FileName%>[/url]"
+img="[url=<%=SafeJsString(SaveFile)%>][img]images/affix.gif[/img]<%=SafeJsString(FileName)%>[/url]"
 }
 
 <%if SiteSettings("AttachmentsSaveOption")=1 then%>
-parent.yuziform.UpFileID.value+='<%=AttachmentID%>,';
+parent.yuziform.UpFileID.value+='<%=SafeLongValue(AttachmentID)%>,';
 <%end if%>
 
-parent.UpFile.innerHTML+='<img src=images/affix.gif><a target=_blank href=<%=SaveFile%>><%=FileName%></a><br>'
+parent.UpFile.innerHTML+='<img src=images/affix.gif><a target=_blank href="<%=HTMLEncode(SaveFile)%>"><%=HTMLEncode(FileName)%></a><br>'
 parent.IframeID.document.body.innerHTML+=img;
 document.oncontextmenu = new Function('return false')
 </script>
-<table cellpadding=0 cellspacing=0 width=100%  height=100% class=a4><tr><td><a target=_blank href=<%=SaveFile%>><%=SiteSettings("SiteURL")%><%=SaveFile%></a> [<a href=PostUpFile.asp>¼ÌĞøÉÏ´«</a>] </td></tr></table>
+<table cellpadding=0 cellspacing=0 width=100%  height=100% class=a4><tr><td><a target=_blank href="<%=HTMLEncode(SaveFile)%>"><%=HTMLEncode(SiteSettings("SiteURL"))%><%=HTMLEncode(SaveFile)%></a> [<a href=PostUpFile.asp>ç»§ç»­ä¸Šä¼ </a>] </td></tr></table>
 <%else%>
 <script>if(top==self)document.location='';</script>
 <body topmargin=0  rightmargin=0  Leftmargin=0>
 <form enctype=multipart/form-data method=Post action=PostUpFile.asp?menu=up>
 <table cellpadding=0 cellspacing=0 width=100% class=a4>
 <tr><td>
-<td><input type=file style=FONT-SIZE:9pt name=file size=60> <input style=FONT-SIZE:9pt type="submit" value=" ÉÏ ´« "></td></tr></table>
+<td><input type=file style=FONT-SIZE:9pt name=file size=60> <input style=FONT-SIZE:9pt type="submit" value=" ä¸Š ä¼  "></td></tr></table>
 <%
 end if
 CloseDatabase

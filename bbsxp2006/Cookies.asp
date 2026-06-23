@@ -3,7 +3,7 @@
 select case Request("menu")
 
 case "skins"
-Response.Cookies("skins")=""&Server.HTMLEncode(Request("no"))&""
+Response.Cookies("skins")=SafeThemeName(Request("no"))
 Response.Cookies("skins").Expires=date+9999
 
 case "eremite"
@@ -16,10 +16,10 @@ Response.Cookies("eremite").Expires=date+9999
 
 end select
 
-url=Request.ServerVariables("http_referer")
-if url<>empty then
+url=SafeRedirectUrl(Request.ServerVariables("http_referer"))
+if url<>"" then
 response.redirect url
 else
-response.write "<SCRIPT>top.location='"&SiteSettings("SiteURL")&"';</SCRIPT>"
+response.write "<SCRIPT>top.location='"&SafeJsString(SiteSettings("SiteURL"))&"';</SCRIPT>"
 end if
 %>
