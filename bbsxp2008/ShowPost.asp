@@ -11,8 +11,8 @@ ViewMode=RequestCookies("ViewMode")
 
 if PostID>0 then
 	Set Rs=Execute("Select top 1 ThreadID,Visible from ["&TablePrefix&"Posts] where PostID="&PostID&"")
-		if Rs.eof or Rs.bof then error"<li>ÏµÍ³²»´æÔÚ¸ÃÌû×ÓµÄ×ÊÁÏ"
-		if Rs("Visible")<>1 and BestRole<>1 then error"<li>¸ÃÌû×ÓÔÚ»ØÊÕÕ¾ÖÐ£¡"
+		if Rs.eof or Rs.bof then error"<li>ÏµÍ³ï¿½ï¿½ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½"
+		if Rs("Visible")<>1 and BestRole<>1 then error"<li>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú»ï¿½ï¿½ï¿½Õ¾ï¿½Ð£ï¿½"
 		ThreadID=Rs("ThreadID")
 	Rs.Close
 	PostSql=" and PostID="&PostID&""
@@ -29,7 +29,7 @@ else
 end if
 
 Set Rs=Execute(sql)
-	if Rs.eof or Rs.bof then error"<li>ÏµÍ³²»´æÔÚ¸ÃÌû×ÓµÄ×ÊÁÏ"
+	if Rs.eof or Rs.bof then error"<li>ÏµÍ³ï¿½ï¿½ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½"
 	Topic=ReplaceText(Rs("Topic"),"<[^>]*>","")
 	ThreadDescription=Rs("Description")
 	TotalReplies=Rs("TotalReplies")
@@ -70,13 +70,13 @@ HtmlHeadTitle=Topic
 HtmlHeadDescription=ThreadDescription
 HtmlTop
 
-if Visible=2 and PermissionManage=0 then error"<li>¸ÃÖ÷ÌâÔÚ»ØÊÕÕ¾ÖÐ£¡"
-if Visible=0 and PermissionManage=0 then error"<li>¸ÃÖ÷ÌâÕýÔÚÉóºËÖÐ£¡"
+if Visible=2 and PermissionManage=0 then error"<li>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú»ï¿½ï¿½ï¿½Õ¾ï¿½Ð£ï¿½"
+if Visible=0 and PermissionManage=0 then error"<li>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½"
 
 Execute("update ["&TablePrefix&"Threads] Set TotalViews=TotalViews+1,LastViewedDate="&SqlNowString&",ThreadTop="&ThreadTop&" where ThreadID="&ThreadID&"")
 
 
-AdvertisementGetRow=RequestApplication("Advertisements")		'Ö±½Ó¶ÁÈ¡Application»º´æ
+AdvertisementGetRow=RequestApplication("Advertisements")		'Ö±ï¿½Ó¶ï¿½È¡Applicationï¿½ï¿½ï¿½ï¿½
 
 if IsArray(AdvertisementGetRow) then
 	Randomize
@@ -84,31 +84,37 @@ if IsArray(AdvertisementGetRow) then
 End if
 
 %>
+<!-- Markdown Support -->
+<script src="js/marked.min.js"></script>
+<script src="js/dompurify.min.js"></script>
+<script src="js/markdown-handler.js"></script>
+<link rel="stylesheet" href="css/markdown-content.css">
+
 <script type="text/javascript" src="Utility/PopupMenu.js"></script>
 
 
 <div class="CommonBreadCrumbArea">
-	<div style="float:left"><%=ClubTree%> ¡ú <%=ForumTree(ParentID)%><a href="ShowForum.asp?ForumID=<%=ForumID%>"><%=ForumName%></a> ¡ú <a href="?ThreadID=<%=ThreadID%>"><%=Topic%></a></div>
+	<div style="float:left"><%=ClubTree%> ï¿½ï¿½ <%=ForumTree(ParentID)%><a href="ShowForum.asp?ForumID=<%=ForumID%>"><%=ForumName%></a> ï¿½ï¿½ <a href="?ThreadID=<%=ThreadID%>"><%=Topic%></a></div>
 	<div style="float:right">
-		<a href="javascript:window.external.AddFavorite(location.href,document.title)" onmouseover="MouseOverOpen('FavoriteAllItem',this.id);" id="FavoriteAll"><img title="Ìí¼Óµ½ÊÕ²Ø¼Ð" src="images/favs.gif" border="0" /></a>¡¡<script language="JavaScript" type="text/javascript">
-		document.write("<a target=_blank href='Mailto:?subject="+document.title+"&body="+encodeURIComponent(location.href)+"'>");</script><img title="Í¨¹ýµç×ÓÓÊ¼þ·¢ËÍ±¾Ò³Ãæ" src="images/mail.gif" border="0" /></a>¡¡<a href="javascript:window.print();"><img title="´òÓ¡±¾Ò³" src="images/Print.gif" border="0" /></a>¡¡<a href="?menu=Previous&ForumID=<%=ForumID%>&ThreadID=<%=ThreadID%>"><img title="ä¯ÀÀÉÏÒ»ÆªÖ÷Ìâ" src="images/previous.gif" border="0" /></a>¡¡<a href="?menu=Next&ForumID=<%=ForumID%>&ThreadID=<%=ThreadID%>"><img title="ä¯ÀÀÏÂÒ»ÆªÖ÷Ìâ" src="images/next.gif" border="0" /></a>
-	</div>¡¡
+		<a href="javascript:window.external.AddFavorite(location.href,document.title)" onmouseover="MouseOverOpen('FavoriteAllItem',this.id);" id="FavoriteAll"><img title="ï¿½ï¿½ï¿½Óµï¿½ï¿½Õ²Ø¼ï¿½" src="images/favs.gif" border="0" /></a>ï¿½ï¿½<script language="JavaScript" type="text/javascript">
+		document.write("<a target=_blank href='Mailto:?subject="+document.title+"&body="+encodeURIComponent(location.href)+"'>");</script><img title="Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Í±ï¿½Ò³ï¿½ï¿½" src="images/mail.gif" border="0" /></a>ï¿½ï¿½<a href="javascript:window.print();"><img title="ï¿½ï¿½Ó¡ï¿½ï¿½Ò³" src="images/Print.gif" border="0" /></a>ï¿½ï¿½<a href="?menu=Previous&ForumID=<%=ForumID%>&ThreadID=<%=ThreadID%>"><img title="ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Æªï¿½ï¿½ï¿½ï¿½" src="images/previous.gif" border="0" /></a>ï¿½ï¿½<a href="?menu=Next&ForumID=<%=ForumID%>&ThreadID=<%=ThreadID%>"><img title="ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Æªï¿½ï¿½ï¿½ï¿½" src="images/next.gif" border="0" /></a>
+	</div>ï¿½ï¿½
 </div>
 
 
 <div class="PopupMenu" id="FavoriteAllItem" style="display: none;">
 	<table cellspacing="0" cellpadding="1">
 		<tr>
-			<td><a style="background-image:url(images/favorite.gif)" href="javascript:window.external.AddFavorite(location.href,document.title)">±¾µØÊÕ²Ø</a></td>
+			<td><a style="background-image:url(images/favorite.gif)" href="javascript:window.external.AddFavorite(location.href,document.title)">ï¿½ï¿½ï¿½ï¿½ï¿½Õ²ï¿½</a></td>
 		</tr>
 		<tr>
-			<td><a style="background-image:url(images/qq_favorite.gif)" href="javascript:window.open('http://shuqian.qq.com/post?title='+encodeURIComponent(document.title)+'&uri='+encodeURIComponent(document.location.href)+'&jumpback=2&noui=1','favit','width=960,height=600,left=50,top=50,toolbar=no,menubar=no,location=no,scrollbars=yes,status=yes,resizable=yes');void(0);">£Ñ£ÑÊéÇ©</a></td>
+			<td><a style="background-image:url(images/qq_favorite.gif)" href="javascript:window.open('http://shuqian.qq.com/post?title='+encodeURIComponent(document.title)+'&uri='+encodeURIComponent(document.location.href)+'&jumpback=2&noui=1','favit','width=960,height=600,left=50,top=50,toolbar=no,menubar=no,location=no,scrollbars=yes,status=yes,resizable=yes');void(0);">ï¿½Ñ£ï¿½ï¿½ï¿½Ç©</a></td>
 		</tr>
 		<tr>
-			<td><a style="background-image:url(images/baidu_favorite.jpg)" href="javascript:window.open('http://cang.baidu.com/do/add?it='+encodeURIComponent(document.title.substring(0,76))+'&iu='+encodeURIComponent(location.href)+'&fr=ien#nw=1','_blank','scrollbars=no,width=600,height=450,left=75,top=20,status=no,resizable=yes');void(0);">°Ù¶ÈËÑ²Ø</a></td>
+			<td><a style="background-image:url(images/baidu_favorite.jpg)" href="javascript:window.open('http://cang.baidu.com/do/add?it='+encodeURIComponent(document.title.substring(0,76))+'&iu='+encodeURIComponent(location.href)+'&fr=ien#nw=1','_blank','scrollbars=no,width=600,height=450,left=75,top=20,status=no,resizable=yes');void(0);">ï¿½Ù¶ï¿½ï¿½Ñ²ï¿½</a></td>
 		</tr>
 		<tr>
-			<td><a style="background-image:url(images/yahoo_favorite.gif)" href="javascript:window.open('http://myweb.cn.yahoo.com/popadd.html?url='+encodeURIComponent(document.location.href)+'&title='+encodeURIComponent(document.title), 'Yahoo','scrollbars=yes,width=780,height=550,left=80,top=80,status=yes,resizable=yes');void(0);">ÑÅ»¢ÊÕ²Ø</a></td>
+			<td><a style="background-image:url(images/yahoo_favorite.gif)" href="javascript:window.open('http://myweb.cn.yahoo.com/popadd.html?url='+encodeURIComponent(document.location.href)+'&title='+encodeURIComponent(document.title), 'Yahoo','scrollbars=yes,width=780,height=550,left=80,top=80,status=yes,resizable=yes');void(0);">ï¿½Å»ï¿½ï¿½Õ²ï¿½</a></td>
 		</tr>
 	</table>
 </div>
@@ -119,7 +125,7 @@ End if
 	</tr>
 	<tr class="CommonListCell">
 		<td align="center" width="5%"><img src="images/totel.gif" /></td>
-		<td>·¢ÆðÈË£º<a href="Profile.asp?UserName=<%=UserNameUrl%>"><%=UserNameHtml%></a>¡¡¡¡»Ø¸´Êý£º<b><%=TotalReplies%></b>¡¡¡¡ä¯ÀÀÊý£º<b><%=TotalViews%></b>¡¡¡¡×îºó¸üÐÂ£º<%=lasttime%>
+		<td>ï¿½ï¿½ï¿½ï¿½ï¿½Ë£ï¿½<a href="Profile.asp?UserName=<%=UserNameUrl%>"><%=UserNameHtml%></a>ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½<b><%=TotalReplies%></b>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½<b><%=TotalViews%></b>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½<%=lasttime%>
 		by <a href="Profile.asp?UserName=<%=LastNameUrl%>"><%=LastNameHtml%></a></td>
 	</tr>
 </table>
@@ -128,10 +134,10 @@ End if
 <div class="PopupMenu" id="View" style="DISPLAY: none">
 	<table cellspacing="0" cellpadding="1">
 		<tr>
-			<td><a href="?ThreadID=<%=ThreadID%>&ViewMode=0">¼ò½àÄ£Ê½</a></td>
+			<td><a href="?ThreadID=<%=ThreadID%>&ViewMode=0">ï¿½ï¿½ï¿½Ä£Ê½</a></td>
 		</tr>
 		<tr>
-			<td><a href="?ThreadID=<%=ThreadID%>&ViewMode=1">ÍêÕûÄ£Ê½</a></td>
+			<td><a href="?ThreadID=<%=ThreadID%>&ViewMode=1">ï¿½ï¿½ï¿½ï¿½Ä£Ê½</a></td>
 		</tr>
 	</table>
 </div>
@@ -145,10 +151,10 @@ End if
 				if SiteConfig("SelectMailMode")<>"" then
 					if Execute("Select UserName from ["&TablePrefix&"Subscriptions] where UserName='"&SqlString(CookieUserName)&"' and ThreadID="&ThreadID&"").eof then
 						BgImage="tracktopic.gif"
-						ButtonText="¶©ÔÄÖ÷Ìâ"
+						ButtonText="ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
 					else
 						BgImage="tracktopic-on.gif"
-						ButtonText="È¡Ïû¶©ÔÄ"
+						ButtonText="È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
 					end if
 					%>
 					<span id="ThreadSubscription"><a class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/<%=BgImage%>)" href="javascript:Ajax_CallBack(false,'ThreadSubscription','Loading.asp?menu=Subscription&ThreadID=<%=ThreadID%>')"><%=ButtonText%></a></span>
@@ -157,23 +163,23 @@ End if
 
 			end if
 			%>
-			<a class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/view.gif)" onmouseover="MouseOverOpen('View',this.id);" id="View1">Ñ¡Ôñ²é¿´</a>
-			<%if PermissionPost=1 then%><a class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/NewPost.gif)" href="AddTopic.asp?ForumID=<%=ForumID%>">·¢±íÐÂÌû</a> <%end if%>
+			<a class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/view.gif)" onmouseover="MouseOverOpen('View',this.id);" id="View1">Ñ¡ï¿½ï¿½é¿´</a>
+			<%if PermissionPost=1 then%><a class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/NewPost.gif)" href="AddTopic.asp?ForumID=<%=ForumID%>">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a> <%end if%>
 			</td>
-			<td align="right" valign="bottom"><a href="http://www.duoci.com/Search/?Charset=<%=BBSxpCharset%>&word=<%=TopicUrl%>" target="_blank" title="ÔÚ¸ü¶àÍøÕ¾ÖÐËÑË÷´ËÀàÎÊÌâ">ËÑË÷¸ü¶àÏà¹ØÖ÷Ìâ</a>
+			<td align="right" valign="bottom"><a href="http://www.duoci.com/Search/?Charset=<%=BBSxpCharset%>&word=<%=TopicUrl%>" target="_blank" title="ï¿½Ú¸ï¿½ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a>
 			<%if SiteConfig("DisplayThreadStatus")=1 and (PermissionManage=1 or UserName=CookieUserName) then%>
-			¡¡Ö÷Ìâ×´Ì¬£º<select onchange="javascript:if(this.options[this.selectedIndex].value)Ajax_CallBack(false,false,'loading.asp?menu=ThreadStatus&amp;ThreadID=<%=ThreadID%>&amp;ThreadStatus='+this.options[this.selectedIndex].value)">
+			ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½<select onchange="javascript:if(this.options[this.selectedIndex].value)Ajax_CallBack(false,false,'loading.asp?menu=ThreadStatus&amp;ThreadID=<%=ThreadID%>&amp;ThreadStatus='+this.options[this.selectedIndex].value)">
 			<option value="0" <%if threadstatus=0 then%>selected<%end if%>>--
 			</option>
-			<option value="1" <%if threadstatus=1 then%>selected<%end if%>>ÒÑ½â¾ö
+			<option value="1" <%if threadstatus=1 then%>selected<%end if%>>ï¿½Ñ½ï¿½ï¿½
 			</option>
-			<option value="2" <%if threadstatus=2 then%>selected<%end if%>>Î´½â¾ö
+			<option value="2" <%if threadstatus=2 then%>selected<%end if%>>Î´ï¿½ï¿½ï¿½
 			</option>
-			</select> <%end if%> ¡¡Ìû×ÓÅÅÐò£º<select onchange="javascript:if(this.options[this.selectedIndex].value)window.location.href='ShowPost.asp?<%=SortQueryString%>&amp;SortOrder='+this.options[this.selectedIndex].value">
+			</select> <%end if%> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½<select onchange="javascript:if(this.options[this.selectedIndex].value)window.location.href='ShowPost.asp?<%=SortQueryString%>&amp;SortOrder='+this.options[this.selectedIndex].value">
 			<option value="0" <%if Request("sortorder")="0" then%>selected<%end if%>>
-			´Ó¾Éµ½ÐÂ</option>
+			ï¿½Ó¾Éµï¿½ï¿½ï¿½</option>
 			<option value="1" <%if Request("sortorder")="1" then%>selected<%end if%>>
-			´ÓÐÂµ½¾É</option>
+			ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½</option>
 			</select> </td>
 		</tr>
 
@@ -187,9 +193,9 @@ if IsVote=1 then
 %>
 <table cellspacing="1" cellpadding="5" width="100%" class="CommonListArea">
 	<tr class="CommonListTitle">
-		<td width="40%" align="center">Ñ¡Ïî</td>
-		<td width="10%" align="center">Æ±Êý</td>
-		<td width="50%" align="center" colspan="2">°Ù·Ö±È</td>
+		<td width="40%" align="center">Ñ¡ï¿½ï¿½</td>
+		<td width="10%" align="center">Æ±ï¿½ï¿½</td>
+		<td width="50%" align="center" colspan="2">ï¿½Ù·Ö±ï¿½</td>
 	</tr>
 	<form action="PostVote.asp?ThreadID=<%=ThreadID%>" method="Post">
 		<%
@@ -233,21 +239,21 @@ next
 		<tr class="CommonListCell">
 			<td align="center"><%
 	if  PermissionVote=0 then
-		response.write "ÄúÃ»ÓÐÈ¨ÏÞÍ¶Æ±"
+		response.write "ï¿½ï¿½Ã»ï¿½ï¿½È¨ï¿½ï¿½Í¶Æ±"
 	elseif CookieUserName=empty then
-		response.write "ÇëµÇÂ¼ºóÔÙÍ¶Æ±"
+		response.write "ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Í¶Æ±"
 	elseif instr("|"&Rs("BallotUserList")&"|","|"&CookieUserName&"|")>0 then
-		response.write "ÄúÒÑ¾­Í¶¹ýÆ±ÁË"
+		response.write "ï¿½ï¿½ï¿½Ñ¾ï¿½Í¶ï¿½ï¿½Æ±ï¿½ï¿½"
 	elseif instr("|"&Rs("BallotIPList")&"|","|"&REMOTE_ADDR&"|")>0 then
-		response.write "´ËIPÒÑ¾­Í¶¹ýÆ±ÁË"
+		response.write "ï¿½ï¿½IPï¿½Ñ¾ï¿½Í¶ï¿½ï¿½Æ±ï¿½ï¿½"
 	elseif Rs("Expiry")< now() then
-		response.write "Í¶Æ±ÒÑ¹ýÆÚ"
+		response.write "Í¶Æ±ï¿½Ñ¹ï¿½ï¿½ï¿½"
 	else
-		response.write "<INPUT type=submit value='Í¶¡¡Æ±'>"
+		response.write "<INPUT type=submit value='Í¶ï¿½ï¿½Æ±'>"
 	end if
 %> </td>
-			<td align="center">×ÜÆ±Êý£º<%=allticket%></td>
-			<td colspan="2" align="center">½ØÖ¹Í¶Æ±Ê±¼ä£º<%=Rs("Expiry")%></td>
+			<td align="center">ï¿½ï¿½Æ±ï¿½ï¿½ï¿½ï¿½<%=allticket%></td>
+			<td colspan="2" align="center">ï¿½ï¿½Ö¹Í¶Æ±Ê±ï¿½ä£º<%=Rs("Expiry")%></td>
 		</tr>
 	</form>
 </table>
@@ -266,19 +272,19 @@ else
 	TotalCount=TotalReplies+1
 end if
 if RequestInt("PostID")>0 then
-	TotalCount=1		'Èç¹ûÊÇä¯ÀÀµ¥Ìû×Ó²»·ÖÒ³
+	TotalCount=1		'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó²ï¿½ï¿½ï¿½Ò³
 elseif PostAuthor>"" then
 	TotalCount=Execute("Select Count(PostID) from ["&TablePrefix&"Posts] where ThreadID="&ThreadID&PostSql&VisibleSql&"")(0)
 end if
 if TotalCount<1 then
 	IsResponseTop=0
 	response.clear()
-	error"<li>ÏµÍ³²»´æÔÚ¸ÃÖ÷ÌâµÄÏà¹ØÌû×Ó"
+	error"<li>ÏµÍ³ï¿½ï¿½ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
 end if
 
-PageSetup=SiteConfig("PostsPerPage") 'Éè¶¨Ã¿Ò³µÄÏÔÊ¾ÊýÁ¿
-TotalPage=Abs(Int(TotalCount/PageSetup*(-1))) '×ÜÒ³Êý
-PageCount = RequestInt("PageIndex") '»ñÈ¡µ±Ç°Ò³
+PageSetup=SiteConfig("PostsPerPage") 'ï¿½è¶¨Ã¿Ò³ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
+TotalPage=Abs(Int(TotalCount/PageSetup*(-1))) 'ï¿½ï¿½Ò³ï¿½ï¿½
+PageCount = RequestInt("PageIndex") 'ï¿½ï¿½È¡ï¿½ï¿½Ç°Ò³
 if PageCount <1 then PageCount = 1
 if PageCount > TotalPage then PageCount = TotalPage
 
@@ -288,7 +294,7 @@ else
 	SqlSortOrder=""
 end if
 
-'¼ÓÈëÉóºË¹¦ÄÜ
+'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¹ï¿½ï¿½ï¿½
 	sql="Select top "&PageCount*pagesetup&" PostID,ThreadID,ParentID,PostAuthor,Subject,Body,IPAddress,PostDate,Visible from ["&TablePrefix&"Posts] where ThreadID="&ThreadID&PostSql&VisibleSql&" order by PostID "&SqlSortOrder&""
 	Set Rs=Execute(sql)
 
@@ -329,15 +335,15 @@ if PermissionManage=1 then%>
 <table cellspacing="0" cellpadding="0" border="0" width="100%">
 	<tr>
 		<td align="right" style="Padding-Top:8px">
-        ¹ÜÀí£º
+        ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		<select name=menu size=1>
-			<optgroup label="Ñ¡Ïî">
-					<option value="DelPost">É¾³ýÌû×Ó</option>
-					<option value="UnDelPost">·´É¾³ýÌû×Ó</option>
-					<option value="PostVisible">Í¨¹ýÉóºËÌû×Ó</option>
-					<option value="PostInVisible">È¡ÏûÉóºËÌû×Ó</option>
+			<optgroup label="Ñ¡ï¿½ï¿½">
+					<option value="DelPost">É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
+					<option value="UnDelPost">ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
+					<option value="PostVisible">Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
+					<option value="PostInVisible">È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</option>
 				</optgroup>
-		</select>¡¡<input type="submit" value=" Ö´ ÐÐ " onclick="return VerifyRadio('Item');" />¡¡<input type=checkbox name=chkall onclick='CheckAll(this.form)' value=ON>
+		</select>ï¿½ï¿½<input type="submit" value=" Ö´ ï¿½ï¿½ " onclick="return VerifyRadio('Item');" />ï¿½ï¿½<input type=checkbox name=chkall onclick='CheckAll(this.form)' value=ON>
         </td>
 	</tr>
 </table>
@@ -359,18 +365,18 @@ if IsLocked=0 and PermissionReply=1 and CookieUserName<>empty then
 	<input type="hidden" value="<%=PostID%>" name="PostID">
 	<input name="Body" type="hidden">
 	<tr class="CommonListTitle">
-		<td colspan="2"><b>¿ìËÙ»Ø¸´</b></td>
+		<td colspan="2"><b>ï¿½ï¿½ï¿½Ù»Ø¸ï¿½</b></td>
 	</tr>
 	<tr class="CommonListCell">
 		<td valign="top" height="50%" width="180">
-				<br /><b>ÎÄÕÂÄÚÈÝ</b><br />£¨<a href="javascript:CheckLength();">²é¿´ÄÚÈÝ³¤¶È</a>£©<br /><br />
-				<input id="DisableBBCode" name="DisableBBCode" type="checkbox" value="1"><label for="DisableBBCode"> ½ûÓÃ BB ´úÂë</label>
+				<br /><b>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</b><br />ï¿½ï¿½<a href="javascript:CheckLength();">ï¿½é¿´ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½</a>ï¿½ï¿½<br /><br />
+				<input id="DisableBBCode" name="DisableBBCode" type="checkbox" value="1"><label for="DisableBBCode"> ï¿½ï¿½ï¿½ï¿½ BB ï¿½ï¿½ï¿½ï¿½</label>
 		</td>
 		<td height="200"><script type="text/javascript" src="Editor/Post.js"></script></td>
 	</tr>
 	<tr class="CommonListCell">
 		<td valign="top" height="50%" colspan="2" align="center">
-		<input type="submit" accesskey="s" title="(Alt + S)" value=" »Ø¸´ " name="EditSubmit">¡¡<input type="Button" value=" Ô¤ÀÀ " onclick="Preview()">¡¡<input onclick="history.back()" type="button" value=" È¡Ïû ">¡¡<input type="button" id="recoverdata" onclick="RestoreData()" title="»Ö¸´ÉÏ´Î×Ô¶¯±£´æµÄÊý¾Ý" value="»Ö¸´Êý¾Ý" /></td>
+		<input type="submit" accesskey="s" title="(Alt + S)" value=" ï¿½Ø¸ï¿½ " name="EditSubmit">ï¿½ï¿½<input type="Button" value=" Ô¤ï¿½ï¿½ " onclick="Preview()">ï¿½ï¿½<input onclick="history.back()" type="button" value=" È¡ï¿½ï¿½ ">ï¿½ï¿½<input type="button" id="recoverdata" onclick="RestoreData()" title="ï¿½Ö¸ï¿½ï¿½Ï´ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" value="ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½" /></td>
 	</tr>
 	</form>
 </table>
@@ -383,11 +389,11 @@ function QuickReply(NO){
 }
 function VerifyRadio() {
 	objYN=false;
-	if (window.confirm('ÄúÈ·¶¨Ö´ÐÐ±¾´Î²Ù×÷?')){
+	if (window.confirm('ï¿½ï¿½È·ï¿½ï¿½Ö´ï¿½Ð±ï¿½ï¿½Î²ï¿½ï¿½ï¿½?')){
 		for (i=0;i<document.getElementsByName("PostID").length;i++) {
 			if (document.getElementsByName("PostID")[i].checked) {objYN= true;}
 		}
-		if (objYN==false) {alert ('ÇëÑ¡ÔñÄúÒª²Ù×÷µÄÌû×Ó£¡');return false;}
+		if (objYN==false) {alert ('ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó£ï¿½');return false;}
 	}
 	return objYN;
 }
@@ -410,15 +416,15 @@ if SiteConfig("DisplayThreadUsers")=1 then
 
 <table cellspacing="1" cellpadding="5" width="100%" class="CommonListArea">
 	<tr class="CommonListTitle">
-		<td>ÓÃ»§ÔÚÏßÐÅÏ¢</td>
+		<td>ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢</td>
 	</tr>
 	<tr class="CommonListCell">
 	<td>
 		<img src="images/plus.gif" id="followImg" style="cursor:pointer;" onclick="loadThreadFollow('ThreadID=<%=ThreadID%>')" />
-		µ±Ç°²é¿´´ËÖ÷ÌâµÄ»áÔ±: <b><%=ThreadIDOnline%></b> ÈË¡£ÆäÖÐ×¢²áÓÃ»§ <b><%=regThreadIDOnline%></b> ÈË£¬·Ã¿Í <b><%=ThreadIDOnline-regThreadIDOnline%></b>
-		ÈË¡£<div style="display:none" id="follow">
+		ï¿½ï¿½Ç°ï¿½é¿´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½Ô±: <b><%=ThreadIDOnline%></b> ï¿½Ë¡ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½ï¿½Ã»ï¿½ <b><%=regThreadIDOnline%></b> ï¿½Ë£ï¿½ï¿½Ã¿ï¿½ <b><%=ThreadIDOnline-regThreadIDOnline%></b>
+		ï¿½Ë¡ï¿½<div style="display:none" id="follow">
 			<hr width="90%" size="1" align="left"><span id="followTd" class="UserList">
-			<img src="images/loading.gif" />ÕýÔÚ¼ÓÔØ...</span></div>
+			<img src="images/loading.gif" />ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½...</span></div>
 		</td>
 	</tr>
 </table>
@@ -427,30 +433,30 @@ if SiteConfig("DisplayThreadUsers")=1 then
 end if
 
 if PermissionManage=1 then
-	response.write "<br><table cellspacing=0 cellpadding=0 width=100% align=center border=0><tr><td align=center>¹ÜÀíÑ¡Ïî£º"
+	response.write "<br><table cellspacing=0 cellpadding=0 width=100% align=center border=0><tr><td align=center>ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½î£º"
 	if ThreadTop=2 then
-		response.write "<a href=javascript:UrlPost('Manage.asp?menu=UnTop&ThreadID="&ThreadID&"')>È¡Ïû¹«¸æ</a> | "
+		response.write "<a href=javascript:UrlPost('Manage.asp?menu=UnTop&ThreadID="&ThreadID&"')>È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a> | "
 	else
-		response.write "<a href=javascript:UrlPost('Manage.asp?menu=Top&ThreadID="&ThreadID&"')>ÉèÎª¹«¸æ</a> | "
+		response.write "<a href=javascript:UrlPost('Manage.asp?menu=Top&ThreadID="&ThreadID&"')>ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½</a> | "
 	end if
 
 	if ThreadTop=1 then
-		response.write "<a href=javascript:UrlPost('Manage.asp?menu=DelTop&ThreadID="&ThreadID&"')>È¡ÏûÖÃ¶¥</a> | "
+		response.write "<a href=javascript:UrlPost('Manage.asp?menu=DelTop&ThreadID="&ThreadID&"')>È¡ï¿½ï¿½ï¿½Ã¶ï¿½</a> | "
 	else
-		response.write "<a href=javascript:UrlPost('Manage.asp?menu=ThreadTop&ThreadID="&ThreadID&"')>ÖÃ¶¥Ö÷Ìâ</a> | "
+		response.write "<a href=javascript:UrlPost('Manage.asp?menu=ThreadTop&ThreadID="&ThreadID&"')>ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½</a> | "
 	end if
-	response.write "<a href=javascript:UrlPost('Manage.asp?menu=MoveNew&ThreadID="&ThreadID&"')>À­Ç°Ö÷Ìâ</a> | "
+	response.write "<a href=javascript:UrlPost('Manage.asp?menu=MoveNew&ThreadID="&ThreadID&"')>ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½</a> | "
 	if IsLocked=1 then
-		response.write "<a href=javascript:UrlPost('Manage.asp?menu=DelIsLocked&ThreadID="&ThreadID&"')>½âËøÖ÷Ìâ</a> | "
+		response.write "<a href=javascript:UrlPost('Manage.asp?menu=DelIsLocked&ThreadID="&ThreadID&"')>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a> | "
 	else
-		response.write "<a href=javascript:UrlPost('Manage.asp?menu=IsLocked&ThreadID="&ThreadID&"')>Ëø¶¨Ö÷Ìâ</a> | "
+		response.write "<a href=javascript:UrlPost('Manage.asp?menu=IsLocked&ThreadID="&ThreadID&"')>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a> | "
 	end if
 	if IsGood=1 then
-		response.write "<a href=javascript:UrlPost('Manage.asp?menu=DelIsGood&ThreadID="&ThreadID&"')>È¡Ïû¾«»ªÖ÷Ìâ</a>"
+		response.write "<a href=javascript:UrlPost('Manage.asp?menu=DelIsGood&ThreadID="&ThreadID&"')>È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a>"
 	else
-		response.write "<a href=javascript:UrlPost('Manage.asp?menu=IsGood&ThreadID="&ThreadID&"')>¼ÓÎª¾«»ªÖ÷Ìâ</a>"
+		response.write "<a href=javascript:UrlPost('Manage.asp?menu=IsGood&ThreadID="&ThreadID&"')>ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a>"
 	end if
-	response.write " | <a href=MoveThread.asp?ThreadID="&ThreadID&">ÒÆ¶¯Ö÷Ìâ</a> | <a title='ÐÞ¸´Ìû×ÓµÄ»Ø¸´Êý' href=javascript:UrlPost('Manage.asp?menu=Fix&ThreadID="&ThreadID&"')>ÐÞ¸´Ö÷Ìâ</a></td></tr></table>"
+	response.write " | <a href=MoveThread.asp?ThreadID="&ThreadID&">ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½</a> | <a title='ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ÓµÄ»Ø¸ï¿½ï¿½ï¿½' href=javascript:UrlPost('Manage.asp?menu=Fix&ThreadID="&ThreadID&"')>ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½</a></td></tr></table>"
 end if
 
 
@@ -467,15 +473,15 @@ Sub ShowPostSimple()
 <table cellspacing="1" cellpadding="5" width="100%" class="CommonListArea" style="TABLE-LAYOUT:fixed;">
 	<tr class="CommonListHeader">
 		<td>
-			<div style=float:left><b><a target="_blank" href="Profile.asp?UserName=<%=PostAuthorUrl%>"><%=PostAuthorHtml%></a></b> ·¢±íÓÚ <%=PostDate%></div>
+			<div style=float:left><b><a target="_blank" href="Profile.asp?UserName=<%=PostAuthorUrl%>"><%=PostAuthorHtml%></a></b> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ <%=PostDate%></div>
 			<div style=float:right>
 						<%if IsLocked=1 then%>
-						<a onclick="window.alert('¸ÃÌûÒÑËø¶¨²»ÔÊÐí»Ø¸´¡£');">Ëø¶¨</a>
+						<a onclick="window.alert('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½');">ï¿½ï¿½ï¿½ï¿½</a>
 						<%elseif PermissionReply=1 then%>
-						<a href="AddPost.asp?ThreadID=<%=ThreadID%>&PostID=<%=PostID%>" title="»Ø¸´Ìû×Ó">»Ø¸´</a>
+						<a href="AddPost.asp?ThreadID=<%=ThreadID%>&PostID=<%=PostID%>" title="ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½">ï¿½Ø¸ï¿½</a>
     <%end if%>
-						<a href="EditPost.asp?ThreadID=<%=ThreadID%>&PostID=<%=PostID%>" title="±à¼­Ìû×Ó">±à¼­</a>
-						<a href="DelPost.asp?ThreadID=<%=ThreadID%>&PostID=<%=PostID%>" title="É¾³ýÌû×Ó">É¾³ý</a>
+						<a href="EditPost.asp?ThreadID=<%=ThreadID%>&PostID=<%=PostID%>" title="ï¿½à¼­ï¿½ï¿½ï¿½ï¿½">ï¿½à¼­</a>
+						<a href="DelPost.asp?ThreadID=<%=ThreadID%>&PostID=<%=PostID%>" title="É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½">É¾ï¿½ï¿½</a>
 			</div>
 		</td>
 	</tr>
@@ -483,12 +489,12 @@ Sub ShowPostSimple()
 		<td>
 <%
 		if Subject<>"" then response.write "<div class=ForumPostTitle>"&Subject&"</div>"
-		response.write "<div class=ForumPostContentText>"&BBCode(Body)&"</div>"
+		response.write "<div class='ForumPostContentText markdown-content'>"&BBCode(Body)&"</div>"
 		%>
 
 				<div style="float:right">
-				<%if PermissionManage=1 then response.write "IP£º"&IPAddressHtml&"¡¡"%>
-				<%if IsLocked=0 and PermissionReply=1 then response.write "<a onclick=javascript:QuickReply("&PostID&")>¿ìËÙ»Ø¸´</a>"%>
+				<%if PermissionManage=1 then response.write "IPï¿½ï¿½"&IPAddressHtml&"ï¿½ï¿½"%>
+				<%if IsLocked=0 and PermissionReply=1 then response.write "<a onclick=javascript:QuickReply("&PostID&")>ï¿½ï¿½ï¿½Ù»Ø¸ï¿½</a>"%>
 				</div>
 
 
@@ -524,33 +530,33 @@ Sub ShowPost()
 	WebLogHtml=Server.HTMLEncode(WebLog)
 	WebGalleryHtml=Server.HTMLEncode(WebGallery)
 	IPAddressHtml=Server.HTMLEncode(IPAddress)
-ReportSubject=Server.URLEncode("ÎÊÌâÌû×Ó±¨¸æ")
-ReportBody=Server.URLEncode("¡¾ÎÊÌâÌû×Ó¡¿£º"&SiteConfig("SiteUrl")&"/ShowPost.asp?PostID="&PostID)
+ReportSubject=Server.URLEncode("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó±ï¿½ï¿½ï¿½")
+ReportBody=Server.URLEncode("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½"&SiteConfig("SiteUrl")&"/ShowPost.asp?PostID="&PostID)
 %>
 <div class="PopupMenu" id="ContactMenu<%=PostID%>" style="DISPLAY: none">
 	<table cellspacing="0" cellpadding="1">
 		<tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/profile.gif)" href="Profile.asp?UID=<%=Rs("UserID")%>">²é¿´ <%=PostUserNameHtml%> µÄ×ÊÁÏ</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/profile.gif)" href="Profile.asp?UID=<%=Rs("UserID")%>">ï¿½é¿´ <%=PostUserNameHtml%> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></td>
 		</tr>
 		<%if CookieUserName<>"" then%><tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/privatemessage.gif)" href="javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&RecipientUserName=<%=PostUserNameUrl%>', 600, 350);">¸ø <%=PostUserNameHtml%> ·¢ËÍÑ¶Ï¢</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/privatemessage.gif)" href="javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&RecipientUserName=<%=PostUserNameUrl%>', 600, 350);">ï¿½ï¿½ <%=PostUserNameHtml%> ï¿½ï¿½ï¿½ï¿½Ñ¶Ï¢</a></td>
 		</tr>
 		<%end if%>
 		<tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/email.gif)" href="Mailto:<%=PostUserEmailHtml%>">¸ø <%=PostUserNameHtml%> ·¢ËÍÓÊ¼þ</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/email.gif)" href="Mailto:<%=PostUserEmailHtml%>">ï¿½ï¿½ <%=PostUserNameHtml%> ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½</a></td>
 		</tr>
 		<%if WebAddress<>"" then%><tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/homepage.gif)" href="<%=WebAddressHtml%>" target="_blank">ä¯ÀÀ <%=PostUserNameHtml%> µÄÖ÷Ò³</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/homepage.gif)" href="<%=WebAddressHtml%>" target="_blank">ï¿½ï¿½ï¿½ <%=PostUserNameHtml%> ï¿½ï¿½ï¿½ï¿½Ò³</a></td>
 		</tr>
 		<%end if%> <%if WebLog<>"" then%><tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/weblog.gif)" href="<%=WebLogHtml%>" target="_blank">ä¯ÀÀ <%=PostUserNameHtml%> µÄ²©¿Í</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/weblog.gif)" href="<%=WebLogHtml%>" target="_blank">ï¿½ï¿½ï¿½ <%=PostUserNameHtml%> ï¿½Ä²ï¿½ï¿½ï¿½</a></td>
 		</tr>
 		<%end if%> <%if WebGallery<>"" then%><tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/webgallery.gif)" href="<%=WebGalleryHtml%>" target="_blank">ä¯ÀÀ <%=PostUserNameHtml%> µÄÏà²á</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/webgallery.gif)" href="<%=WebGalleryHtml%>" target="_blank">ï¿½ï¿½ï¿½ <%=PostUserNameHtml%> ï¿½ï¿½ï¿½ï¿½ï¿½</a></td>
 		</tr>
 		<%end if%>
 		<tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/search.gif)" href="ShowBBS.asp?menu=MyTopic&UserName=<%=PostUserNameUrl%>">ËÑË÷ <%=PostUserNameHtml%> µÄÌû×Ó</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/search.gif)" href="ShowBBS.asp?menu=MyTopic&UserName=<%=PostUserNameUrl%>">ï¿½ï¿½ï¿½ï¿½ <%=PostUserNameHtml%> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></td>
 		</tr>
 	</table>
 </div>
@@ -558,13 +564,13 @@ ReportBody=Server.URLEncode("¡¾ÎÊÌâÌû×Ó¡¿£º"&SiteConfig("SiteUrl")&"/ShowPost.as
 <div class="PopupMenu" id="FavoriteMenu<%=PostID%>" style="DISPLAY: none">
 	<table cellspacing="0" cellpadding="1">
 		<tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/favorite.gif)" href="javascript:Ajax_CallBack(false,false,'MyFavorites.asp?menu=FavoriteFriend&FriendUserName=<%=PostUserNameUrl%>',true);">½« <%=PostUserNameHtml%> ¼ÓÎªºÃÓÑ</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/favorite.gif)" href="javascript:Ajax_CallBack(false,false,'MyFavorites.asp?menu=FavoriteFriend&FriendUserName=<%=PostUserNameUrl%>',true);">ï¿½ï¿½ <%=PostUserNameHtml%> ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½</a></td>
 		</tr>
 		<tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/favorite.gif)" href="javascript:Ajax_CallBack(false,false,'MyFavorites.asp?menu=FavoritePost&PostID=<%=PostID%>',true);">½«¸ÃÌû×Ó¼ÓÈëÊÕ²Ø¼Ð</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/favorite.gif)" href="javascript:Ajax_CallBack(false,false,'MyFavorites.asp?menu=FavoritePost&PostID=<%=PostID%>',true);">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¼ï¿½ï¿½ï¿½ï¿½Õ²Ø¼ï¿½</a></td>
 		</tr>
 		<tr>
-			<td><a style="BACKGROUND-IMAGE:url(images/favorite.gif)" href="javascript:Ajax_CallBack(false,false,'MyFavorites.asp?menu=FavoriteForums&ForumID=<%=ForumID%>',true);">½«¸ÃÂÛÌ³¼ÓÈëÊÕ²Ø¼Ð</a></td>
+			<td><a style="BACKGROUND-IMAGE:url(images/favorite.gif)" href="javascript:Ajax_CallBack(false,false,'MyFavorites.asp?menu=FavoriteForums&ForumID=<%=ForumID%>',true);">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½ï¿½Õ²Ø¼ï¿½</a></td>
 		</tr>
 	</table>
 </div>
@@ -575,7 +581,7 @@ ReportBody=Server.URLEncode("¡¾ÎÊÌâÌû×Ó¡¿£º"&SiteConfig("SiteUrl")&"/ShowPost.as
 	<tr class="CommonListTitle">
 		<td>
 			<div style=float:left><img src="images/icon_post_show.gif" /> <%=PostDate%></div>
-			<div style=float:right>[<a href="?ThreadID=<%=ThreadID%>&PostAuthor=<%=PostAuthorUrl%>" title="Ö»¿´¸Ã×÷ÕßµÄÌû×Ó">Ö»¿´¸Ã×÷Õß</a>] <a href="?PostID=<%=PostID%>" title="Ö»¿´¸ÃÌû×Ó">#<%=i+(PageCount-1)*PageSetup+1%></a><%if PermissionManage=1 then response.write("<input type=checkbox value="&PostID&" name=PostID onclick="&chr(34)&"CheckSelected(this.form,this.checked,'Post"&PostID&"')"&chr(34)&">")%></div>
+			<div style=float:right>[<a href="?ThreadID=<%=ThreadID%>&PostAuthor=<%=PostAuthorUrl%>" title="Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ßµï¿½ï¿½ï¿½ï¿½ï¿½">Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a>] <a href="?PostID=<%=PostID%>" title="Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½">#<%=i+(PageCount-1)*PageSetup+1%></a><%if PermissionManage=1 then response.write("<input type=checkbox value="&PostID&" name=PostID onclick="&chr(34)&"CheckSelected(this.form,this.checked,'Post"&PostID&"')"&chr(34)&">")%></div>
 		</td>
 	</tr>
 	<tr class="CommonListCell" id="Post<%=PostID%>">
@@ -589,13 +595,13 @@ ReportBody=Server.URLEncode("¡¾ÎÊÌâÌû×Ó¡¿£º"&SiteConfig("SiteUrl")&"/ShowPost.as
 				<div style="text-align:left;width:90%;">
 					<div style="float:left">
 						<%if DateDiff("n",Rs("UserActivityTime"),Now()) < SiteConfig("UserOnlineTime") then%>
-						<img title="<%=PostUserNameHtml%> ÔÚÏß. ×îºó»î¶¯Ê±¼ä:<%=Server.HTMLEncode(Rs("UserActivityTime"))%>" src="Images/user_IsOnline.gif" border="0" />
+						<img title="<%=PostUserNameHtml%> ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½î¶¯Ê±ï¿½ï¿½:<%=Server.HTMLEncode(Rs("UserActivityTime"))%>" src="Images/user_IsOnline.gif" border="0" />
 				    <%end if%>
 						<font style="font-size:10pt"><b><%=PostUserNameHtml%></b></font><br /><%=Server.HTMLEncode(Rs("UserTitle"))%>
 					</div>
 					<%if SiteConfig("EnableReputation")=1 then%>
 					<div style="float:right">
-						<a href="javascript:BBSXP_Modal.Open('Reputation.asp?CommentFor=<%=PostUserNameUrl%>',550,200);"><img title="¶Ô <%=PostUserNameHtml%> ½øÐÐÉùÍûÆÀ¼Û" src="Images/reputation.gif" border="0" align="absmiddle" /></a>
+						<a href="javascript:BBSXP_Modal.Open('Reputation.asp?CommentFor=<%=PostUserNameUrl%>',550,200);"><img title="ï¿½ï¿½ <%=PostUserNameHtml%> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" src="Images/reputation.gif" border="0" align="absmiddle" /></a>
 					</div>
 				<%
 					end if
@@ -604,20 +610,20 @@ ReportBody=Server.URLEncode("¡¾ÎÊÌâÌû×Ó¡¿£º"&SiteConfig("SiteUrl")&"/ShowPost.as
 				if SiteConfig("EnableAvatars")=1 and SiteConfig("AllowAvatars")=1 and UserFaceUrl<>"" then response.write "<img src='"&UserFaceUrl&"' style='max-width:"&SiteConfig("AvatarWidth")&"px;max-height:"&SiteConfig("AvatarHeight")&"px;'  /><br />"
 				if Rs("UserRank")<>"" then response.write "<br />"&Rs("UserRank")&"<br />"
 
-				response.write "<br /></div>½Ç¡¡¡¡É«£º"
+				response.write "<br /></div>ï¿½Ç¡ï¿½ï¿½ï¿½É«ï¿½ï¿½"
 
 				if instr("|"&Moderated&"|","|"&Rs("UserName")&"|") > 0 then
-					Response.Write "°æÖ÷"
+					Response.Write "ï¿½ï¿½ï¿½ï¿½"
 				else
 					response.write ShowRole(Rs("UserRoleID"))
 				end if
 
-				if Rs("UserMate")<>"" then response.write "<br />Åä¡¡¡¡Å¼£º"&Server.HTMLEncode(Rs("UserMate"))&""
-				response.write "<br />·¢ Ìû Êý£º"&Rs("TotalPosts")&""
-				response.write "<br />¾­ Ñé Öµ£º"&Rs("experience")&""
-				response.write "<br />×¢²áÊ±¼ä£º"&FormatDateTime(Rs("UserRegisterTime"),2)&"<br />"
+				if Rs("UserMate")<>"" then response.write "<br />ï¿½ä¡¡ï¿½ï¿½Å¼ï¿½ï¿½"&Server.HTMLEncode(Rs("UserMate"))&""
+				response.write "<br />ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"&Rs("TotalPosts")&""
+				response.write "<br />ï¿½ï¿½ ï¿½ï¿½ Öµï¿½ï¿½"&Rs("experience")&""
+				response.write "<br />×¢ï¿½ï¿½Ê±ï¿½ä£º"&FormatDateTime(Rs("UserRegisterTime"),2)&"<br />"
 
-				response.write "<img src=images/money.gif title='½ð±Ò:"&Rs("UserMoney")&"'> "&ShowReputation(Rs("Reputation"))&" "&ShowUserActivityDay(Rs("UserActivityDay"))&" "&Horoscope(Rs("birthday"))&" "&ShowUserSex(Rs("UserSex"))&""
+				response.write "<img src=images/money.gif title='ï¿½ï¿½ï¿½:"&Rs("UserMoney")&"'> "&ShowReputation(Rs("Reputation"))&" "&ShowUserActivityDay(Rs("UserActivityDay"))&" "&Horoscope(Rs("birthday"))&" "&ShowUserSex(Rs("UserSex"))&""
 
 				%>
 				</div>
@@ -625,15 +631,15 @@ ReportBody=Server.URLEncode("¡¾ÎÊÌâÌû×Ó¡¿£º"&SiteConfig("SiteUrl")&"/ShowPost.as
 				</td>
 				<td valign="top">
 				<div class=ForumPostButtons>
-					<a class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/contact.gif)" onmouseover="MouseOverOpen('ContactMenu<%=PostID%>',this.id);" id="Contact<%=PostID%>">ÁªÏµ</a>
-					<%if ""&CookieUserName&""<>"" then%><a class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/favorite.gif)" onmouseover="MouseOverOpen('FavoriteMenu<%=PostID%>',this.id);" id="Favorite<%=PostID%>">ÊÕ²Ø</a> <%end if%>
+					<a class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/contact.gif)" onmouseover="MouseOverOpen('ContactMenu<%=PostID%>',this.id);" id="Contact<%=PostID%>">ï¿½ï¿½Ïµ</a>
+					<%if ""&CookieUserName&""<>"" then%><a class="CommonImageTextButton" style="BACKGROUND-IMAGE: url(images/favorite.gif)" onmouseover="MouseOverOpen('FavoriteMenu<%=PostID%>',this.id);" id="Favorite<%=PostID%>">ï¿½Õ²ï¿½</a> <%end if%>
 					<%if IsLocked=1 then%>
-					<a class="CommonImageTextButton" style="BACKGROUND-IMAGE:url(images/locked.gif)" onclick="window.alert('¸ÃÌûÒÑËø¶¨²»ÔÊÐí»Ø¸´¡£');">Ëø¶¨</a>
+					<a class="CommonImageTextButton" style="BACKGROUND-IMAGE:url(images/locked.gif)" onclick="window.alert('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½');">ï¿½ï¿½ï¿½ï¿½</a>
 					<%elseif PermissionReply=1 then%>
-					<a class="CommonImageTextButton" style="BACKGROUND-IMAGE:url(images/NewPost.gif)" href="AddPost.asp?ThreadID=<%=ThreadID%>&PostID=<%=PostID%>" title="»Ø¸´Ìû×Ó">»Ø¸´</a>
+					<a class="CommonImageTextButton" style="BACKGROUND-IMAGE:url(images/NewPost.gif)" href="AddPost.asp?ThreadID=<%=ThreadID%>&PostID=<%=PostID%>" title="ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½">ï¿½Ø¸ï¿½</a>
 		    <%end if%>
-						<a class="CommonImageTextButton" style="BACKGROUND-IMAGE:url(images/edit.gif)" href="EditPost.asp?ThreadID=<%=ThreadID%>&PostID=<%=PostID%>" title="±à¼­Ìû×Ó">±à¼­</a>
-						<a class="CommonImageTextButton" style="BACKGROUND-IMAGE:url(images/delete.gif)" href="DelPost.asp?ThreadID=<%=ThreadID%>&PostID=<%=PostID%>" title="É¾³ýÌû×Ó">É¾³ý</a>
+						<a class="CommonImageTextButton" style="BACKGROUND-IMAGE:url(images/edit.gif)" href="EditPost.asp?ThreadID=<%=ThreadID%>&PostID=<%=PostID%>" title="ï¿½à¼­ï¿½ï¿½ï¿½ï¿½">ï¿½à¼­</a>
+						<a class="CommonImageTextButton" style="BACKGROUND-IMAGE:url(images/delete.gif)" href="DelPost.asp?ThreadID=<%=ThreadID%>&PostID=<%=PostID%>" title="É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½">É¾ï¿½ï¿½</a>
 				</div>
 
 				<div class="ForumPostBodyArea">
@@ -641,15 +647,15 @@ ReportBody=Server.URLEncode("¡¾ÎÊÌâÌû×Ó¡¿£º"&SiteConfig("SiteUrl")&"/ShowPost.as
 
 				<%
 				if Rs("UserAccountStatus")=2 then
-					Response.Write "==============================<br /><font color=RED>¸ÃÓÃ»§ÕÊºÅÒÑ±»½ûÓÃ</font><br />=============================="
+					Response.Write "==============================<br /><font color=RED>ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Êºï¿½ï¿½Ñ±ï¿½ï¿½ï¿½ï¿½ï¿½</font><br />=============================="
 				elseif Rs("Reputation") < SiteConfig("InPrisonReputation") then
-					Response.Write "<div id='PostContent_"&PostID&"'>=============================================<br /><font color=RED>¸ÃÓÃ»§ÉùÍûÐ¡ÓÚ"&SiteConfig("InPrisonReputation")&"£¬Ìû×ÓÄÚÈÝÒÑ±»Òþ²Ø.</font>¡¡<a onclick='showPostText("&PostID&")'>µã»÷²é¿´</a><br />=============================================</div>"
-					response.write "<div class=ForumPostTitle id='PostTitle"&PostID&"' style='display:none'>"&Subject&"</div><div class=ForumPostContentText id='PostContent"&PostID&"' style='display:none'>"&BBCode(Body)&"</div>"
+					Response.Write "<div id='PostContent_"&PostID&"'>=============================================<br /><font color=RED>ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½"&SiteConfig("InPrisonReputation")&"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ±ï¿½ï¿½ï¿½ï¿½ï¿½.</font>ï¿½ï¿½<a onclick='showPostText("&PostID&")'>ï¿½ï¿½ï¿½ï¿½é¿´</a><br />=============================================</div>"
+					response.write "<div class=ForumPostTitle id='PostTitle"&PostID&"' style='display:none'>"&Subject&"</div><div class='ForumPostContentText markdown-content' id='PostContent"&PostID&"' style='display:none'>"&BBCode(Body)&"</div>"
 				elseif Visible=2 then
-					Response.Write "<div id='PostContent_"&PostID&"'>========================<br /><font color=RED>Ìû×ÓÒÑ±»É¾³ý£¡</font>¡¡<a onclick='showPostText("&PostID&")'>µã»÷²é¿´</a><br />========================</div>"
-					response.write "<div class=ForumPostTitle id='PostTitle"&PostID&"' style='display:none'>"&Subject&"</div><div class=ForumPostContentText id='PostContent"&PostID&"' style='display:none'>"&BBCode(Body)&"</div>"
+					Response.Write "<div id='PostContent_"&PostID&"'>========================<br /><font color=RED>ï¿½ï¿½ï¿½ï¿½ï¿½Ñ±ï¿½É¾ï¿½ï¿½ï¿½ï¿½</font>ï¿½ï¿½<a onclick='showPostText("&PostID&")'>ï¿½ï¿½ï¿½ï¿½é¿´</a><br />========================</div>"
+					response.write "<div class=ForumPostTitle id='PostTitle"&PostID&"' style='display:none'>"&Subject&"</div><div class='ForumPostContentText markdown-content' id='PostContent"&PostID&"' style='display:none'>"&BBCode(Body)&"</div>"
 				else
-					response.write "<div class=ForumPostTitle>"&Subject&"</div><div class=ForumPostContentText>"&BBCode(Body)&"</div>"
+					response.write "<div class=ForumPostTitle>"&Subject&"</div><div class='ForumPostContentText markdown-content'>"&BBCode(Body)&"</div>"
 
 					if SiteConfig("EnableSignatures")=1 and SiteConfig("AllowSignatures")=1 then
 						if Rs("UserSign")<>"" then response.write "<div class=ForumPostSignature>"&BBCode(Rs("UserSign"))&"</div>"
@@ -664,7 +670,7 @@ ReportBody=Server.URLEncode("¡¾ÎÊÌâÌû×Ó¡¿£º"&SiteConfig("SiteUrl")&"/ShowPost.as
 					Loop
 					RsTag.Close
 					Set RsTag = Nothing
-					if ""&Tags&""<>"" then Response.Write("<p>±êÇ©£º"&Mid(Tags,2))&"</p>"
+					if ""&Tags&""<>"" then Response.Write("<p>ï¿½ï¿½Ç©ï¿½ï¿½"&Mid(Tags,2))&"</p>"
 
 
 					if SiteConfig("DisplayEditNotes")=1 then
@@ -696,14 +702,14 @@ ReportBody=Server.URLEncode("¡¾ÎÊÌâÌû×Ó¡¿£º"&SiteConfig("SiteUrl")&"/ShowPost.as
 					</td>
 					<td align="right" valign="bottom"><%
 					if CookieUserName<>empty then%>
-						<a onclick="javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&ForumID=<%=ForumID%>&subject=<%=ReportSubject%>&Body=<%=ReportBody%>', 600, 350);"><img title="±¨¸æ±¾Ìû" src="images/feedback.gif" border="0" /></a>¡¡<%
+						<a onclick="javascript:BBSXP_Modal.Open('MyMessage.asp?menu=Post&ForumID=<%=ForumID%>&subject=<%=ReportSubject%>&Body=<%=ReportBody%>', 600, 350);"><img title="ï¿½ï¿½ï¿½æ±¾ï¿½ï¿½" src="images/feedback.gif" border="0" /></a>ï¿½ï¿½<%
 					end if
 					if PermissionManage=1 then
-						if Visible=0 then response.write("<img src='images/InVisible.gif' border=0 alt='Ìû×ÓÎ´Í¨¹ýÉóºË' title='Ìû×ÓÎ´Í¨¹ýÉóºË' />¡¡")
-						if Visible=2 then response.write("<img src='images/recycle.gif' border=0 alt='Ìû×ÓÒÑÉ¾³ý' title='Ìû×ÓÒÑÉ¾³ý' />¡¡")
-						response.write("<img src='images/IP.gif' border=0 alt='"&IPAddressHtml&"' title='"&IPAddressHtml&"' />¡¡")
+						if Visible=0 then response.write("<img src='images/InVisible.gif' border=0 alt='ï¿½ï¿½ï¿½ï¿½Î´Í¨ï¿½ï¿½ï¿½ï¿½ï¿½' title='ï¿½ï¿½ï¿½ï¿½Î´Í¨ï¿½ï¿½ï¿½ï¿½ï¿½' />ï¿½ï¿½")
+						if Visible=2 then response.write("<img src='images/recycle.gif' border=0 alt='ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½' title='ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½' />ï¿½ï¿½")
+						response.write("<img src='images/IP.gif' border=0 alt='"&IPAddressHtml&"' title='"&IPAddressHtml&"' />ï¿½ï¿½")
 					end if
-					if IsLocked=0 and PermissionReply=1 and CookieUserName<>empty then response.write "<a href=AddPost.asp?ThreadID="&ThreadID&"&PostID="&PostID&"&Quote=1><img src=images/Quote.gif alt='ÒýÓÃ»Ø¸´' title='ÒýÓÃ»Ø¸´' border=0 /></a>¡¡<a onclick=javascript:QuickReply("&PostID&")><img src=images/QuickReply.gif alt='¿ìËÙ»Ø¸´' title='¿ìËÙ»Ø¸´' /></a>"%>
+					if IsLocked=0 and PermissionReply=1 and CookieUserName<>empty then response.write "<a href=AddPost.asp?ThreadID="&ThreadID&"&PostID="&PostID&"&Quote=1><img src=images/Quote.gif alt='ï¿½ï¿½ï¿½Ã»Ø¸ï¿½' title='ï¿½ï¿½ï¿½Ã»Ø¸ï¿½' border=0 /></a>ï¿½ï¿½<a onclick=javascript:QuickReply("&PostID&")><img src=images/QuickReply.gif alt='ï¿½ï¿½ï¿½Ù»Ø¸ï¿½' title='ï¿½ï¿½ï¿½Ù»Ø¸ï¿½' /></a>"%>
 					</td>
 				</tr>
 				</table>
@@ -719,3 +725,10 @@ ReportBody=Server.URLEncode("¡¾ÎÊÌâÌû×Ó¡¿£º"&SiteConfig("SiteUrl")&"/ShowPost.as
 Rs.close
 End Sub
 %>
+
+<!-- Render Markdown content -->
+<script>
+if (typeof renderMarkdown === 'function') {
+    renderMarkdown('.markdown-content');
+}
+</script>

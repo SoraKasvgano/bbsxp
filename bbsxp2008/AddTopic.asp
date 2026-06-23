@@ -1,19 +1,26 @@
 <!-- #include file="Setup.asp" -->
 <%
 HtmlTop
-if CookieUserName=empty then error("Äú»¹Î´<a href=""javascript:BBSXP_Modal.Open('Login.asp',380,170);"">µÇÂ¼</a>ÂÛÌ³")
-if CookieUserAccountStatus<>1 then error("ÄúµÄÕÊºÅÎ´Í¨¹ýÉóºË£¡")
+%>
+<!-- Markdown Support -->
+<script src="js/marked.min.js"></script>
+<script src="js/dompurify.min.js"></script>
+<script src="js/markdown-handler.js"></script>
+<link rel="stylesheet" href="css/markdown-content.css">
+<%
+if CookieUserName=empty then error("ï¿½ï¿½ï¿½ï¿½Î´<a href=""javascript:BBSXP_Modal.Open('Login.asp',380,170);"">ï¿½ï¿½Â¼</a>ï¿½ï¿½Ì³")
+if CookieUserAccountStatus<>1 then error("ï¿½ï¿½ï¿½ï¿½ï¿½Êºï¿½Î´Í¨ï¿½ï¿½ï¿½ï¿½Ë£ï¿½")
 
-	if CookieReputation < SiteConfig("InPrisonReputation") then error("ÄúµÄÉùÍûµÍÓÚ"&SiteConfig("InPrisonReputation")&"£¬ÎÞ·¨·¢±íÌû×Ó£¡")
+	if CookieReputation < SiteConfig("InPrisonReputation") then error("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"&SiteConfig("InPrisonReputation")&"ï¿½ï¿½ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó£ï¿½")
 
 	if SiteConfig("RegUserTimePost") > 0 then
 		StopPostTime=int(DateDiff("n",CookieUserRegisterTime,Now()))
-		if StopPostTime < SiteConfig("RegUserTimePost") then error("<li>ÐÂ×¢²áÓÃ»§±ØÐëµÈ´ý "&SiteConfig("RegUserTimePost")&" ·ÖÖÓºó²ÅÄÜ·¢Ìû£¡<li>Äú±ØÐëÔÙµÈ´ý "&SiteConfig("RegUserTimePost")-StopPostTime&" ·ÖÖÓ£¡")
+		if StopPostTime < SiteConfig("RegUserTimePost") then error("<li>ï¿½ï¿½×¢ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½È´ï¿½ "&SiteConfig("RegUserTimePost")&" ï¿½ï¿½ï¿½Óºï¿½ï¿½ï¿½Ü·ï¿½ï¿½ï¿½ï¿½ï¿½<li>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÙµÈ´ï¿½ "&SiteConfig("RegUserTimePost")-StopPostTime&" ï¿½ï¿½ï¿½Ó£ï¿½")
 	end if
 
 	if SiteConfig("PostInterval") > 0 then
 		StopPostTime=int(DateDiff("s",CookieUserPostTime,Now()))
-		if StopPostTime < SiteConfig("PostInterval") then error("ÂÛÌ³ÏÞÖÆÒ»¸öÈËÁ½´Î·¢Ìû¼ä¸ô±ØÐë´óÓÚ "&SiteConfig("PostInterval")&" Ãë£¡<li>Äú±ØÐëÔÙµÈ´ý "&SiteConfig("PostInterval")-StopPostTime&" Ãë£¡")
+		if StopPostTime < SiteConfig("PostInterval") then error("ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ "&SiteConfig("PostInterval")&" ï¿½ë£¡<li>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÙµÈ´ï¿½ "&SiteConfig("PostInterval")-StopPostTime&" ï¿½ë£¡")
 	end if
 
 
@@ -23,9 +30,9 @@ ForumID=RequestInt("ForumID")
 
 
 if Request_Method = "POST" then
-	if Request.Form=RequestApplication("LastPost") and SiteConfig("AllowDuplicatePosts")=0 then error("Çë²»ÒªÌá½»ÖØ¸´Êý¾Ý")
+	if Request.Form=RequestApplication("LastPost") and SiteConfig("AllowDuplicatePosts")=0 then error("ï¿½ë²»Òªï¿½á½»ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½")
 	if SiteConfig("EnableAntiSpamTextGenerateForPost")=1 then
-		if Request.Form("VerifyCode")<>Session("VerifyCode") or Session("VerifyCode")="" then Message=Message&"<li>ÑéÖ¤Âë´íÎó£¡</li>"
+		if Request.Form("VerifyCode")<>Session("VerifyCode") or Session("VerifyCode")="" then Message=Message&"<li>ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½ï¿½</li>"
 	end if
 	Subject=HTMLEncode(Request.Form("Subject"))
 	Category=HTMLEncode(Request.Form("Category"))
@@ -41,8 +48,8 @@ if Request_Method = "POST" then
 
 	if Request.Form("DisableBBCode")=1 then Body=Replace(Body,CHR(91),"&#91;")
 
-	if Len(Subject)<2 then Message=Message&"<li>ÎÄÕÂÖ÷Ìâ²»ÄÜÐ¡ÓÚ 2 ×Ö·û"
-	if Len(Body)<2 then Message=Message&"<li>ÎÄÕÂÄÚÈÝ²»ÄÜÐ¡ÓÚ 2 ×Ö·û"
+	if Len(Subject)<2 then Message=Message&"<li>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â²»ï¿½ï¿½Ð¡ï¿½ï¿½ 2 ï¿½Ö·ï¿½"
+	if Len(Body)<2 then Message=Message&"<li>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ 2 ï¿½Ö·ï¿½"
 
 	if PermissionCreatePoll=1 and RequestInt("IsVote")=1 then
 		j=0
@@ -54,8 +61,8 @@ if Request_Method = "POST" then
 				end if
 			end if
 		next
-		if j<SiteConfig("MinVoteOptions") then Message=Message&"<li>Í¶Æ±Ñ¡Ïî²»ÄÜÉÙÓÚ "&SiteConfig("MinVoteOptions")&" ¸ö"
-		if j>SiteConfig("MaxVoteOptions") then Message=Message&"<li>Í¶Æ±Ñ¡Ïî²»ÄÜ³¬¹ý "&SiteConfig("MaxVoteOptions")&" ¸ö"
+		if j<SiteConfig("MinVoteOptions") then Message=Message&"<li>Í¶Æ±Ñ¡ï¿½î²»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ "&SiteConfig("MinVoteOptions")&" ï¿½ï¿½"
+		if j>SiteConfig("MaxVoteOptions") then Message=Message&"<li>Í¶Æ±Ñ¡ï¿½î²»ï¿½Ü³ï¿½ï¿½ï¿½ "&SiteConfig("MaxVoteOptions")&" ï¿½ï¿½"
 		for y = 1 to j
 			Votenum=""&Votenum&"0|"
 		next
@@ -65,10 +72,10 @@ if Request_Method = "POST" then
 	VoteItems=HTMLEncode(allpollTopic)
 	VoteExpiry=now()+RequestInt("VoteExpiry")
 
-	if Not Isdate(VoteExpiry) then Message=Message&"<li>Í¶Æ±¹ýÆÚÊ±¼ä´íÎó"
+	if Not Isdate(VoteExpiry) then Message=Message&"<li>Í¶Æ±ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½"
 
 	TagArray=split(Tags,",")
-	if Ubound(TagArray)>5 then Message=Message&"<li>±êÇ©²»ÄÜ³¬¹ý5¸ö"
+	if Ubound(TagArray)>5 then Message=Message&"<li>ï¿½ï¿½Ç©ï¿½ï¿½ï¿½Ü³ï¿½ï¿½ï¿½5ï¿½ï¿½"
 
 	if Message<>"" then error(""&Message&"")
 
@@ -150,17 +157,17 @@ if Request_Method = "POST" then
 
 
 	if ModerateNewThread=1 and CookieModerationLevel=0 then
-		EnableCensorship="ÓÉÓÚÂÛÌ³ÉèÖÃÐÂÖ÷ÌâÉóºËÖÆ¶È£¬Äú·¢±íµÄÌû×ÓÐèÒªµÈ´ý¼¤»î²ÅÄÜÏÔÊ¾¡£"
+		EnableCensorship="ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶È£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½"
 	else
-		EnableCensorship="<a href=ShowPost.asp?ThreadID="&ThreadID&">·µ»ØÖ÷Ìâ</a>"
+		EnableCensorship="<a href=ShowPost.asp?ThreadID="&ThreadID&">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a>"
 	end if
 
-	Message="<li>ÐÂÖ÷Ìâ·¢±í³É¹¦</li><li>"&EnableCensorship&"</li><li><a href=ShowForum.asp?ForumID="&ForumID&">·µ»ØÂÛÌ³</a></li>"
+	Message="<li>ï¿½ï¿½ï¿½ï¿½ï¿½â·¢ï¿½ï¿½ï¿½É¹ï¿½</li><li>"&EnableCensorship&"</li><li><a href=ShowForum.asp?ForumID="&ForumID&">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³</a></li>"
 	succeed Message,"ShowForum.asp?ForumID="&ForumID&""
 
 end if
 %>
-<div class="CommonBreadCrumbArea"><%=ClubTree%> ¡ú <%=ForumTree(ParentID)%> <a href=ShowForum.asp?ForumID=<%=ForumID%>><%=ForumName%></a> ¡ú ·¢±íÌû×Ó</div>
+<div class="CommonBreadCrumbArea"><%=ClubTree%> ï¿½ï¿½ <%=ForumTree(ParentID)%> <a href=ShowForum.asp?ForumID=<%=ForumID%>><%=ForumName%></a> ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</div>
 <form name="form" method="post" onSubmit="return CheckForm(this);" />
 <input name="Body" type="hidden" />
 <input name="Description" type="hidden" />
@@ -170,16 +177,16 @@ end if
 <input type=hidden name=IsVote value=<%=RequestInt("Poll")%> />
 <table cellspacing=1 cellpadding=5 border=0 align=center class=CommonListArea  width=100%>
 	<tr class=CommonListTitle>
-		<td valign=Left colspan=2>·¢±íÌû×Ó</td>
+		<td valign=Left colspan=2>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</td>
 	</tr>
 	<tr class="CommonListCell">
-		<td width="180"><b>±êÌâ</b><%if PermissionManage=1 then%>£¨<a href="javascript:BBSXP_Modal.Open('Utility/SelectStyle.htm',500,420);">×ÖÌå</a>£©<%end if%></td>
+		<td width="180"><b>ï¿½ï¿½ï¿½ï¿½</b><%if PermissionManage=1 then%>ï¿½ï¿½<a href="javascript:BBSXP_Modal.Open('Utility/SelectStyle.htm',500,420);">ï¿½ï¿½ï¿½ï¿½</a>ï¿½ï¿½<%end if%></td>
 		<td><input type="text" size="60" id="Subject" name="Subject" /></td>
 	</tr>
 	<tr class="CommonListCell">
-		<td width="180"><b>Àà±ð</b></td>
+		<td width="180"><b>ï¿½ï¿½ï¿½</b></td>
 		<td>
-			<select name=Category size=1><option value="" selected="selected">ÎÞ</option>
+			<select name=Category size=1><option value="" selected="selected">ï¿½ï¿½</option>
 <%
 	if TotalCategorys<>empty then
 		filtrate=split(TotalCategorys,"|")
@@ -188,14 +195,14 @@ end if
 		next
 	end if
 %>
-			</select> <a href="javascript:BBSXP_Modal.Open('Utility/AddCategory.htm', 500, 100);">Ìí¼ÓÀà±ð</a></td>
+			</select> <a href="javascript:BBSXP_Modal.Open('Utility/AddCategory.htm', 500, 100);">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></td>
 	</tr>
 	<tr class="CommonListCell">
-		<td valign=top align=Left><b>±íÇé</b></td>
-		<td><input type=radio value=0 name=ThreadEmoticonID <%if ThreadEmoticonID=0 then%>checked<%end if%> />ÎÞ<br />
+		<td valign=top align=Left><b>ï¿½ï¿½ï¿½ï¿½</b></td>
+		<td><input type=radio value=0 name=ThreadEmoticonID <%if ThreadEmoticonID=0 then%>checked<%end if%> />ï¿½ï¿½<br />
 		<script language="JavaScript" type="text/javascript">
 		for(i=1;i<=30;i++) {
-			document.write("<input type=radio value="+i+" name=ThreadEmoticonID><IMG src=images/Emoticons/"+i+".gif width=23 height=23 />¡¡")
+			document.write("<input type=radio value="+i+" name=ThreadEmoticonID><IMG src=images/Emoticons/"+i+".gif width=23 height=23 />ï¿½ï¿½")
 			if (i ==10 || i ==20){document.write("<br />")}
 		}
 		</script>		</td>
@@ -203,13 +210,13 @@ end if
 <%if PermissionCreatePoll=1 and Request("Poll")=1 then%>
 	<script language="javascript" type="text/javascript" src="Utility/LabelDom.js"></script>
 	<tr class="CommonListCell">
-		<td valign=top align=Left><b>Í¶Æ±</b><br />Ã¿ÐÐÒ»¸öÍ¶Æ±ÏîÄ¿<br />
-<input type=radio checked="checked" value=0 name=IsMultiplePoll id=IsMultiplePoll /><label for=IsMultiplePoll>µ¥Ñ¡Í¶Æ±</label><br /><input type=radio value=1 name=IsMultiplePoll id=IsMultiplePoll_1 /><label for=IsMultiplePoll_1>¶àÑ¡Í¶Æ±</label></font> <br />¹ýÆÚÊ±¼ä <input type="text" size="2" name="VoteExpiry" value="7" onkeyup=if(isNaN(this.value))this.value='7' /> Ììºó
+		<td valign=top align=Left><b>Í¶Æ±</b><br />Ã¿ï¿½ï¿½Ò»ï¿½ï¿½Í¶Æ±ï¿½ï¿½Ä¿<br />
+<input type=radio checked="checked" value=0 name=IsMultiplePoll id=IsMultiplePoll /><label for=IsMultiplePoll>ï¿½ï¿½Ñ¡Í¶Æ±</label><br /><input type=radio value=1 name=IsMultiplePoll id=IsMultiplePoll_1 /><label for=IsMultiplePoll_1>ï¿½ï¿½Ñ¡Í¶Æ±</label></font> <br />ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ <input type="text" size="2" name="VoteExpiry" value="7" onkeyup=if(isNaN(this.value))this.value='7' /> ï¿½ï¿½ï¿½
 
 
 </td>
 		<td valign="top">
-		<div id="VoteOptionList"></div><a class="CommonTextButton" href="javascript:AddLabel('VoteOptionList')">Ìí¼ÓÏîÄ¿</a>
+		<div id="VoteOptionList"></div><a class="CommonTextButton" href="javascript:AddLabel('VoteOptionList')">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿</a>
 		<script language="javascript" type="text/javascript">
 			var MinCount=parseInt('<%=SiteConfig("MinVoteOptions")%>');
 			var MaxCount=parseInt('<%=SiteConfig("MaxVoteOptions")%>');
@@ -223,28 +230,28 @@ end if
 end if
 if SiteConfig("UpFileOption")<>empty and PermissionAttachment=1 then%>
 	<tr class="CommonListCell">
-		<td valign=top><b>ÉÏ´«¸½¼þ</b></td>
+		<td valign=top><b>ï¿½Ï´ï¿½ï¿½ï¿½ï¿½ï¿½</b></td>
 		<td><iframe id="UpLoadIframe" name="UpLoadIframe" src="UploadAttachment.asp" frameborder="0" width="100%" height="20" scrolling="no"></iframe></td>
 	</tr>
 <%end if%>
 	<tr class="CommonListCell">
 		<td valign=top>
-		<br /><b>ÄÚÈÝ</b><br />£¨<a href="javascript:CheckLength();">²é¿´ÄÚÈÝ³¤¶È</a>£©<br /><br />
-		<input id=LockMyPost name=IsLocked type=checkbox value="1" /><label for=LockMyPost> Ö÷ÌâËø¶¨</label><br />
-        <input id=DisableBBCode name=DisableBBCode type=checkbox value=1 /><label for=DisableBBCode> ½ûÓÃ BB ´úÂë</label>
+		<br /><b>ï¿½ï¿½ï¿½ï¿½</b><br />ï¿½ï¿½<a href="javascript:CheckLength();">ï¿½é¿´ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½</a>ï¿½ï¿½<br /><br />
+		<input id=LockMyPost name=IsLocked type=checkbox value="1" /><label for=LockMyPost> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</label><br />
+        <input id=DisableBBCode name=DisableBBCode type=checkbox value=1 /><label for=DisableBBCode> ï¿½ï¿½ï¿½ï¿½ BB ï¿½ï¿½ï¿½ï¿½</label>
         <br /><br />
 		<%if PermissionManage=1 then%><br />
 		<select name=StickyDate size=1>
-			<option value="0" selected="selected">ÖÃ¶¥</option>
-			<option value="1">1 Ìì</option>
-			<option value="3">3 Ìì</option>
-			<option value="7">1 ÖÜ</option>
-			<option value="14">2 ÖÜ</option>
-			<option value="30">1 ÔÂ</option>
-			<option value="90">3 ÔÂ</option>
-			<option value="180">6 ÔÂ</option>
-			<option value="366">1 Äê</option>
-			<%if BestRole=1 then%><option value="999">¹«¸æ</option><%end if%>
+			<option value="0" selected="selected">ï¿½Ã¶ï¿½</option>
+			<option value="1">1 ï¿½ï¿½</option>
+			<option value="3">3 ï¿½ï¿½</option>
+			<option value="7">1 ï¿½ï¿½</option>
+			<option value="14">2 ï¿½ï¿½</option>
+			<option value="30">1 ï¿½ï¿½</option>
+			<option value="90">3 ï¿½ï¿½</option>
+			<option value="180">6 ï¿½ï¿½</option>
+			<option value="366">1 ï¿½ï¿½</option>
+			<%if BestRole=1 then%><option value="999">ï¿½ï¿½ï¿½ï¿½</option><%end if%>
 		</select>
 		<%end if%>
 
@@ -254,22 +261,32 @@ if SiteConfig("UpFileOption")<>empty and PermissionAttachment=1 then%>
 		<%end if%>
 
 		</td>
-		<td height=250 valign="top"><script type="text/javascript" src="Editor/Post.js"></script></td>
+		<td height=250 valign="top">
+			<script type="text/javascript" src="Editor/Post.js"></script>
+			<!-- Initialize Markdown editor after BBCode editor loads -->
+			<script>
+			setTimeout(function() {
+				if (typeof initMarkdownEditor === 'function' && window.YuZi_EDIT) {
+					console.log('Markdown support enabled');
+				}
+			}, 100);
+			</script>
+		</td>
 	</tr>
 <%if SiteConfig("DisplayPostTags")=1 then%>
 	<tr class="CommonListCell">
-		<td><b>±êÇ©</b><br />ÒÔ¶ººÅ¡°,¡±·Ö¸ô</td>
-		<td><input type="text" name="Tags" size="80" id="Tags" /> <a href="javascript:BBSXP_Modal.Open('Tags.asp?menu=SelectTags',500,420);" class="CommonTextButton">Ñ¡Ôñ±êÇ©</a></td>
+		<td><b>ï¿½ï¿½Ç©</b><br />ï¿½Ô¶ï¿½ï¿½Å¡ï¿½,ï¿½ï¿½ï¿½Ö¸ï¿½</td>
+		<td><input type="text" name="Tags" size="80" id="Tags" /> <a href="javascript:BBSXP_Modal.Open('Tags.asp?menu=SelectTags',500,420);" class="CommonTextButton">Ñ¡ï¿½ï¿½ï¿½Ç©</a></td>
 	</tr>
 <%end if%>
 <%if SiteConfig("EnableAntiSpamTextGenerateForPost")=1 then%>
 	<tr class="CommonListCell">
-		<td><b>ÑéÖ¤Âë</b></td>
-		<td><input type="text" name="VerifyCode" maxlength="4" size="10" onBlur="CheckVerifyCode(this.value)" onKeyUp="if (this.value.length == 4)CheckVerifyCode(this.value)" onfocus="getVerifyCode()" /> <span id="VerifyCodeImgID">µã»÷ÊäÈë¿ò»ñÈ¡ÑéÖ¤Âë</span> <span id="CheckVerifyCode" style="color:red"></span></td>
+		<td><b>ï¿½ï¿½Ö¤ï¿½ï¿½</b></td>
+		<td><input type="text" name="VerifyCode" maxlength="4" size="10" onBlur="CheckVerifyCode(this.value)" onKeyUp="if (this.value.length == 4)CheckVerifyCode(this.value)" onfocus="getVerifyCode()" /> <span id="VerifyCodeImgID">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½Ö¤ï¿½ï¿½</span> <span id="CheckVerifyCode" style="color:red"></span></td>
 	</tr>
 <%end if%>
 	<tr class="CommonListCell">
-		<td align=center colspan=2><input type=submit accesskey="s" title="(Alt + S)" value=" ·¢±í " name=EditSubmit />¡¡<input type="Button" value=" Ô¤ÀÀ " onClick="Preview();" />¡¡<input onClick="history.back()" type="button" value=" È¡Ïû " />¡¡<input type="button" id="recoverdata" onclick="RestoreData()" title="»Ö¸´ÉÏ´Î×Ô¶¯±£´æµÄÊý¾Ý" value="»Ö¸´Êý¾Ý" /></td>
+		<td align=center colspan=2><input type=submit accesskey="s" title="(Alt + S)" value=" ï¿½ï¿½ï¿½ï¿½ " name=EditSubmit />ï¿½ï¿½<input type="Button" value=" Ô¤ï¿½ï¿½ " onClick="Preview();" />ï¿½ï¿½<input onClick="history.back()" type="button" value=" È¡ï¿½ï¿½ " />ï¿½ï¿½<input type="button" id="recoverdata" onclick="RestoreData()" title="ï¿½Ö¸ï¿½ï¿½Ï´ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" value="ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½" /></td>
 	</tr>
 </table>
 </form>
