@@ -51,6 +51,12 @@ ForumUserList=Rs("ForumUserList")
 Rs.Close
 %>
 <!-- #include file="inc/Validate.asp" -->
+<!-- Markdown Support -->
+<script src="../bbsxp2008/js/marked.min.js"></script>
+<script src="../bbsxp2008/js/dompurify.min.js"></script>
+<script src="../bbsxp2008/js/markdown-handler.js"></script>
+<link rel="stylesheet" href="../bbsxp2008/css/markdown-content.css">
+
 <script src="inc/birth.js"></script>
 <title><%=Topic%> - Powered By BBSXP</title>
 <script>
@@ -235,7 +241,7 @@ ShowRank()
 ==============================<br>������<font color=RED>���û������ѱ����ˡ�����</font><br>==============================
 <%else%>
 <b><%=Rs("Subject")%></b><br><br>
-<%=Rs("content")%>
+<div class="markdown-content"><%=Rs("content")%></div>
 <%end if%></td></tr><tr vAlign=top><td colSpan=3 align=right>
 <%if Rs1("UserSign")<>"" and Request.Cookies("DisabledShowSign")="" then%>
 ��������������������<br><%=YbbEncode(Rs1("UserSign"))%>
