@@ -21,35 +21,35 @@ ShowRank()
 				<td width="18%" align="center" valign="bottom" height="100">
 				<img src="<%=Rs1("Userface")%>" onload='javascript:if(this.width>60)this.width=60;if(this.height>60)this.height=60;'><br>
 				<br>
-				<a href="UserCp.asp">¿ØÖÆÃæ°å</a></td>
+				<a href="UserCp.asp">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></td>
 				<td align="center" valign="bottom" height="100%">
 				<table width="100%" border="0" cellpadding="3" cellspacing="1">
 					<tr>
 						<td width="25%" align="Left" valign="middle">
-						<a href="Profile.asp?UserName=<%=Server.URLEncode(CookieUserName)%>">ÎÒµÄ×ÊÁÏ</a></td>
+						<a href="Profile.asp?UserName=<%=Server.URLEncode(CookieUserName)%>">ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½</a></td>
 						<td width="26%" align="Left" valign="middle">
-						<a href="UpFace.asp">ÉÏ´«Í·Ïñ</a></td>
+						<a href="UpFace.asp">ï¿½Ï´ï¿½Í·ï¿½ï¿½</a></td>
 						<td width="28%" align="Left" valign="middle">
-						<a href="UpPhoto.asp">ÉÏ´«ÕÕÆ¬</a></td>
+						<a href="UpPhoto.asp">ï¿½Ï´ï¿½ï¿½ï¿½Æ¬</a></td>
 					</tr>
 					<tr>
 						<td align="Left" valign="middle">
 						<span style="text-decoration: none">
-						<a href="Calendar.asp?UserName=<%=Server.URLEncode(CookieUserName)%>">ÎÒµÄÈÕÖ¾</a></span></td>
+						<a href="Calendar.asp?UserName=<%=Server.URLEncode(CookieUserName)%>">ï¿½Òµï¿½ï¿½ï¿½Ö¾</a></span></td>
 						<td align="Left" valign="middle">
-						<a href="ShowBBS.asp?menu=5&UserName=<%=Server.URLEncode(CookieUserName)%>">ÎÒµÄÌû×Ó</a></td>
+						<a href="ShowBBS.asp?menu=5&UserName=<%=Server.URLEncode(CookieUserName)%>">ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½</a></td>
 						<td align="Left" valign="middle">
-						<a href="MyFavorites.asp">ÎÒµÄÊÕ²Ø</a></td>
+						<a href="MyFavorites.asp">ï¿½Òµï¿½ï¿½Õ²ï¿½</a></td>
 					</tr>
 					<tr>
-						<td align="Left" valign="middle">µÈ¼¶£º<%=RankName%></td>
-						<td align="Left" valign="middle">ÉçÇø½ð±Ò£º<font face="Georgia, Times New Roman, Times, serif"><%=Rs1("UserMoney")%></font></td>
-						<td align="Left" valign="middle">·¢±íÎÄÕÂ£º<font face="Georgia, Times New Roman, Times, serif"><%=Rs1("PostTopic")%></font></td>
+						<td align="Left" valign="middle">ï¿½È¼ï¿½ï¿½ï¿½<%=RankName%></td>
+						<td align="Left" valign="middle">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò£ï¿½<font face="Georgia, Times New Roman, Times, serif"><%=Rs1("UserMoney")%></font></td>
+						<td align="Left" valign="middle">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½<font face="Georgia, Times New Roman, Times, serif"><%=Rs1("PostTopic")%></font></td>
 					</tr>
 					<tr>
-						<td align="Left" valign="middle">¾­Ñé£º<font face="Georgia, Times New Roman, Times, serif"><%=Rs1("experience")%></font></td>
-						<td align="Left" valign="middle">ÉçÇø´æ¿î£º<font face="Georgia, Times New Roman, Times, serif"><%=Rs1("savemoney")%></font></td>
-						<td align="Left" valign="middle">»Ø¸´ÎÄÕÂ£º<font face="Georgia, Times New Roman, Times, serif"><%=Rs1("Postrevert")%></font></td>
+						<td align="Left" valign="middle">ï¿½ï¿½ï¿½é£º<font face="Georgia, Times New Roman, Times, serif"><%=Rs1("experience")%></font></td>
+						<td align="Left" valign="middle">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î£º<font face="Georgia, Times New Roman, Times, serif"><%=Rs1("savemoney")%></font></td>
+						<td align="Left" valign="middle">ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½Â£ï¿½<font face="Georgia, Times New Roman, Times, serif"><%=Rs1("Postrevert")%></font></td>
 					</tr>
 				</table>
 				</td>
@@ -66,28 +66,28 @@ else
 					<td align="center" height="50">
 					<table border="0" width="100%">
 						<tr>
-							<td rowspan="3">ÓÃ»§Ãû³Æ:
-							<input size="20" name="UserName" value="<%=HTMLEncode(CookieUserName)%>"><br>ÓÃ»§ÃÜÂë:
+							<td rowspan="3">ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½:
+							<input size="20" name="UserName" value="<%=HTMLEncode(CookieUserName)%>"><br>ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½:
 							<input type="password" size="20" value name="Userpass">
 <%if sitesettings("EnableAntiSpamTextGenerateForLogin")=1 then%>
-							<br>Ñé Ö¤ Âë: <input size="10" name="VerifyCode">&nbsp;&nbsp;<img src="VerifyCode.asp" alt="ÑéÖ¤Âë,¿´²»Çå³þ?Çëµã»÷Ë¢ÐÂÑéÖ¤Âë" style=cursor:pointer onclick="this.src='VerifyCode.asp'">
+							<br>ï¿½ï¿½ Ö¤ ï¿½ï¿½: <input size="10" name="VerifyCode">&nbsp;&nbsp;<img src="VerifyCode.asp" alt="ï¿½ï¿½Ö¤ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½" style=cursor:pointer onclick="this.src='VerifyCode.asp'">
 <%end if%>
-							¡¡</td>
+							ï¿½ï¿½</td>
 							<td>
-							<input type="checkbox" value="1" name="eremite" id="eremite"><label for="eremite">ÒþÉíµÇÂ¼</label>
+							<input type="checkbox" value="1" name="eremite" id="eremite"><label for="eremite">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼</label>
 							</td>
-							<td><a href="CreateUser.asp">Ã»ÓÐ×¢²á?</a></td>
+							<td><a href="CreateUser.asp">Ã»ï¿½ï¿½×¢ï¿½ï¿½?</a></td>
 						</tr>
 						<tr>
 							<td>
-							<input type="checkbox" value="1" name="xuansave" id="xuansave"><label for="xuansave">¼Ç×¡ÃÜÂë</label>
+							<input type="checkbox" value="1" name="xuansave" id="xuansave"><label for="xuansave">ï¿½ï¿½×¡ï¿½ï¿½ï¿½ï¿½</label>
 							</td>
-							<td><a href="RecoverPassword.asp">Íü¼ÇÃÜÂë?</a></td>
+							<td><a href="RecoverPassword.asp">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?</a></td>
 						</tr>
 						<tr>
 							<td colspan="2">
-							<input type="submit" value=" µÇÂ¼ ">&nbsp;
-							<input type="reset" value=" È¡Ïû "></td>
+							<input type="submit" value=" ï¿½ï¿½Â¼ ">&nbsp;
+							<input type="reset" value=" È¡ï¿½ï¿½ "></td>
 						</tr>
 					</table>
 					</td>
@@ -100,11 +100,11 @@ end if
 %>
 			<tr class="a3">
 				<td colspan="2" align="center" valign="bottom" height="25">
-				×¢²á»áÔ±£º<%=Statistics("TotalUser")%>&nbsp;
-				Ö÷Ìâ×ÜÊý£º<%=Statistics("TotalThread")%>&nbsp;
-				Ìû×Ó×ÜÊý£º<%=Statistics("TotalPost")%>&nbsp;
-				½ñÈÕÌûÊý£º<%=Statistics("TodayPost")%>&nbsp;
-				ÐÂ»áÔ±£º<a href="Profile.asp?UserName=<%=Server.URLEncode(""&Statistics("NewUser")&"")%>"><%=HTMLEncode(""&Statistics("NewUser")&"")%></a>
+				×¢ï¿½ï¿½ï¿½Ô±ï¿½ï¿½<%=Statistics("TotalUser")%>&nbsp;
+				ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½<%=Statistics("TotalThread")%>&nbsp;
+				ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½<%=Statistics("TotalPost")%>&nbsp;
+				ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½<%=Statistics("TodayPost")%>&nbsp;
+				ï¿½Â»ï¿½Ô±ï¿½ï¿½<a href="Profile.asp?UserName=<%=Server.URLEncode(""&Statistics("NewUser")&"")%>"><%=HTMLEncode(""&Statistics("NewUser")&"")%></a>
 </td>
 			</tr>
 		</table>
@@ -112,7 +112,7 @@ end if
 		<td width="223" valign="top">
 		<table width="100%" border="0" cellpadding="5" cellspacing="1" class="a2">
 			<tr class="a1" id="TableTitleLink">
-				<td height="9" align="Left" valign="middle">&nbsp;<a href="Affiche.asp">ÉçÇø¹«¸æ</a></td>
+				<td height="9" align="Left" valign="middle">&nbsp;<a href="Affiche.asp">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></td>
 			</tr>
 			<tr class="a3">
 				<td height="100" align="Left" valign="top">
@@ -144,7 +144,7 @@ Rs.Close
 <table width="100%" align="center" border="0" class="a2" cellspacing=1 cellpadding=0>
 	<%
 if Request.Cookies("forumid")<>empty then
-sql="select * from [BBSXP_Forums] where id="&int(Request.Cookies("forumid"))&""
+sql="select * from [BBSXP_Forums] where id="&RequestInt(Request.Cookies("forumid"))&""
 Set Rs1=Conn.Execute(sql)
 if Rs1.eof then Response.Cookies("forumid")=""
 ShowForum()
@@ -157,7 +157,7 @@ do while not Rs.eof
 ForumIntro=replace(Rs("ForumIntro"),"<br>",CHR(10))
 %>
 <tr class="a1" id="TableTitleLink">
-<td colspan="7" height="25" title="<%=ForumIntro%>">¡¡<b><a href="ShowForum.asp?ForumID=<%=Rs("id")%>"><%=Rs("ForumName")%></a></b></td></tr>
+<td colspan="7" height="25" title="<%=ForumIntro%>">ï¿½ï¿½<b><a href="ShowForum.asp?ForumID=<%=Rs("id")%>"><%=Rs("ForumName")%></a></b></td></tr>
 <%
 i=0
 sql="Select * From [BBSXP_Forums] where followid="&Rs("id")&" and ForumHide=0 order by SortNum"
@@ -205,7 +205,7 @@ if SiteSettings("DisplayWhoIsOnline")=1 then
 %>
 <table cellspacing="1" cellpadding="0" width="100%" align="center" border="0" class="a2">
 	<tr>
-		<td height="25" class="a1" colspan="2">¡¡<b>¡ö </b>ÔÚÏßÍ³¼Æ</td>
+		<td height="25" class="a1" colspan="2">ï¿½ï¿½<b>ï¿½ï¿½ </b>ï¿½ï¿½ï¿½ï¿½Í³ï¿½ï¿½</td>
 	</tr>
 	<tr>
 		<td align="middle" width="5%" class=a3>
@@ -214,14 +214,14 @@ if SiteSettings("DisplayWhoIsOnline")=1 then
 		<table cellspacing="0" cellpadding="3" width="100%">
 			<tr>
 				<td height="15">&nbsp;<img loaded="no" src="images/plus.gif" id="followImg0" style="cursor:hand;" onclick="loadThreadFollow(0,<%=ForumID%>)">
-				Ä¿Ç°ÂÛÌ³×Ü¹² ÓÐ <b><%=Onlinemany%></b> ÈËÔÚÏß¡£ÆäÖÐ×¢²áÓÃ»§ <b><%=regOnline%></b>
-				ÈË£¬·Ã¿Í <b><%=Onlinemany-regOnline%></b> ÈË¡£×î¸ßÔÚÏß <font color="red">
-				<b><%=Statistics("BestOnline")%></b></font> ÈË£¬·¢ÉúÔÚ <b><%=Statistics("BestOnlineTime")%></b>
+				Ä¿Ç°ï¿½ï¿½Ì³ï¿½Ü¹ï¿½ ï¿½ï¿½ <b><%=Onlinemany%></b> ï¿½ï¿½ï¿½ï¿½ï¿½ß¡ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½ï¿½Ã»ï¿½ <b><%=regOnline%></b>
+				ï¿½Ë£ï¿½ï¿½Ã¿ï¿½ <b><%=Onlinemany-regOnline%></b> ï¿½Ë¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ <font color="red">
+				<b><%=Statistics("BestOnline")%></b></font> ï¿½Ë£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ <b><%=Statistics("BestOnlineTime")%></b>
 				</td>
 			</tr>
 			<tr height="25" style="display:none" id="follow0">
 				<td id="followTd0" align="Left" class="a4" width="94%" colspan="5">
-				¡¡Loading.....</td>
+				ï¿½ï¿½Loading.....</td>
 			</tr>
 		</table>
 		</td>
@@ -233,7 +233,7 @@ if SiteSettings("DisplayLink")=1 then
 %>
 <table cellspacing="1" cellpadding="5" width="100%" border="0" class="a2" align="center">
 	<tr>
-		<td height="25" colspan="2" class="a1">¡¡¡ö<b> </b>ÓÑÇéÁ´½Ó</td>
+		<td height="25" colspan="2" class="a1">ï¿½ï¿½ï¿½ï¿½<b> </b>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</td>
 	</tr>
 	<tr>
 		<td align="center" class=a3 width="5%" rowspan="2">
@@ -257,10 +257,10 @@ Rs.close
 </table>
 <br>
 <%end if%>
-<center>&nbsp;<img src="images/skins/<%=SafeThemeName(Request.Cookies("skins"))%>/Board0.gif" alt="½ûÖ¹ä¯ÀÀ"> ¹Ø±ÕÂÛÌ³&nbsp;
-<img src="images/skins/<%=SafeThemeName(Request.Cookies("skins"))%>/Board1.gif" alt="ÈÎºÎÈË¾ù¿Éä¯ÀÀ"> Õý¹æÂÛÌ³&nbsp;
-<img src="images/skins/<%=SafeThemeName(Request.Cookies("skins"))%>/Board2.gif" alt="ÓÎ¿Í½ûÖ¹ä¯ÀÀ"> »áÔ±ÂÛÌ³&nbsp;
-<img src="images/skins/<%=SafeThemeName(Request.Cookies("skins"))%>/Board3.gif" alt="ÐèÒªÊÚÈ¨²ÅÄÜä¯ÀÀ"> ÌØÊâÂÛÌ³</center>
+<center>&nbsp;<img src="images/skins/<%=SafeThemeName(Request.Cookies("skins"))%>/Board0.gif" alt="ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½"> ï¿½Ø±ï¿½ï¿½ï¿½Ì³&nbsp;
+<img src="images/skins/<%=SafeThemeName(Request.Cookies("skins"))%>/Board1.gif" alt="ï¿½Îºï¿½ï¿½Ë¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³&nbsp;
+<img src="images/skins/<%=SafeThemeName(Request.Cookies("skins"))%>/Board2.gif" alt="ï¿½Î¿Í½ï¿½Ö¹ï¿½ï¿½ï¿½"> ï¿½ï¿½Ô±ï¿½ï¿½Ì³&nbsp;
+<img src="images/skins/<%=SafeThemeName(Request.Cookies("skins"))%>/Board3.gif" alt="ï¿½ï¿½Òªï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³</center>
 <%
 Set Statistics=Nothing
 
@@ -270,17 +270,17 @@ htmlend
 sub ShowForumFloor()
 ForumIntro=replace(Rs1("ForumIntro"),"<br>",CHR(10))
 if rs1("Moderated")<>empty then
-ModeratedList="°æÖ÷£º"
+ModeratedList="ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
 filtrate=split(rs1("Moderated"),"|")
 ModeratedList=ModeratedList&"<a href=Profile.asp?UserName="&Server.URLEncode(filtrate(0))&">"&HTMLEncode(filtrate(0))&"</a> "
 if ubound(filtrate)>0 then ModeratedList=ModeratedList&" <font color=gray>...</font>"
 else
-ModeratedList="¡¡"
+ModeratedList="ï¿½ï¿½"
 end if
 i=i+1
 if i=1 then response.write "<tr>"
 %>
-<td><table border=0 width=100% cellspacing=0 cellpadding=4><tr class=a3><td colspan=3 title='<%=ForumIntro%>'>¡º <a href="ShowForum.asp?ForumID=<%=Rs1("id")%>"><%=Rs1("ForumName")%></a> ¡»</td></tr><tr class=a3><td><img src=images/Forum_nav.gif alt=½ñÈÕ> <font color=red><%=Rs1("ForumToday")%></font></td><td><img src=images/Forum_nav.gif alt=Ö÷Ìâ> <%=Rs1("ForumThreads")%></td><td><img src=images/Forum_nav.gif alt=Ìû×Ó> <%=Rs1("ForumPosts")%></td></tr><tr class=a4><td colspan=3><%=ModeratedList%></td></tr></table></td>
+<td><table border=0 width=100% cellspacing=0 cellpadding=4><tr class=a3><td colspan=3 title='<%=ForumIntro%>'>ï¿½ï¿½ <a href="ShowForum.asp?ForumID=<%=Rs1("id")%>"><%=Rs1("ForumName")%></a> ï¿½ï¿½</td></tr><tr class=a3><td><img src=images/Forum_nav.gif alt=ï¿½ï¿½ï¿½ï¿½> <font color=red><%=Rs1("ForumToday")%></font></td><td><img src=images/Forum_nav.gif alt=ï¿½ï¿½ï¿½ï¿½> <%=Rs1("ForumThreads")%></td><td><img src=images/Forum_nav.gif alt=ï¿½ï¿½ï¿½ï¿½> <%=Rs1("ForumPosts")%></td></tr><tr class=a4><td colspan=3><%=ModeratedList%></td></tr></table></td>
 <%
 if i=3 then i=0:response.write "</tr>"
 

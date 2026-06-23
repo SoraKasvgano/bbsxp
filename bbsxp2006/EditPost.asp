@@ -24,7 +24,7 @@ Rs.close
 if membercode>3 or instr("|"&moderated&"|","|"&CookieUserName&"|")>0 then UserPopedomPass=1
 
 
-sql="select * from [BBSXP_Posts"&PostsTableName&"] where id="&Request("PostID")&""
+sql="select * from [BBSXP_Posts"&PostsTableName&"] where id="&RequestInt("PostID")&""
 Set Rs=Conn.Execute(sql)
 if Rs.eof then error("<li>���ݿ��в����ڴ����ӵ�����")
 if Rs("UserName")<>CookieUserName and UserPopedomPass<>1 then error("<li>�Բ�������Ȩ�޲�����")
@@ -55,7 +55,7 @@ if sitesettings("DisplayEditNotes")=1 then content=""&content&"<p>�۴���
 
 if Message<>"" then error(""&Message&"")
 
-sql="select * from [BBSXP_Posts"&PostsTableName&"] where id="&Request("PostID")&""
+sql="select * from [BBSXP_Posts"&PostsTableName&"] where id="&RequestInt("PostID")&""
 Rs.Open sql,Conn,1,3
 if UserPopedomPass=1 and color<>"" then Subject="<font color="&color&">"&Subject&"</font>"
 if Rs("IsTopic")=1 then Conn.execute("update [BBSXP_Threads] set Topic='"&Subject&"' where ID="&ThreadID&"")

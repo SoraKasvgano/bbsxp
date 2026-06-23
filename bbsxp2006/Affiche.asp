@@ -1,30 +1,30 @@
 <!-- #include file="Setup.asp" -->
-<title>¹«¸æÀ¸ - Powered By BBSXP</title>
+<title>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ - Powered By BBSXP</title>
 <%
 top
 %>
 <table border=0 width=100% align=center cellspacing=1 cellpadding=4 class=a2>
 <tr class=a3>
-<td height=25>&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ¡ú 
-<a href="Affiche.asp">ÉçÇø¹«¸æ</a></td>
+<td height=25>&nbsp;<img src=images/Forum_nav.gif>&nbsp; <%ClubTree%> ï¿½ï¿½ 
+<a href="Affiche.asp">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</a></td>
 </tr>
 </table>
 <%
 if Request("id")="" then
 sql="select * from [BBSXP_Affiche] order by Posttime Desc"
 else
-sql="select * from [BBSXP_Affiche] where id="&int(Request("id"))&""
+sql="select * from [BBSXP_Affiche] where id="&RequestInt("id")&""
 end if
 
 
 Rs.Open sql,Conn,1
-PageSetup=10 'Éè¶¨Ã¿Ò³µÄÏÔÊ¾ÊýÁ¿
+PageSetup=10 'ï¿½è¶¨Ã¿Ò³ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
 Rs.Pagesize=PageSetup
-TotalPage=Rs.Pagecount  '×ÜÒ³Êý
+TotalPage=Rs.Pagecount  'ï¿½ï¿½Ò³ï¿½ï¿½
 PageCount = cint(Request.QueryString("PageIndex"))
 if PageCount <1 then PageCount = 1
 if PageCount > TotalPage then PageCount = TotalPage
-if TotalPage>0 then Rs.absolutePage=PageCount 'Ìø×ªµ½Ö¸¶¨Ò³Êý
+if TotalPage>0 then Rs.absolutePage=PageCount 'ï¿½ï¿½×ªï¿½ï¿½Ö¸ï¿½ï¿½Ò³ï¿½ï¿½
 i=0
 Do While Not Rs.EOF and i<PageSetup
 i=i+1
@@ -41,7 +41,7 @@ i=i+1
 	</tr>
 	<tr>
 		<td width="100%" class="a4" height="18">
-		<p align="right">·¢²¼ÈË <%=Rs("UserName")%>¡¡·¢²¼Ê±¼ä 
+		<p align="right">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ <%=Rs("UserName")%>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ 
 		<font style="family:arial; font-size: 7pt"><%=Rs("Posttime")%></font> </p>
 		</td>
 	</tr>
